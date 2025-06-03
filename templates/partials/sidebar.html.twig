@@ -1,0 +1,107 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title" data-key="t-menu">{% trans %}Menu{% endtrans %}</li>
+
+                <li>
+                    <a href="{{ path('app_dashboard') }}">
+                        <i data-feather="home"></i>
+                        <span data-key="t-dashboard">{% trans %}Dashboard{% endtrans %}</span>
+                    </a>
+                </li>
+
+
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="users"></i>
+                        <span data-key="t-authentication">{% trans %}Authentication{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="auth-login" data-key="t-login">{% trans %}Login{% endtrans %}</a></li>
+                        <li><a href="auth-register" data-key="t-register">{% trans %}Register{% endtrans %}</a></li>
+                        <li><a href="auth-recoverpw" data-key="t-recover-password">{% trans %}Recover Password{%
+                                endtrans %}</a></li>
+                        <li><a href="auth-lock-screen" data-key="t-lock-screen">{% trans %}Lock Screen{% endtrans %}</a>
+                        </li>
+                        <li><a href="auth-logout" data-key="t-logout">{% trans %}Logout{% endtrans %}</a></li>
+                        <li><a href="auth-confirm-mail" data-key="t-confirm-mail">{% trans %}Confirm Mail{% endtrans
+                                %}</a></li>
+                        <li><a href="auth-email-verification" data-key="t-email-verification">{% trans %}Email
+                                Verification{% endtrans %}</a></li>
+                        <li><a href="auth-two-step-verification" data-key="t-two-step-verification">{% trans %}Two Step
+                                Verification{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="file-text"></i>
+                        <span data-key="t-pages">{% trans %}Pages{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="pages-starter" data-key="t-starter-page">{% trans %}Starter Page{% endtrans %}</a>
+                        </li>
+                        <li><a href="pages-maintenance" data-key="t-maintenance">{% trans %}Maintenance{% endtrans
+                                %}</a></li>
+                        <li><a href="pages-comingsoon" data-key="t-coming-soon">{% trans %}Coming Soon{% endtrans %}</a>
+                        </li>
+                        <li><a href="pages-404" data-key="t-error-404">{% trans %}Error 404{% endtrans %}</a></li>
+                        <li><a href="pages-500" data-key="t-error-500">{% trans %}Error 500{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="layouts-horizontal">
+                        <i data-feather="layout"></i>
+                        <span data-key="t-horizontal">{% trans %}Horizontal{% endtrans %}</span>
+                    </a>
+                </li>
+
+                <li class="menu-title mt-2" data-key="t-components">{% trans %}Elements{% endtrans %}</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="share-2"></i>
+                        <span data-key="t-multi-level">{% trans %}Multi Level{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a href="javascript: void(0);" data-key="t-level-1-1">{% trans %}Level{% endtrans %} 1.1</a>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow" data-key="t-level-1-2">{% trans %}Level{%
+                                endtrans %} 1.2</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="javascript: void(0);" data-key="t-level-2-1">{% trans %}Level{% endtrans %}
+                                        2.1</a></li>
+                                <li><a href="javascript: void(0);" data-key="t-level-2-2">{% trans %}Level{% endtrans %}
+                                        2.2</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">
+                <div class="card-body">
+                    <img src="/images/giftbox.png" alt="">
+                    <div class="mt-4">
+                        <h5 class="alertcard-title font-size-16">{% trans %}Unlimited Access{% endtrans %}</h5>
+                        <p class="font-size-13">{% trans %}Upgrade your plan from a Free trial, to select ‘Business
+                            Plan’{% endtrans %}</p>
+                        <a href="#!" class="btn btn-primary mt-2">{% trans %}Upgrade Now{% endtrans %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<!-- Left Sidebar End -->

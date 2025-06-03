@@ -1,0 +1,47 @@
+{{ include('partials/main.html.twig') }}
+
+    <head>
+        
+        {{ include('partials/title-meta.html.twig', {title: 'Starter Page'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        {{ include('partials/page-title.html.twig', {pagetitle: 'Pages', title: 'Starter Page'}) }}
+                        
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <script src="/js/app.js"></script>
+
+    </body>
+</html>
