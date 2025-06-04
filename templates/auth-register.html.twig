@@ -26,52 +26,47 @@
                                     <h5 class="mb-0">Register Account</h5>
                                     <p class="text-muted mt-2">Get your free 3Tek-Europe account now.</p>
                                     {{ form_errors(registrationForm) }}
-                                    {{ form_start(registrationForm) }}
-                                    {{ form_row(registrationForm.email) }}
+                                    {{ form_start(registrationForm, {attr:{novalidate : 'novalidate',
+                                    class: 'needs-validation mt-4 pt-2'}} ) }}
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.email, {
+                                        label: 'Votre Mail',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre email',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
                                     {{ form_row(registrationForm.plainPassword, {
-                                    label: 'Password'
+                                    label: 'Password',
+                                    class: 'form-label',
+                                    attr:{
+                                    placeholder :'Saisir votre mot de pass',
+                                    class : 'form-control',
+                                    }
                                     }) }}
-                                    {{ form_row(registrationForm.agreeTerms) }}
-
-                                    <button type="submit" class="btn">Register</button>
-                                    {{ form_end(registrationForm) }}
-                                </div>
-                                <form class="needs-validation mt-4 pt-2" novalidate action="{{ path('app_login') }}">
-                                    <div class="mb-3">
-                                        <label for="useremail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="useremail"
-                                            placeholder="Enter email" required>
-                                        <div class="invalid-feedback">
-                                            Please Enter Email
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control" id="username"
-                                            placeholder="Enter username" required>
-                                        <div class="invalid-feedback">
-                                            Please Enter Username
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="userpassword" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="userpassword"
-                                            placeholder="Enter password" required>
-                                        <div class="invalid-feedback">
-                                            Please Enter Password
-                                        </div>
-                                    </div>
                                     <div class="mb-4">
                                         <p class="mb-0">By registering you agree to the 3Tek-Europe <a href="#"
                                                 class="text-primary">Terms of Use</a></p>
                                     </div>
-                                    <div class="mb-3">
-                                        <button class="btn btn-primary w-100 waves-effect waves-light"
-                                            type="submit">Register Ok</button>
-                                    </div>
-                                </form>
+
+                                    {{ form_row(registrationForm.agreeTerms, {
+                                    label :'Agréement',
+                                    class : 'form-check-label',
+                                    for : 'Agrée',
+                                    attr: {
+                                    class: 'form-check-input'
+                                    }
+                                    }) }}
+
+                                    <button class="btn btn-primary w-100 waves-effect waves-light" type="submit"
+                                        class="btn">Register</button>
+                                    {{ form_end(registrationForm) }}
+                                </div>
+
 
                                 <div class="mt-4 pt-2 text-center">
                                     <div class="signin-other-title">

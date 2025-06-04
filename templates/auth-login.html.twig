@@ -52,7 +52,8 @@
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <div class="">
-                                                    <a href="auth-recoverpw" class="text-muted">Forgot password?</a>
+                                                    <a href="{{ path('app_forgot_password_request') }}"
+                                                        class="text-muted">Forgot password?</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,8 +114,9 @@
                                 </div>
 
                                 <div class="mt-5 text-center">
-                                    <p class="text-muted mb-0">Don't have an account ? <a href="auth-register"
-                                            class="text-primary fw-semibold"> Signup now </a> </p>
+                                    <p class="text-muted mb-0">Don't have an account ? <a
+                                            href="{{ path('app_register') }}" class="text-primary fw-semibold"> Signup
+                                            now </a> </p>
                                 </div>
                             </div>
                             <div class="mt-4 mt-md-5 text-center">
