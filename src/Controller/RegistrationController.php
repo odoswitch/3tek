@@ -45,6 +45,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address('info@odoip.fr', '3Tek-Europe'))
                     ->to((string) $user->getEmail())
                     ->subject('Please Confirm your Email')
+                    //->htmlTemplate('registration/confirmation_email.html.twig')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
@@ -53,7 +54,8 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('registration/register.html.twig', [
+        //return $this->render('registration/register.html.twig', [
+        return $this->render('auth-register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
