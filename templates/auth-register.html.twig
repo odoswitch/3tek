@@ -12,8 +12,8 @@
 <div class="auth-page">
     <div class="container-fluid p-0">
         <div class="row g-0">
-            <div class="col-xxl-3 col-lg-4 col-md-5">
-                <div class="auth-full-page-content d-flex p-sm-5 p-4">
+            <div class="col-xxl-3 col-lg-1 col-md-2">
+                <div class="auth-full-page-content d-flex p-sm-3 p-4">
                     <div class="w-100">
                         <div class="d-flex flex-column h-100">
                             <div class="mb-4 mb-md-5 text-center">
@@ -23,15 +23,111 @@
                             </div>
                             <div class="auth-content my-auto">
                                 <div class="text-center">
-                                    <h5 class="mb-0">Register Account</h5>
+                                    <h5 class="mb-0">Créer un compte</h5>
                                     <p class="text-muted mt-2">Get your free 3Tek-Europe account now.</p>
                                     {{ form_errors(registrationForm) }}
                                     {{ form_start(registrationForm, {attr:{novalidate : 'novalidate',
-                                    class: 'needs-validation mt-4 pt-2'}} ) }}
+                                    class: 'needs-validation mt-2 pt-1'}} ) }}
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.office, {
+                                        label: "Nom de l'entripse",
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre entreprise',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
                                     <div class="mb-3">
 
                                         {{ form_row(registrationForm.email, {
                                         label: 'Votre Mail',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre email',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.name, {
+                                        label: 'Votre Nom',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre nom',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.prenom, {
+                                        label: 'Votre Prénom',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre prénom',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.phone, {
+                                        label: 'Votre Téléphone',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Numéro Téléphone ',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.address, {
+                                        label: 'Votre adresse',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre adresse Postale',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.ville, {
+                                        label: 'Ville',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre ville',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.code, {
+                                        label: 'Votre code Postale',
+                                        class: 'form-label',
+                                        attr:{
+                                        placeholder : 'Saisir votre code postale',
+                                        class : 'form-control',
+                                        }
+                                        }) }}
+
+                                    </div>
+                                    <div class="mb-3">
+
+                                        {{ form_row(registrationForm.pays, {
+                                        label: 'Pays',
                                         class: 'form-label',
                                         attr:{
                                         placeholder : 'Saisir votre email',
