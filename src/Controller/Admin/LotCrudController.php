@@ -24,7 +24,7 @@ class LotCrudController extends AbstractCrudController
             TextField::new('name'),
             TextEditorField::new('description'),
             TextField::new('image'),
-            AssociationField::new('categorie'),
+            AssociationField::new('categorie')->autocomplete(),
         ];
     }
     

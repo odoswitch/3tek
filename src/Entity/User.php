@@ -68,11 +68,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'User')]
     private Collection $categories;
 
+   
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
     }
     public function __toString()
+   
     {
         return $this->categories;
     }
@@ -284,4 +287,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    
 }

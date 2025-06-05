@@ -6,9 +6,11 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -31,10 +33,15 @@ class UserCrudController extends AbstractCrudController
             TextField::new('code'),
             TextField::new('ville'),
             TextField::new('pays'),
+            TextField::new('password'),
             AssociationField::new('categories')->autocomplete(),
+            //ChoiceField::new('categories')->allowMultipleChoices(),
+            
             BooleanField::new('isVerified'),
         ];
     }
+        
+        
         
     
 }
