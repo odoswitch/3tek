@@ -22,7 +22,7 @@ class UserCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
-        return [
+       /* return [
             IdField::new('office'),
             TextField::new('email'),
             TextField::new('name'),
@@ -38,7 +38,19 @@ class UserCrudController extends AbstractCrudController
             //ChoiceField::new('categories')->allowMultipleChoices(),
             
             BooleanField::new('isVerified'),
-        ];
+        ];*/
+        yield TextField::new('office');
+        yield TextField::new('email');
+        yield TextField::new('name');
+        yield TextField::new('prenom');
+        yield TextField::new('phone');
+        yield TextField::new('address');
+        yield TextField::new('code');
+        yield TextField::new('ville');
+        yield TextField::new('pays');
+       
+        yield AssociationField::new('categories')->autocomplete();
+        yield BooleanField::new('isVerified');
     }
         
         
