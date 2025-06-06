@@ -48,8 +48,8 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('code');
         yield TextField::new('ville');
         yield TextField::new('pays');
-       
         yield AssociationField::new('categories')->autocomplete();
+        //yield AssociationField::new('categories')->autocomplete();
         yield BooleanField::new('isVerified');
     }
         

@@ -74,10 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->categories = new ArrayCollection();
     }
+
     public function __toString()
    
     {
-        return $this->categories;
+        return $this->name;
     }
 
     public function getId(): ?int

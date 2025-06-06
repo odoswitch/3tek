@@ -20,7 +20,7 @@ class LotCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            //IdField::new('id'),
+            
             TextField::new('name'),
             TextEditorField::new('description'),
             TextField::new('image'),
