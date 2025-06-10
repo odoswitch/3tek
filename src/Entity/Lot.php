@@ -34,6 +34,9 @@ class Lot
     #[ORM\ManyToMany(targetEntity: Type::class, inversedBy: 'lots')]
     private Collection $types;
 
+    #[ORM\Column]
+    private ?float $prix = null;
+
     public function __construct()
     {
         $this->types = new ArrayCollection();
@@ -112,6 +115,18 @@ class Lot
     public function removeType(Type $type): static
     {
         $this->types->removeElement($type);
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): static
+    {
+        $this->prix = $prix;
 
         return $this;
     }

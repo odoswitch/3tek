@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Lot;
 use App\Entity\Type;
+use App\Entity\User;
 use App\Entity\Category;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,6 +28,8 @@ class DashboardController extends AbstractDashboardController
         // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
+        //return $this->redirectToRoute('app_dash');
+        //Touficreturn $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
 
         // Option 2. You can make your dashboard redirect to different pages depending on the user
         //
@@ -49,8 +52,9 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Liste clients', 'fa-solid fa-user', User::class);
         yield MenuItem::linkToCrud('The Category', 'fas fa-list', Category::class);
-        yield MenuItem::linkToCrud('The Lots', 'fas fa-list', Lot::class);
-        yield MenuItem::linkToCrud('The Type Client', 'fas fa-list', Type::class);
+        yield MenuItem::linkToCrud('The Lots', 'fa-solid fa-gift', Lot::class);
+        yield MenuItem::linkToCrud('The Type Client', 'fa-solid fa-face-smile', Type::class);
     }
 }

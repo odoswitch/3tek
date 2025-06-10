@@ -3,11 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Lot;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Doctrine\DBAL\Types\FloatType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class LotCrudController extends AbstractCrudController
 {
@@ -24,7 +27,8 @@ class LotCrudController extends AbstractCrudController
             TextField::new('name'),
             TextEditorField::new('description'),
             TextField::new('image'),
-            AssociationField::new('cat'),
+            NumberField::new('prix'),
+            AssociationField::new('cat')->autocomplete(),
             AssociationField::new('types'),
         ];
     }
