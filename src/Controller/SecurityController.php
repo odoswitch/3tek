@@ -13,7 +13,13 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_dash');
+            //Switch entre le Dashbord user et admi 
+
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('admin');
+            } else {
+                return $this->redirectToRoute('app_dash');
+            }
         }
 
         // get the login error if there is one
