@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Lot;
+
 use App\Repository\LotRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class DashController extends AbstractController
 {
     #[Route('/dash', name: 'app_dash')]
-    public function index(LotRepository $lot, Lot $l): Response
+    public function index(LotRepository $lot): Response
     {
         $user = $this->getUser()->getid();
 
@@ -26,7 +26,7 @@ final class DashController extends AbstractController
 
        }else{
         $data = $lot->lotUser($user);
-       
+       //dd($data);
         return $this->render('dash1.html.twig', [
 
             'controller_name' => 'DashController',
