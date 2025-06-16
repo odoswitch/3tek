@@ -25,9 +25,9 @@ class LotRepository extends ServiceEntityRepository
         return $resultat->fetchAllAssociative();
     }
 
-    public function lotUser($a){
-        // $a = 2;
-        $sql ="SELECT *  FROM `lot` l  JOIN user u  ON l.id = u.lot_id WHERE u.is_verified = 1 AND u.id =  " .$a ;
+    public function lotUser($param){
+        $sql = "SELECT * FROM `lot` l JOIN user_category uc ON uc.category_id = l.cat_id JOIN lot_type lt JOIN user u ON u.lot_id = lt.type_id AND lt.lot_id = l.id WHERE u.is_verified = 1 AND u.id = " .$param;
+        //$sql ="SELECT *  FROM `lot` l  JOIN user u  ON l.id = u.lot_id JOIN lot_type lt ON lt.lot_id = u.lot_id JOIN user_category uc ON uc.user_id = u.id WHERE u.is_verified = 1 AND u.id =  " .$a ;
         // $sql = 'SELECT * FROM lot INNER JOIN user on lot.id = user.lot_id WHERE user.id = '.$a .'AND user.is_verified = 0';
          $con = $this->getEntityManager()->getConnection();
          $resultat = $con->query($sql);

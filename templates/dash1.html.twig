@@ -28,9 +28,14 @@
         <div class="row align-items-center">
           <div class="col-md-6">
             <div class="mb-3">
-              <h5 class="card-title">Votre Espace :
+
+
+
+              {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+              <h5 class="card-title">Votre Espace : {{ app.user.name|capitalize }}
                 <span class="text-muted fw-normal ms-2">(535)</span>
               </h5>
+              {% endif %}
             </div>
           </div>
 

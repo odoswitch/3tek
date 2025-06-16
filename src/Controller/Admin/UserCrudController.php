@@ -10,6 +10,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -30,6 +32,8 @@ class UserCrudController extends AbstractCrudController
 
             TextField::new('lastname', 'Prénom'),
             TextField::new('name', 'Nom'),
+            ArrayField::new('roles'),
+            BooleanField::new('isverified', 'Mail verifié'),
             FormField::addTab('Adresse Client'),
             TextField::new('address', 'Adresse Postale'),
             TextField::new('code', 'Code Postale'),
