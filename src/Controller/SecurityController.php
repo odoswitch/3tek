@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -35,4 +37,20 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    #[Route(path: '/test', name: 'app_test')]
+    public function test(MailerInterface $mailer): Response
+    {
+        $email = (new Email())->from('test@odoip.fr')
+        ->to('info@odoip.fr')
+        ->cc('congocrei2000@gmail.com')
+        ->replyTo('info@odoip.fr')
+        ->subject('NGAMBA TEST MAIl')
+        ->text('Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn')
+        ->html('<h2>Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn</h2>');
+        $mailer->send($email);
+        return $this->redirectToRoute('app_login');
+    }
+
+    
 }
