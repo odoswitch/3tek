@@ -5,15 +5,16 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationForm;
 use App\Security\EmailVerifier;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -21,7 +22,7 @@ class RegistrationController extends AbstractController
     public function __construct(private EmailVerifier $emailVerifier) {}
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
@@ -36,6 +37,18 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+
+            //test envoie mail
+
+            $email = (new Email())->from('test@odoip.fr')
+                ->to('info@odoip.fr')
+                ->cc('congocrei2000@gmail.com')
+                ->replyTo('info@odoip.fr')
+                ->subject('NGAMBA TEST MAIl')
+                ->text('Bonjour si vous avez reçu ce message cela veut dire tout est ok pour enregistrement')
+                ->html('<h2>Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn</h2>');
+            $mailer->send($email);
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(
