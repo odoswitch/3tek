@@ -3,16 +3,16 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Lot;
-use Doctrine\DBAL\Types\FloatType;
-use Symfony\Component\DomCrawler\Image;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+
+
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\VichImageField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class LotCrudController extends AbstractCrudController
 {
@@ -28,7 +28,10 @@ class LotCrudController extends AbstractCrudController
 
             TextField::new('name'),
             TextEditorField::new('description'),
-            ImageField::new('image')->setBasePath('public/uploads/images/')->setUploadDir('public/uploads/images/')->setLabel('Uploader Image')->setRequired(false),
+            ImageField::new('image', 'Image actuelle')->setBasePath('public/uploads/images/')->hideOnForm(),
+
+            TextField::new('imageFile')->setFormType(VichImageType::class)->onlyOnForms(),
+            //ImageField::new('imageFile')->setBasePath('/uploads/images/')->setUploadDir('public/uploads/images/')->setLabel('Uploader Image')->setRequired(false)->onlyOnForms()->setFormType(VichFileType::class),
             //->setUploadedFileNamePattern('[year]/[month]/[day].[extension]'),
             NumberField::new('prix'),
             AssociationField::new('cat')->autocomplete(),

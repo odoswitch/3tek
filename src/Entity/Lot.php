@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Vich\UploadableField;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LotRepository;
@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: LotRepository::class)]
 class Lot
@@ -27,10 +28,17 @@ class Lot
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
-    /**
-     * @Vich\UploadableField(mapping: 'lot_image', fileNameProperty: 'imageFile')
-     * 
+
+
+
+    #[Vich\UploadableField(mapping: 'lot_images', fileNameProperty: 'image')]
+
+    /** 
+     * @Vich\UploadableField(mapping: 'lot_images', fileNameProperty: 'image')
      */
+
+
+
     private ?File $imageFile = null;
 
 
@@ -139,5 +147,31 @@ class Lot
         $this->prix = $prix;
 
         return $this;
+    }
+
+
+    /**
+     * Getter pour le fichier uploadé (temporaire).
+     * @return File|null
+     */
+
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * Setter pour le fichier uploadé (temporaire).
+     * Si un fichier est fourni, met à jour la date de modification
+     * pour déclencher les listeners de Vich.
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        // TRÈS IMPORTANT : Mettre à jour un champ mappé si un nouveau fichier est fourni.
+        // Cela force Doctrine à détecter un changement et à déclencher les listeners de Vich.
+
     }
 }
