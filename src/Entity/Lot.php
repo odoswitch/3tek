@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\LotRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Vich\UploadableField;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LotRepository;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: LotRepository::class)]
@@ -25,6 +27,13 @@ class Lot
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+    /**
+     * @Vich\UploadableField(mapping: 'lot_image', fileNameProperty: 'imageFile')
+     * 
+     */
+    private ?File $imageFile = null;
+
+
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Category $cat = null;

@@ -25,10 +25,10 @@ class LotCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            
+
             TextField::new('name'),
             TextEditorField::new('description'),
-            ImageField::new('image')->setBasePath('public/uploads/images/')->setUploadDir('public/uploads/images/'),
+            ImageField::new('image')->setBasePath('public/uploads/images/')->setUploadDir('public/uploads/images/')->setLabel('Uploader Image')->setRequired(false),
             //->setUploadedFileNamePattern('[year]/[month]/[day].[extension]'),
             NumberField::new('prix'),
             AssociationField::new('cat')->autocomplete(),
