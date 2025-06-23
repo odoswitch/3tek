@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Lot;
 
-
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -29,10 +28,9 @@ class LotCrudController extends AbstractCrudController
             TextField::new('name'),
             TextEditorField::new('description'),
             ImageField::new('image', 'Image actuelle')->setBasePath('public/uploads/images/')->hideOnForm(),
-
             TextField::new('imageFile')->setFormType(VichImageType::class)->onlyOnForms(),
             //ImageField::new('imageFile')->setBasePath('/uploads/images/')->setUploadDir('public/uploads/images/')->setLabel('Uploader Image')->setRequired(false)->onlyOnForms()->setFormType(VichFileType::class),
-            //->setUploadedFileNamePattern('[year]/[month]/[day].[extension]'),
+           
             NumberField::new('prix'),
             AssociationField::new('cat')->autocomplete(),
             AssociationField::new('types'),

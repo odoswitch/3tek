@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+##use Assert\Type;
+use App\Entity\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LotRepository;
@@ -12,7 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 
+
 #[ORM\Entity(repositoryClass: LotRepository::class)]
+#[Vich\Uploadable]
 class Lot
 {
     #[ORM\Id]
@@ -26,19 +30,15 @@ class Lot
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
+ 
     private ?string $image = null;
 
 
 
+    
     #[Vich\UploadableField(mapping: 'lot_images', fileNameProperty: 'image')]
-
-    /** 
-     * @Vich\UploadableField(mapping: 'lot_images', fileNameProperty: 'image')
-     */
-
-
-
+    ##[ORM\Column(nullable: true)]
     private ?File $imageFile = null;
 
 
@@ -161,10 +161,12 @@ class Lot
         return $this->imageFile;
     }
 
-    /**
-     * Setter pour le fichier uploadé (temporaire).
-     * Si un fichier est fourni, met à jour la date de modification
-     * pour déclencher les listeners de Vich.
+   
+     /**
+     * If manually uploading a file (i.e. not using Symfony Form's UploadedFile representation),
+     * this must be called to ensure that the file's contents are permanently saved to disk.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {
