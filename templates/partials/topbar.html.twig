@@ -42,7 +42,8 @@
     <div class="d-flex">
 
       <div class="dropdown d-inline-block d-lg-none ms-2">
-        <button type="button" class="btn header-item" id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn header-item" id="page-header-search-dropdown" data-bs-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           <i data-feather="search" class="icon-lg"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-search-dropdown">
@@ -50,7 +51,8 @@
           <form class="p-3">
             <div class="form-group m-0">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..." aria-label="Search Result">
+                <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..."
+                  aria-label="Search Result">
 
                 <button class="btn btn-primary" type="submit">
                   <i class="mdi mdi-magnify"></i>
@@ -62,61 +64,62 @@
       </div>
 
       <div class="dropdown d-none d-sm-inline-block">
-        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
           {% if app.request.locale == 'en' %}
-            <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
           {% elseif app.request.locale == 'es' %}
-            <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
           {% elseif app.request.locale == 'de' %}
-            <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16">
           {% elseif app.request.locale == 'it' %}
-            <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16">
           {% elseif app.request.locale == 'ru' %}
-            <img class="header-lang-img" src="/images/flags/russia.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/russia.jpg" alt="Header Language" height="16">
           {% else %}
-            <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+          <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
           {% endif %}
         </button>
         <div class="dropdown-menu dropdown-menu-end">
 
           {% if app.request.locale != 'en' %}
-            <!-- item-->
-            <a href="lang/en" class="dropdown-item notify-item language" data-lang="eng">
-              <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12">
-              <span class="align-middle">English</span>
-            </a>
+          <!-- item-->
+          <a href="lang/en" class="dropdown-item notify-item language" data-lang="eng">
+            <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12">
+            <span class="align-middle">English</span>
+          </a>
           {% endif %}
 
           {% if app.request.locale != 'es' %}
-            <!-- item-->
-            <a href="lang/es" class="dropdown-item notify-item language" data-lang="sp">
-              <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12">
-              <span class="align-middle">Spanish</span>
-            </a>
+          <!-- item-->
+          <a href="lang/es" class="dropdown-item notify-item language" data-lang="sp">
+            <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12">
+            <span class="align-middle">Spanish</span>
+          </a>
           {% endif %}
 
           {% if app.request.locale != 'de' %}
-            <!-- item-->
-            <a href="lang/de" class="dropdown-item notify-item language" data-lang="gr">
-              <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12">
-              <span class="align-middle">German</span>
-            </a>
+          <!-- item-->
+          <a href="lang/de" class="dropdown-item notify-item language" data-lang="gr">
+            <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12">
+            <span class="align-middle">German</span>
+          </a>
           {% endif %}
 
           {% if app.request.locale != 'it' %}
-            <!-- item-->
-            <a href="lang/it" class="dropdown-item notify-item language" data-lang="it">
-              <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12">
-              <span class="align-middle">Italian</span>
-            </a>
+          <!-- item-->
+          <a href="lang/it" class="dropdown-item notify-item language" data-lang="it">
+            <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12">
+            <span class="align-middle">Italian</span>
+          </a>
           {% endif %}
 
           {% if app.request.locale != 'ru' %}
-            <!-- item-->
-            <a href="lang/ru" class="dropdown-item notify-item language" data-lang="ru">
-              <img src="/images/flags/russia.jpg" alt="user-image" class="me-1" height="12">
-              <span class="align-middle">Russian</span>
-            </a>
+          <!-- item-->
+          <a href="lang/ru" class="dropdown-item notify-item language" data-lang="ru">
+            <img src="/images/flags/russia.jpg" alt="user-image" class="me-1" height="12">
+            <span class="align-middle">Russian</span>
+          </a>
           {% endif %}
 
         </div>
@@ -130,7 +133,8 @@
       </div>
 
       <div class="dropdown d-none d-lg-inline-block ms-1">
-        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
           <i data-feather="grid" class="icon-lg"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -181,11 +185,13 @@
       </div>
 
       <div class="dropdown d-inline-block">
-        <button type="button" class="btn header-item noti-icon position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn header-item noti-icon position-relative"
+          id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i data-feather="bell" class="icon-lg"></i>
           <span class="badge bg-danger rounded-pill">5</span>
         </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+          aria-labelledby="page-header-notifications-dropdown">
           <div class="p-3">
             <div class="row align-items-center">
               <div class="col">
@@ -213,7 +219,8 @@
                     </p>
                     <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}1 hour ago{% endtrans %}</span></p>
+                      <span>{% trans %}1 hour ago{% endtrans %}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -229,10 +236,11 @@
                   <h6 class="mb-1">{% trans %}Your order is placed{% endtrans %}</h6>
                   <div class="font-size-13 text-muted">
                     <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans
- %}</p>
+                      %}</p>
                     <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}3 min ago{% endtrans %}</span></p>
+                      <span>{% trans %}3 min ago{% endtrans %}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -248,10 +256,11 @@
                   <h6 class="mb-1">{% trans %}Your item is shipped{% endtrans %}</h6>
                   <div class="font-size-13 text-muted">
                     <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans
- %}</p>
+                      %}</p>
                     <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}3 min ago{% endtrans %}</span></p>
+                      <span>{% trans %}3 min ago{% endtrans %}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -268,7 +277,8 @@
                     <p class="mb-1">{% trans %}As a skeptical Cambridge friend of mine occidental{% endtrans %}.</p>
                     <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}1 hour ago{% endtrans %}</span></p>
+                      <span>{% trans %}1 hour ago{% endtrans %}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -278,7 +288,7 @@
             <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
               <i class="mdi mdi-arrow-right-circle me-1"></i>
               <span>{% trans %}View More{% endtrans
- %}..</span>
+                %}..</span>
             </a>
           </div>
         </div>
@@ -291,9 +301,11 @@
       </div>
 
       <div class="dropdown d-inline-block">
-        <button type="button" class="btn header-item bg-light-subtle border-start border-end" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn header-item bg-light-subtle border-start border-end"
+          id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img class="rounded-circle header-profile-user" src="/images/users/avatar-1.jpg" alt="Header Avatar">
-          <span class="d-none d-xl-inline-block ms-1 fw-medium">{% trans %}Shawn L{% endtrans %}</span>
+          <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ app.user.lastname|capitalize }}
+          </span>
           <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-end">
@@ -304,12 +316,12 @@
           <a class="dropdown-item" href="auth-lock-screen">
             <i class="mdi mdi-lock font-size-16 align-middle me-1"></i>
             {% trans %}Lock Screen{% endtrans
- %}</a>
+            %}</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ path('app_logout') }}">
             <i class="mdi mdi-logout font-size-16 align-middle me-1"></i>
             {% trans %}Logout{% endtrans
- %}</a>
+            %}</a>
         </div>
       </div>
 

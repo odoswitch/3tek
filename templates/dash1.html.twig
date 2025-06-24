@@ -32,8 +32,8 @@
 
 
               {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-              <h5 class="card-title">Votre Espace : {{ app.user.name|capitalize }}
-                <span class="text-muted fw-normal ms-2">(535)</span>
+              <h5 class="card-title">Votre Espace : {{ app.user.name|upper }}
+                <span class="text-muted fw-normal ms-2">{{ app.user.lastname|capitalize }}</span>
               </h5>
               {% endif %}
             </div>
@@ -44,14 +44,12 @@
               <div>
                 <ul class="nav nav-pills">
                   <li class="nav-item">
-                    <a class="nav-link" href="apps-blog-list.html" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="List">
+                    <a class="nav-link" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="List">
                       <i class="bx bx-list-ul"></i>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="apps-blog-grid.html" data-bs-toggle="tooltip"
-                      data-bs-placement="top" title="Grid">
+                    <a class="nav-link active" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Grid">
                       <i class="bx bx-grid-alt"></i>
                     </a>
                   </li>
@@ -60,7 +58,7 @@
               <div>
                 <a href="#" class="btn btn-light">
                   <i class="bx bx-plus me-1"></i>
-                  Add New</a>
+                  Ajout panier</a>
               </div>
 
               <div class="dropdown">
@@ -95,7 +93,7 @@
                 <img src="/uploads/images/{{item.image}}" alt="" class="img-fluid">
               </div>
               <div class="card-body">
-                <p class="text-muted mb-2">10 Apr, 2022</p>
+                <p class="text-muted mb-2">{{"now"|date}}</p>
                 <h5 class="">
                   <a href="#" class="text-body">{{item.name|upper }}</a>
                 </h5>

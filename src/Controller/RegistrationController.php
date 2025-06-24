@@ -43,11 +43,11 @@ class RegistrationController extends AbstractController
 
             //test envoie mail
 
-            $email = (new Email())->from('test@odoip.fr')
-                ->to('info@odoip.fr')
-                ->cc('congocrei2000@gmail.com')
-                ->replyTo('info@odoip.fr')
-                ->subject('NGAMBA TEST MAIl')
+            $email = (new Email())->from('noreply@3tek-europe.com')
+                ->to('noreply@3tek-europe.com')
+                ->cc('contact@3tek-europe.com')
+                //->replyTo('info@odoip.fr')
+                ->subject('ENREGISTREMENT')
                 ->text('Bonjour si vous avez reçu ce message cela veut dire tout est ok pour enregistrement')
                 ->html('<h2>Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur la partir dsn</h2>');
             $mailer->send($email);
@@ -57,7 +57,7 @@ class RegistrationController extends AbstractController
                 'app_verify_email',
                 $user,
                 (new TemplatedEmail())
-                    ->from(new Address('info@odoip.fr', '3Tek-Europe'))
+                    ->from(new Address('noreply@3tek-europe.com', '3Tek-Europe'))
                     ->to((string) $user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
