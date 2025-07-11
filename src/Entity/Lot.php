@@ -31,19 +31,20 @@ class Lot
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
- 
+
     private ?string $image = null;
 
 
 
-    
+
     #[Vich\UploadableField(mapping: 'lot_images', fileNameProperty: 'image')]
     ##[ORM\Column(nullable: true)]
     private ?File $imageFile = null;
 
 
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    ##[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'lots')]
     private ?Category $cat = null;
 
     /**
@@ -161,8 +162,8 @@ class Lot
         return $this->imageFile;
     }
 
-   
-     /**
+
+    /**
      * If manually uploading a file (i.e. not using Symfony Form's UploadedFile representation),
      * this must be called to ensure that the file's contents are permanently saved to disk.
      *

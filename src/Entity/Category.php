@@ -24,9 +24,17 @@ class Category
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'categorie')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Lot>
+     */
+    #[ORM\OneToMany(targetEntity: Lot::class, mappedBy: 'categorie')]
+    private Collection $lots;
+
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->lots = new ArrayCollection();
     }
     public function __toString()
     {
@@ -76,4 +84,34 @@ class Category
 
         return $this;
     }
+    /**
+     * @return Collection<int, Lot>
+     */
+    public function getLots(): Collection
+    {
+        return $this->lots;
+    }
+
+    public function addLot(Lot $lot): static
+    {
+        if (!$this->lots->contains($lot)) {
+            $this->lots->add($lot);
+            $lot->setCat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLot(Lot $lot): static
+    {
+        if ($this->lots->removeElement($lot)) {
+            // set the owning side to null (unless already changed)
+            if ($lot->getCat() === $this) {
+                $lot->setCat(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
