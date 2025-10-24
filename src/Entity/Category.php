@@ -27,7 +27,7 @@ class Category
     /**
      * @var Collection<int, Lot>
      */
-    #[ORM\OneToMany(targetEntity: Lot::class, mappedBy: 'categorie')]
+    #[ORM\OneToMany(targetEntity: Lot::class, mappedBy: 'cat')]
     private Collection $lots;
 
 
