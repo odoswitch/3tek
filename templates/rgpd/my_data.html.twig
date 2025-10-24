@@ -1,0 +1,183 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', {title: 'Mes données personnelles'}) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/topbar.html.twig') }}
+        {{ include('partials/sidebar.html.twig') }}
+
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    {{ include('partials/page-title.html.twig', {
+                        pagetitle: 'RGPD',
+                        title: 'Mes données personnelles'
+                    }) }}
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4">Données stockées</h4>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <th width="30%">Email</th>
+                                                    <td>{{ user.email }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <td>{{ user.name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Prénom</th>
+                                                    <td>{{ user.lastname }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Téléphone</th>
+                                                    <td>{{ user.phone }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Bureau</th>
+                                                    <td>{{ user.office }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Catégories</th>
+                                                    <td>
+                                                        {% if user.categorie|length > 0 %}
+                                                            {% for cat in user.categorie %}
+                                                                <span class="badge bg-info">{{ cat.name }}</span>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            Non définie
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Type de client</th>
+                                                    <td>{{ user.type ? user.type.name : 'Non défini' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Compte vérifié</th>
+                                                    <td>
+                                                        {% if user.isVerified %}
+                                                            <span class="badge bg-success">Oui</span>
+                                                        {% else %}
+                                                            <span class="badge bg-warning">Non</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nombre de commandes</th>
+                                                    <td>{{ user.commandes|length }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nombre de favoris</th>
+                                                    <td>{{ user.favoris|length }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="alert alert-info mt-3">
+                                        <i class="mdi mdi-information me-2"></i>
+                                        Ces données sont utilisées uniquement pour gérer votre compte et vos commandes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4">Actions RGPD</h4>
+
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">
+                                            <i class="bx bx-edit me-1"></i> Modifier mes données
+                                        </a>
+
+                                        <a href="{{ path('app_export_data') }}" class="btn btn-info">
+                                            <i class="bx bx-download me-1"></i> Exporter mes données
+                                        </a>
+
+                                        <a href="{{ path('app_privacy_policy') }}" class="btn btn-secondary">
+                                            <i class="bx bx-shield me-1"></i> Politique de confidentialité
+                                        </a>
+
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                            <i class="bx bx-trash me-1"></i> Supprimer mon compte
+                                        </button>
+                                    </div>
+
+                                    <div class="alert alert-warning mt-3">
+                                        <small>
+                                            <strong>Session automatique :</strong><br>
+                                            Votre session expire après 15 minutes d'inactivité pour votre sécurité.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Vos droits RGPD</h5>
+                                    <ul class="list-unstyled">
+                                        <li><i class="mdi mdi-check text-success me-2"></i> Droit d'accès</li>
+                                        <li><i class="mdi mdi-check text-success me-2"></i> Droit de rectification</li>
+                                        <li><i class="mdi mdi-check text-success me-2"></i> Droit à l'effacement</li>
+                                        <li><i class="mdi mdi-check text-success me-2"></i> Droit à la portabilité</li>
+                                        <li><i class="mdi mdi-check text-success me-2"></i> Droit d'opposition</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Supprimer mon compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="bx bx-error-circle me-2"></i>
+                        <strong>Attention !</strong> Cette action est irréversible.
+                    </div>
+                    <p>En supprimant votre compte :</p>
+                    <ul>
+                        <li>Vos données personnelles seront anonymisées</li>
+                        <li>Vous ne pourrez plus accéder à votre compte</li>
+                        <li>Votre historique de commandes sera conservé (obligation légale)</li>
+                    </ul>
+                    <p><strong>Êtes-vous sûr de vouloir continuer ?</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <a href="{{ path('app_delete_account') }}" class="btn btn-danger">
+                        Oui, supprimer mon compte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+</body>
+</html>

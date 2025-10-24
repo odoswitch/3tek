@@ -22,6 +22,11 @@ class FavoriController extends AbstractController
     public function index(FavoriRepository $favoriRepository): Response
     {
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $favoris = $favoriRepository->findByUser($user);
 
         return $this->render('favori/index.html.twig', [
@@ -40,6 +45,10 @@ class FavoriController extends AbstractController
         }
 
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
 
         // Vérifier si le lot est déjà en favori
         $existingFavori = $this->entityManager->getRepository(Favori::class)->findOneBy([

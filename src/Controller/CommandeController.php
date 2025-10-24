@@ -71,6 +71,11 @@ class CommandeController extends AbstractController
     public function mesCommandes(): Response
     {
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $commandes = $user->getCommandes();
 
         return $this->render('commande/list.html.twig', [

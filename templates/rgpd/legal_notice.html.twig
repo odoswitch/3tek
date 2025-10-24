@@ -1,0 +1,97 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', {title: 'Mentions légales'}) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/topbar.html.twig') }}
+        {{ include('partials/sidebar.html.twig') }}
+
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    {{ include('partials/page-title.html.twig', {
+                        pagetitle: 'Informations légales',
+                        title: 'Mentions légales'
+                    }) }}
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4">Informations légales</h4>
+
+                                    <div class="legal-content">
+                                        <h5>1. Éditeur du site</h5>
+                                        <p>
+                                            <strong>3Tek-Europe</strong><br>
+                                            Votre partenaire en équipements professionnels<br>
+                                            Email : contact@3tek-europe.com<br>
+                                            Téléphone : +33 1 83 61 18 36
+                                        </p>
+
+                                        <h5>2. Hébergement</h5>
+                                        <p>
+                                            Le site est hébergé par :<br>
+                                            <strong>[Nom de l'hébergeur]</strong><br>
+                                            [Adresse de l'hébergeur]
+                                        </p>
+
+                                        <h5>3. Propriété intellectuelle</h5>
+                                        <p>
+                                            L'ensemble du contenu de ce site (textes, images, logos, vidéos) est la propriété exclusive de 3Tek-Europe.
+                                            Toute reproduction, même partielle, est interdite sans autorisation préalable.
+                                        </p>
+
+                                        <h5>4. Données personnelles</h5>
+                                        <p>
+                                            Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles.
+                                            Pour plus d'informations, consultez notre <a href="{{ path('app_privacy_policy') }}">politique de confidentialité</a>.
+                                        </p>
+
+                                        <h5>5. Cookies</h5>
+                                        <p>
+                                            Ce site utilise uniquement des cookies essentiels au fonctionnement de la plateforme (session, panier, sécurité).
+                                            Aucun cookie publicitaire ou de tracking n'est utilisé.
+                                        </p>
+
+                                        <h5>6. Responsabilité</h5>
+                                        <p>
+                                            3Tek-Europe s'efforce d'assurer l'exactitude des informations diffusées sur ce site.
+                                            Toutefois, nous ne pouvons garantir l'absence d'erreurs ou d'omissions.
+                                        </p>
+
+                                        <h5>7. Liens hypertextes</h5>
+                                        <p>
+                                            Les liens hypertextes présents sur ce site peuvent renvoyer vers des sites tiers.
+                                            3Tek-Europe n'est pas responsable du contenu de ces sites externes.
+                                        </p>
+
+                                        <h5>8. Droit applicable</h5>
+                                        <p>
+                                            Les présentes mentions légales sont régies par le droit français.
+                                            Tout litige sera soumis aux tribunaux compétents.
+                                        </p>
+
+                                        <p class="text-muted mt-4">
+                                            <small>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+</body>
+</html>

@@ -10,6 +10,7 @@ services:
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - DATABASE_URL=${DATABASE_URL}
+      - TZ=Europe/Paris
     depends_on:
       - database
     networks:
@@ -37,6 +38,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!}
       MYSQL_USER: ${MYSQL_USER:-app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!}
+      TZ: Europe/Paris
+    command: --default-time-zone='+01:00'
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 5s

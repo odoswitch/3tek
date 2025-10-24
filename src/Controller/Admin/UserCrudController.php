@@ -3,18 +3,28 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private UserPasswordHasherInterface $passwordHasher
+    ) {
+    }
+
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -24,24 +34,104 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-
             FormField::addTab('Information client'),
-
-            TextField::new('office', 'Votre Entreprise'),
-            EmailField::new('email', 'Adresse Mail associé'),
-
+            
+            IdField::new('id')->onlyOnIndex(),
+            TextField::new('office', 'Entreprise'),
+            EmailField::new('email', 'Email'),
             TextField::new('lastname', 'Prénom'),
             TextField::new('name', 'Nom'),
-            ArrayField::new('roles'),
-            BooleanField::new('isverified', 'Mail verifié'),
+            TextField::new('phone', 'Téléphone'),
+            
+            // Champ mot de passe (uniquement en création et édition)
+            TextField::new('plainPassword', 'Nouveau mot de passe')
+                ->setFormType(PasswordType::class)
+                ->setRequired(false)
+                ->onlyOnForms()
+                ->setHelp('Laissez vide pour conserver le mot de passe actuel'),
+            
+            // Champ rôles avec choix multiples
+            ChoiceField::new('roles', 'Rôles')
+                ->setChoices([
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
+                ])
+                ->allowMultipleChoices()
+                ->renderExpanded()
+                ->setHelp('Sélectionnez les rôles de l\'utilisateur'),
+            
+            BooleanField::new('isVerified', 'Email vérifié'),
+            
             FormField::addTab('Adresse Client'),
-            TextField::new('address', 'Adresse Postale'),
-            TextField::new('code', 'Code Postale'),
-            TextField::new('ville', 'Votre ville'),
+            TextField::new('address', 'Adresse')->hideOnIndex(),
+            TextField::new('code', 'Code Postal')->hideOnIndex(),
+            TextField::new('ville', 'Ville')->hideOnIndex(),
+            
             FormField::addTab('Type Compte'),
-            AssociationField::new('type', 'Type Client')->autocomplete(),
-            AssociationField::new('categorie', 'Centres d\'intérêt')->autocomplete(),
-
+            AssociationField::new('type', 'Type Client')
+                ->autocomplete()
+                ->setHelp('Type de client (Grossiste, Détaillant, etc.)'),
+            AssociationField::new('categorie', 'Catégories')
+                ->autocomplete()
+                ->setHelp('Catégories de produits accessibles'),
         ];
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if ($entityInstance instanceof User) {
+            // Hasher le mot de passe si fourni
+            if ($entityInstance->getPlainPassword()) {
+                $hashedPassword = $this->passwordHasher->hashPassword(
+                    $entityInstance,
+                    $entityInstance->getPlainPassword()
+                );
+                $entityInstance->setPassword($hashedPassword);
+            }
+            
+            // S'assurer que ROLE_USER est toujours présent
+            $roles = $entityInstance->getRoles();
+            if (!in_array('ROLE_USER', $roles)) {
+                $roles[] = 'ROLE_USER';
+                $entityInstance->setRoles($roles);
+            }
+        }
+
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if ($entityInstance instanceof User) {
+            // Hasher le mot de passe si un nouveau est fourni
+            if ($entityInstance->getPlainPassword()) {
+                $hashedPassword = $this->passwordHasher->hashPassword(
+                    $entityInstance,
+                    $entityInstance->getPlainPassword()
+                );
+                $entityInstance->setPassword($hashedPassword);
+            }
+            
+            // S'assurer que ROLE_USER est toujours présent
+            $roles = $entityInstance->getRoles();
+            if (!in_array('ROLE_USER', $roles)) {
+                $roles[] = 'ROLE_USER';
+                $entityInstance->setRoles($roles);
+            }
+        }
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Utilisateur')
+            ->setEntityLabelInPlural('Utilisateurs')
+            ->setPageTitle('index', 'Gestion des utilisateurs')
+            ->setPageTitle('new', 'Créer un utilisateur')
+            ->setPageTitle('edit', 'Modifier l\'utilisateur')
+            ->setPageTitle('detail', 'Détails de l\'utilisateur')
+            ->setDefaultSort(['id' => 'DESC']);
     }
 }

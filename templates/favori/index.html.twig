@@ -52,32 +52,34 @@
                             <div class="col-xl-4 col-sm-6 mb-4">
                                 <div class="card h-100">
                                     <div class="position-relative">
-                                        {% if favori.lot.images|length > 0 %}
-                                            <img src="{{ vich_uploader_asset(favori.lot.images[0], 'imageFile') }}" 
-                                                 alt="{{ favori.lot.name }}" 
-                                                 class="img-fluid" 
-                                                 style="height: 250px; object-fit: cover; width: 100%; {% if favori.lot.quantite == 0 %}opacity: 0.5; filter: grayscale(50%);{% endif %}">
-                                            {% if favori.lot.quantite == 0 %}
-                                                <div class="position-absolute top-50 start-50 translate-middle">
-                                                    <span class="badge bg-danger font-size-16 px-3 py-2">
-                                                        <i class="bx bx-x-circle"></i> RUPTURE DE STOCK
+                                        <a href="{{ path('app_lot_view', {id: favori.lot.id}) }}" class="d-block" style="cursor: pointer; overflow: hidden;">
+                                            {% if favori.lot.images|length > 0 %}
+                                                <img src="{{ vich_uploader_asset(favori.lot.images[0], 'imageFile') }}" 
+                                                     alt="{{ favori.lot.name }}" 
+                                                     class="img-fluid favori-image" 
+                                                     style="height: 250px; object-fit: cover; width: 100%; transition: transform 0.3s ease; {% if favori.lot.quantite == 0 %}opacity: 0.5; filter: grayscale(50%);{% endif %}">
+                                                {% if favori.lot.quantite == 0 %}
+                                                    <div class="position-absolute top-50 start-50 translate-middle">
+                                                        <span class="badge bg-danger font-size-16 px-3 py-2">
+                                                            <i class="bx bx-x-circle"></i> RUPTURE DE STOCK
+                                                        </span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if favori.lot.images|length > 1 %}
+                                                    <span class="badge bg-primary position-absolute" style="top: 10px; right: 10px;">
+                                                        <i class="bx bx-images"></i> {{ favori.lot.images|length }} photos
                                                     </span>
+                                                {% endif %}
+                                            {% else %}
+                                                <div class="text-center py-5 bg-light">
+                                                    <i class="bx bx-image font-size-48 text-muted"></i>
+                                                    <p class="text-muted mt-2">Aucune image</p>
                                                 </div>
                                             {% endif %}
-                                            {% if favori.lot.images|length > 1 %}
-                                                <span class="badge bg-primary position-absolute" style="top: 10px; right: 10px;">
-                                                    <i class="bx bx-images"></i> {{ favori.lot.images|length }} photos
-                                                </span>
-                                            {% endif %}
-                                        {% else %}
-                                            <div class="text-center py-5 bg-light">
-                                                <i class="bx bx-image font-size-48 text-muted"></i>
-                                                <p class="text-muted mt-2">Aucune image</p>
-                                            </div>
-                                        {% endif %}
+                                        </a>
                                         <a href="{{ path('app_favori_remove', {id: favori.id}) }}" 
                                            class="btn btn-danger btn-sm position-absolute" 
-                                           style="top: 10px; left: 10px;"
+                                           style="top: 10px; left: 10px; z-index: 10;"
                                            onclick="return confirm('Retirer ce lot de vos favoris ?')">
                                             <i class="bx bxs-heart"></i>
                                         </a>
@@ -126,5 +128,22 @@
     {{ include('partials/right-sidebar.html.twig') }}
     {{ include('partials/vendor-scripts.html.twig') }}
     <script src="/js/app.js"></script>
+    
+    <style>
+        /* Effet zoom sur l'image au survol */
+        .favori-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Effet sur la carte au survol */
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+    </style>
 </body>
 </html>

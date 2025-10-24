@@ -32,6 +32,10 @@ class PanierController extends AbstractController
     public function index(PanierRepository $panierRepository): Response
     {
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         $items = $panierRepository->findByUser($user);
         $total = $panierRepository->getTotalByUser($user);
 
@@ -57,6 +61,11 @@ class PanierController extends AbstractController
         }
 
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $quantite = (int) $request->request->get('quantite', 1);
 
         if ($quantite > $lot->getQuantite()) {
@@ -131,6 +140,11 @@ class PanierController extends AbstractController
     public function valider(PanierRepository $panierRepository, UserRepository $userRepository): Response
     {
         $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $items = $panierRepository->findByUser($user);
 
         if (empty($items)) {

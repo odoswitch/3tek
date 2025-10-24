@@ -35,20 +35,20 @@ class LotController extends AbstractController
             $lots = $lotRepository->findAll();
         } else {
             // Utilisateur normal : filtrer par catégorie et type
-            if (!$user || !$user->getCategorie() || !$user->getType()) {
+            if (!$user || $user->getCategorie()->isEmpty() || !$user->getType()) {
                 // Si pas de catégorie ou type, aucun lot
                 $lots = [];
             } else {
-                // Filtrer les lots selon la catégorie et le type de l'utilisateur
+                // Filtrer les lots selon les catégories et le type de l'utilisateur
                 $lots = $lotRepository->createQueryBuilder('l')
                     ->leftJoin('l.images', 'images')
                     ->addSelect('images')
                     ->leftJoin('l.types', 'lt')
                     ->addSelect('lt')
-                    ->where('l.cat = :categorie')
+                    ->where('l.cat IN (:categories)')
                     ->andWhere(':userType MEMBER OF l.types')
                     ->andWhere('l.quantite > 0')
-                    ->setParameter('categorie', $user->getCategorie())
+                    ->setParameter('categories', $user->getCategorie())
                     ->setParameter('userType', $user->getType())
                     ->orderBy('l.quantite', 'DESC')
                     ->addOrderBy('l.id', 'DESC')

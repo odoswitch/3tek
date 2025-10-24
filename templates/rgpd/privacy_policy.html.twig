@@ -1,0 +1,135 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', {title: 'Politique de confidentialité'}) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/topbar.html.twig') }}
+        {{ include('partials/sidebar.html.twig') }}
+
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    {{ include('partials/page-title.html.twig', {
+                        pagetitle: 'RGPD',
+                        title: 'Politique de confidentialité'
+                    }) }}
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4">Protection de vos données personnelles</h4>
+
+                                    <div class="privacy-content">
+                                        <h5>1. Responsable du traitement</h5>
+                                        <p>
+                                            <strong>3Tek-Europe</strong><br>
+                                            Email : contact@3tek-europe.com<br>
+                                            Téléphone : +33 1 83 61 18 36
+                                        </p>
+
+                                        <h5>2. Données collectées</h5>
+                                        <p>Nous collectons les données suivantes :</p>
+                                        <ul>
+                                            <li><strong>Données d'identification :</strong> Nom, prénom, email</li>
+                                            <li><strong>Données de contact :</strong> Numéro de téléphone, bureau</li>
+                                            <li><strong>Données de profil :</strong> Catégorie client, type de client</li>
+                                            <li><strong>Données de commande :</strong> Historique des commandes, montants</li>
+                                            <li><strong>Données de navigation :</strong> Cookies de session</li>
+                                        </ul>
+
+                                        <h5>3. Finalités du traitement</h5>
+                                        <p>Vos données sont utilisées pour :</p>
+                                        <ul>
+                                            <li>Gérer votre compte client</li>
+                                            <li>Traiter vos commandes</li>
+                                            <li>Vous envoyer des notifications sur les nouveaux lots</li>
+                                            <li>Assurer la sécurité de notre plateforme</li>
+                                            <li>Respecter nos obligations légales</li>
+                                        </ul>
+
+                                        <h5>4. Base légale</h5>
+                                        <p>Le traitement de vos données repose sur :</p>
+                                        <ul>
+                                            <li><strong>Votre consentement</strong> lors de la création de votre compte</li>
+                                            <li><strong>L'exécution du contrat</strong> pour le traitement des commandes</li>
+                                            <li><strong>Notre intérêt légitime</strong> pour la sécurité de la plateforme</li>
+                                        </ul>
+
+                                        <h5>5. Durée de conservation</h5>
+                                        <p>Vos données sont conservées :</p>
+                                        <ul>
+                                            <li><strong>Compte actif :</strong> Pendant toute la durée d'utilisation</li>
+                                            <li><strong>Compte inactif :</strong> 3 ans après la dernière connexion</li>
+                                            <li><strong>Données de commande :</strong> 10 ans (obligation légale)</li>
+                                        </ul>
+
+                                        <h5>6. Vos droits</h5>
+                                        <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                                        <ul>
+                                            <li><strong>Droit d'accès :</strong> Consulter vos données (<a href="{{ path('app_my_data') }}">Mes données</a>)</li>
+                                            <li><strong>Droit de rectification :</strong> Modifier vos informations (<a href="{{ path('app_profile') }}">Mon profil</a>)</li>
+                                            <li><strong>Droit à l'effacement :</strong> Supprimer votre compte (<a href="{{ path('app_delete_account') }}">Supprimer mon compte</a>)</li>
+                                            <li><strong>Droit à la portabilité :</strong> Exporter vos données (<a href="{{ path('app_export_data') }}">Exporter</a>)</li>
+                                            <li><strong>Droit d'opposition :</strong> Refuser certains traitements</li>
+                                            <li><strong>Droit de limitation :</strong> Limiter l'utilisation de vos données</li>
+                                        </ul>
+
+                                        <h5>7. Sécurité</h5>
+                                        <p>Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger vos données :</p>
+                                        <ul>
+                                            <li>Chiffrement des mots de passe</li>
+                                            <li>Connexion HTTPS sécurisée</li>
+                                            <li>Déconnexion automatique après 15 minutes d'inactivité</li>
+                                            <li>Accès restreint aux données personnelles</li>
+                                        </ul>
+
+                                        <h5>8. Cookies</h5>
+                                        <p>Nous utilisons uniquement des cookies essentiels pour :</p>
+                                        <ul>
+                                            <li>Maintenir votre session de connexion</li>
+                                            <li>Mémoriser votre panier</li>
+                                            <li>Assurer la sécurité (CSRF)</li>
+                                        </ul>
+
+                                        <h5>9. Partage des données</h5>
+                                        <p>Vos données ne sont <strong>jamais vendues</strong> à des tiers. Elles peuvent être partagées uniquement avec :</p>
+                                        <ul>
+                                            <li>Nos prestataires techniques (hébergement)</li>
+                                            <li>Les autorités légales sur demande judiciaire</li>
+                                        </ul>
+
+                                        <h5>10. Contact et réclamation</h5>
+                                        <p>
+                                            Pour exercer vos droits ou pour toute question :<br>
+                                            <strong>Email :</strong> contact@3tek-europe.com<br>
+                                            <strong>Téléphone :</strong> +33 1 83 61 18 36
+                                        </p>
+                                        <p>
+                                            Vous pouvez également introduire une réclamation auprès de la CNIL :<br>
+                                            <a href="https://www.cnil.fr" target="_blank">www.cnil.fr</a>
+                                        </p>
+
+                                        <p class="text-muted mt-4">
+                                            <small>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+</body>
+</html>

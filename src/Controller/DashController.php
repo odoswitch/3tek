@@ -15,7 +15,13 @@ final class DashController extends AbstractController
     #[Route('/dash', name: 'app_dash')]
     public function index(Request $request, LotRepository $lot, PaginatorInterface $paginator): Response
     {
-        $user = $this->getUser()->getid();
+        $currentUser = $this->getUser();
+        
+        if (!$currentUser) {
+            return $this->redirectToRoute('app_login');
+        }
+        
+        $user = $currentUser->getId();
         $page = $request->query->getInt('page', 1);
         $search = $request->query->get('search', '');
 

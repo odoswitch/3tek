@@ -25,7 +25,24 @@ class LotCrudController extends AbstractCrudController
     {
         return [
             TextField::new('name', 'Nom du lot'),
-            TextEditorField::new('description', 'Description'),
+            TextEditorField::new('description', 'Description')
+                ->hideOnIndex()
+                ->setTrixEditorConfig([
+                    'blockAttributes' => [
+                        'default' => ['tagName' => 'p'],
+                        'heading1' => ['tagName' => 'h2'],
+                        'quote' => ['tagName' => 'blockquote'],
+                        'code' => ['tagName' => 'pre'],
+                    ],
+                    'css' => [
+                        'attachment' => 'attachment',
+                    ],
+                ])
+                ->setFormTypeOptions([
+                    'attr' => [
+                        'style' => 'min-height: 300px;',
+                    ],
+                ]),
             NumberField::new('prix', 'Prix (€)'),
             NumberField::new('quantite', 'Quantité en stock')
                 ->setHelp('Nombre d\'unités disponibles. Le lot ne sera plus visible quand la quantité atteint 0.'),

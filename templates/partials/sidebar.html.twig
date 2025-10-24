@@ -45,6 +45,13 @@
           </a>
         </li>
 
+        <li>
+          <a href="{{ path('app_my_data') }}">
+            <i data-feather="shield"></i>
+            <span data-key="t-rgpd">Mes Données (RGPD)</span>
+          </a>
+        </li>
+
         {% if is_granted('ROLE_ADMIN') %}
         <li>
           <a href="{{ path('app_admin') }}">

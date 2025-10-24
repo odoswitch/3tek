@@ -21,21 +21,23 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="product-img position-relative">
-                                    {% if lot.images|length > 0 %}
-                                        <img src="{{ vich_uploader_asset(lot.images[0], 'imageFile') }}" 
-                                             alt="{{ lot.name }}" 
-                                             class="img-fluid mx-auto d-block" 
-                                             style="height: 250px; object-fit: cover; width: 100%;">
-                                        {% if lot.images|length > 1 %}
-                                            <span class="badge bg-primary position-absolute" style="top: 10px; right: 10px;">
-                                                <i class="bx bx-images"></i> {{ lot.images|length }} photos
-                                            </span>
+                                    <a href="{{ path('app_lot_view', {id: lot.id}) }}" class="d-block" style="cursor: pointer;">
+                                        {% if lot.images|length > 0 %}
+                                            <img src="{{ vich_uploader_asset(lot.images[0], 'imageFile') }}" 
+                                                 alt="{{ lot.name }}" 
+                                                 class="img-fluid mx-auto d-block" 
+                                                 style="height: 250px; object-fit: cover; width: 100%; transition: transform 0.3s ease;">
+                                            {% if lot.images|length > 1 %}
+                                                <span class="badge bg-primary position-absolute" style="top: 10px; right: 10px;">
+                                                    <i class="bx bx-images"></i> {{ lot.images|length }} photos
+                                                </span>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="text-center py-5 bg-light">
+                                                <i class="bx bx-image font-size-48 text-muted"></i>
+                                            </div>
                                         {% endif %}
-                                    {% else %}
-                                        <div class="text-center py-5 bg-light">
-                                            <i class="bx bx-image font-size-48 text-muted"></i>
-                                        </div>
-                                    {% endif %}
+                                    </a>
                                 </div>
                                 <div class="mt-4 text-center">
                                     <h5 class="mb-3 text-truncate">
@@ -80,6 +82,29 @@
 
 {{ include('partials/right-sidebar.html.twig') }}
 {{ include('partials/vendor-scripts.html.twig') }}
+
+<style>
+    /* Effet zoom sur l'image au survol */
+    .product-img a:hover img {
+        transform: scale(1.05);
+    }
+    
+    .product-img a {
+        overflow: hidden;
+        display: block;
+        border-radius: 4px;
+    }
+    
+    /* Effet sur la carte au survol */
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+</style>
 
 </body>
 </html>

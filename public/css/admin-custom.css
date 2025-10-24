@@ -722,3 +722,182 @@ body, .wrapper, .content-wrapper, .main-content {
     background: #f3f4f6 !important;
     color: #0066cc !important;
 }
+
+/* Trix Editor - Amélioration de l'éditeur de texte */
+trix-editor {
+    min-height: 300px !important;
+    max-height: 600px !important;
+    overflow-y: auto !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    background: white !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+}
+
+trix-editor:focus {
+    border-color: #0066cc !important;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1) !important;
+    outline: none !important;
+}
+
+/* Toolbar Trix */
+trix-toolbar {
+    background: #f9fafb !important;
+    border: 2px solid #e5e7eb !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 10px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+}
+
+trix-toolbar .trix-button-group {
+    margin: 0 5px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    background: white !important;
+}
+
+trix-toolbar .trix-button {
+    border: none !important;
+    background: transparent !important;
+    padding: 8px 10px !important;
+    margin: 2px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+    color: #374151 !important;
+}
+
+trix-toolbar .trix-button:hover {
+    background: #e5e7eb !important;
+    color: #0066cc !important;
+}
+
+trix-toolbar .trix-button.trix-active {
+    background: #0066cc !important;
+    color: white !important;
+}
+
+trix-toolbar .trix-button--icon {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+/* Améliorer les icônes Trix */
+trix-toolbar .trix-button--icon::before {
+    font-size: 16px !important;
+    opacity: 0.8 !important;
+}
+
+trix-toolbar .trix-button:hover::before {
+    opacity: 1 !important;
+}
+
+/* Styles du contenu Trix */
+trix-editor h1 {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin: 20px 0 15px !important;
+    color: #111827 !important;
+}
+
+trix-editor h2 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    margin: 18px 0 12px !important;
+    color: #1f2937 !important;
+}
+
+trix-editor p {
+    margin: 10px 0 !important;
+    color: #374151 !important;
+}
+
+trix-editor ul, trix-editor ol {
+    margin: 15px 0 !important;
+    padding-left: 30px !important;
+}
+
+trix-editor li {
+    margin: 8px 0 !important;
+    color: #374151 !important;
+}
+
+trix-editor blockquote {
+    border-left: 4px solid #0066cc !important;
+    padding-left: 20px !important;
+    margin: 20px 0 !important;
+    color: #6b7280 !important;
+    font-style: italic !important;
+}
+
+trix-editor pre {
+    background: #f3f4f6 !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    padding: 15px !important;
+    margin: 15px 0 !important;
+    overflow-x: auto !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 14px !important;
+}
+
+trix-editor code {
+    background: #f3f4f6 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 14px !important;
+    color: #ef4444 !important;
+}
+
+trix-editor a {
+    color: #0066cc !important;
+    text-decoration: underline !important;
+}
+
+trix-editor a:hover {
+    color: #0052a3 !important;
+}
+
+trix-editor strong, trix-editor b {
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+trix-editor em, trix-editor i {
+    font-style: italic !important;
+}
+
+trix-editor del, trix-editor s {
+    text-decoration: line-through !important;
+    color: #9ca3af !important;
+}
+
+/* Placeholder */
+trix-editor:empty:not(:focus)::before {
+    color: #9ca3af !important;
+    font-style: italic !important;
+}
+
+/* Scrollbar dans Trix */
+trix-editor::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+trix-editor::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 10px !important;
+}
+
+trix-editor::-webkit-scrollbar-thumb {
+    background: #0066cc !important;
+    border-radius: 10px !important;
+}
+
+trix-editor::-webkit-scrollbar-thumb:hover {
+    background: #0052a3 !important;
+}
