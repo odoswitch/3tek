@@ -1,0 +1,19 @@
+{% extends '@EasyAdmin/crud/field/collection.html.twig' %}
+
+{% block field %}
+    <div class="field-collection-item-row">
+        {{ form_widget(field.formTypeOptions.form) }}
+    </div>
+    
+    <div class="field-collection-action">
+        <button type="button" 
+                class="btn btn-primary btn-sm field-collection-add-button"
+                data-collection-add-button>
+            <i class="fa fa-plus"></i> Ajouter une image
+        </button>
+    </div>
+    
+    <div class="field-collection-empty text-muted" style="{% if field.formTypeOptions.form|length > 0 %}display:none{% endif %}">
+        <i class="fa fa-image"></i> Aucune image ajoutée
+    </div>
+{% endblock %}

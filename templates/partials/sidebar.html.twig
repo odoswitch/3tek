@@ -17,25 +17,60 @@
         </li>
 
         <li>
-          <a href="#">
-            <i data-feather="layout"></i>
-            <span data-key="t-horizontal">{% trans %}Votre selection{% endtrans %}</span>
+          <a href="{{ path('app_panier') }}">
+            <i data-feather="shopping-cart"></i>
+            <span data-key="t-panier">Mon Panier</span>
+            {% set panierCount = app.user.paniers|length %}
+            {% if panierCount > 0 %}
+            <span class="badge rounded-pill bg-primary float-end">{{ panierCount }}</span>
+            {% endif %}
           </a>
         </li>
+
+        <li>
+          <a href="{{ path('app_mes_commandes') }}">
+            <i data-feather="package"></i>
+            <span data-key="t-commandes">Mes Commandes</span>
+            {% set commandesEnAttente = app.user.commandes|filter(c => c.statut == 'en_attente')|length %}
+            {% if commandesEnAttente > 0 %}
+            <span class="badge rounded-pill bg-warning float-end">{{ commandesEnAttente }}</span>
+            {% endif %}
+          </a>
+        </li>
+
+        <li>
+          <a href="{{ path('app_favoris') }}">
+            <i data-feather="heart"></i>
+            <span data-key="t-favoris">Mes Favoris</span>
+          </a>
+        </li>
+
+        {% if is_granted('ROLE_ADMIN') %}
+        <li>
+          <a href="{{ path('app_admin') }}">
+            <i data-feather="shield"></i>
+            <span data-key="t-admin">Administration</span>
+          </a>
+        </li>
+        {% endif %}
 
         <li class="menu-title mt-2" data-key="t-components">{% trans %}Surprise avec 3Tek-Europe{% endtrans %}</li>
 
       </ul>
 
-      <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">
+      <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="card-body">
-          <img src="/images/giftbox.png" alt="">
-          <div class="mt-4">
-            <h5 class="alertcard-title font-size-16">{% trans %}Unlimited Access{% endtrans %}</h5>
-            <p class="font-size-13">{% trans %}Upgrade your plan from a Free trial, to select ‘Business Plan’{% endtrans
-              %}</p>
-            <a href="#!" class="btn btn-primary mt-2">{% trans %}Cadeau 3tek-Europe
-              {% endtrans %}</a>
+          <div class="avatar-md mx-auto mb-3">
+            <div class="avatar-title bg-white bg-opacity-25 rounded-circle">
+              <i class="bx bx-gift font-size-24 text-white"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <h5 class="alertcard-title font-size-16 text-white">Accès Illimité</h5>
+            <p class="font-size-13 text-white-50">Passez à un plan Business pour débloquer toutes les fonctionnalités premium de 3Tek-Europe</p>
+            <a href="#!" class="btn btn-light btn-sm mt-2 waves-effect waves-light">
+              <i class="bx bx-rocket me-1"></i> Découvrir les offres
+            </a>
           </div>
         </div>
       </div>

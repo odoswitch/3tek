@@ -1,0 +1,148 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', { title: 'Détail de la commande' }) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/menu.html.twig') }}
+        
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0">Commande {{ commande.numeroCommande }}</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="{{ path('app_dash') }}">Dashboard</a></li>
+                                        <li class="breadcrumb-item active">Commande</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bx bx-check-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <h4 class="card-title mb-0">Détails de la commande</h4>
+                                        <span class="badge {% if commande.statut == 'validee' %}bg-success{% elseif commande.statut == 'annulee' %}bg-danger{% else %}bg-warning{% endif %} ms-auto font-size-14">
+                                            {{ commande.statutLabel }}
+                                        </span>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <th style="width: 200px;">Numéro de commande :</th>
+                                                    <td><strong>{{ commande.numeroCommande }}</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Date de commande :</th>
+                                                    <td>{{ commande.createdAt|date('d/m/Y à H:i') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Article :</th>
+                                                    <td>
+                                                        <a href="{{ path('app_lot_view', {id: commande.lot.id}) }}">
+                                                            {{ commande.lot.name }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Quantité :</th>
+                                                    <td>{{ commande.quantite }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Prix unitaire :</th>
+                                                    <td>{{ commande.prixUnitaire|number_format(2, ',', ' ') }} €</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total :</th>
+                                                    <td><h4 class="text-primary">{{ commande.prixTotal|number_format(2, ',', ' ') }} €</h4></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            {% if commande.statut == 'en_attente' %}
+                            <div class="card bg-warning bg-soft">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning"><i class="bx bx-time-five me-2"></i>En attente de paiement</h5>
+                                    <p class="card-text">Votre commande sera validée dès réception du paiement.</p>
+                                    <hr>
+                                    <h6 class="mb-3">💳 Modes de paiement :</h6>
+                                    
+                                    <div class="bg-white p-3 rounded mb-3">
+                                        <h6 class="text-primary">🏦 Virement bancaire</h6>
+                                        <p class="mb-1"><strong>Bénéficiaire :</strong> 3 TEK EUROPE</p>
+                                        <p class="mb-1"><strong>IBAN :</strong><br>FR76 1027 8062 1400 0208 9890 195</p>
+                                        <p class="mb-1"><strong>BIC :</strong> CMCIFR2A</p>
+                                        <p class="mb-1"><strong>Banque :</strong> Crédit Mutuel</p>
+                                        <p class="mb-0"><strong>Référence :</strong><br>{{ commande.numeroCommande }}</p>
+                                    </div>
+
+                                    <div class="bg-info bg-soft p-3 rounded">
+                                        <h6 class="text-info">💳 Carte bancaire</h6>
+                                        <p class="mb-1">Contactez-nous pour obtenir un lien de paiement sécurisé :</p>
+                                        <p class="mb-1"><i class="bx bx-phone"></i> +33 1 83 61 18 36</p>
+                                        <p class="mb-0"><i class="bx bx-envelope"></i> contact@3tek-europe.com</p>
+                                    </div>
+
+                                    <div class="alert alert-warning mt-3 mb-0">
+                                        <small><strong>Important :</strong> Indiquez bien la référence {{ commande.numeroCommande }} dans le libellé du virement.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elseif commande.statut == 'validee' %}
+                            <div class="card bg-success bg-soft">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success"><i class="bx bx-check-circle me-2"></i>Commande validée</h5>
+                                    <p class="card-text">Votre paiement a été reçu et votre commande est validée.</p>
+                                    {% if commande.validatedAt %}
+                                    <p class="mb-0"><small>Validée le {{ commande.validatedAt|date('d/m/Y à H:i') }}</small></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Besoin d'aide ?</h5>
+                                    <p class="card-text">Pour toute question concernant votre commande :</p>
+                                    <p class="mb-1"><i class="bx bx-envelope me-2"></i>contact@3tek-europe.com</p>
+                                    <p class="mb-0"><i class="bx bx-phone me-2"></i>+33 1 83 61 18 36</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+    <script src="/js/app.js"></script>
+</body>
+</html>

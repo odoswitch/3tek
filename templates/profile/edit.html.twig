@@ -1,0 +1,157 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', { title: 'Modifier mon profil' }) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/menu.html.twig') }}
+        
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0"><i class="bx bx-edit me-2"></i>Modifier mon profil</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="{{ path('app_dash') }}">Dashboard</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ path('app_profile') }}">Profil</a></li>
+                                        <li class="breadcrumb-item active">Modifier</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bx bx-check-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bx bx-error-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Photo de profil</h5>
+                                    
+                                    <div class="text-center mb-4">
+                                        {% if user.profileImage %}
+                                            <img src="/uploads/profile_images/{{ user.profileImage }}" 
+                                                 alt="Profile" 
+                                                 class="rounded-circle avatar-xl"
+                                                 id="profilePreview"
+                                                 style="width: 150px; height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="avatar-xl mx-auto mb-3" id="profilePreview">
+                                                <div class="avatar-title bg-primary bg-soft text-primary rounded-circle font-size-48">
+                                                    {{ user.name|first|upper }}{{ user.lastname|first|upper }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    {{ form_row(form.profileImageFile) }}
+                                    
+                                    <div class="alert alert-info mt-3">
+                                        <small>
+                                            <i class="bx bx-info-circle me-1"></i>
+                                            Formats acceptés : JPEG, PNG, GIF, WEBP<br>
+                                            Taille maximale : 2 Mo
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Sécurité</h5>
+                                    <a href="{{ path('app_forgot_password_request') }}" class="btn btn-outline-warning w-100">
+                                        <i class="bx bx-lock-alt me-2"></i>Réinitialiser mon mot de passe
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Informations personnelles</h5>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            {{ form_row(form.name) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            {{ form_row(form.lastname) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            {{ form_row(form.email) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            {{ form_row(form.phone) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            {{ form_row(form.office) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                                            <i class="bx bx-x me-2"></i>Annuler
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bx bx-save me-2"></i>Enregistrer les modifications
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+    <script src="/js/app.js"></script>
+    
+    <script>
+        // Preview image before upload
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('profilePreview');
+                    preview.innerHTML = '<img src="' + e.target.result + '" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+    {{ include('partials/title-meta.html.twig', { title: 'Mon Panier' }) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/menu.html.twig') }}
+        
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0"><i class="bx bx-shopping-bag me-2"></i>Mon Panier</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="{{ path('app_dash') }}">Dashboard</a></li>
+                                        <li class="breadcrumb-item active">Panier</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bx bx-check-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bx bx-error-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            {% if items is empty %}
+                                <div class="card">
+                                    <div class="card-body text-center py-5">
+                                        <i class="bx bx-cart font-size-48 text-muted mb-3"></i>
+                                        <h5>Votre panier est vide</h5>
+                                        <p class="text-muted">Parcourez nos lots et ajoutez-les à votre panier</p>
+                                        <a href="{{ path('app_dash') }}" class="btn btn-primary">
+                                            <i class="bx bx-store me-2"></i>Continuer mes achats
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-4">Articles dans votre panier ({{ items|length }})</h5>
+                                        
+                                        {% for item in items %}
+                                        <div class="border rounded p-3 mb-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-2">
+                                                    {% if item.lot.images|length > 0 %}
+                                                        <img src="{{ vich_uploader_asset(item.lot.images[0], 'imageFile') }}" 
+                                                             alt="{{ item.lot.name }}" 
+                                                             class="img-fluid rounded"
+                                                             style="max-height: 80px; object-fit: cover;">
+                                                    {% else %}
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                                            <i class="bx bx-image font-size-24 text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <h6 class="mb-1">
+                                                        <a href="{{ path('app_lot_view', {id: item.lot.id}) }}">
+                                                            {{ item.lot.name }}
+                                                        </a>
+                                                    </h6>
+                                                    <p class="text-muted mb-0">{{ item.lot.prix|number_format(2, ',', ' ') }} € / unité</p>
+                                                    <small class="text-muted">Stock disponible: {{ item.lot.quantite }}</small>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <form action="{{ path('app_panier_update', {id: item.id}) }}" method="POST" class="d-flex align-items-center">
+                                                        <label class="me-2 mb-0">Qté:</label>
+                                                        <input type="number" 
+                                                               name="quantite" 
+                                                               value="{{ item.quantite }}" 
+                                                               min="1" 
+                                                               max="{{ item.lot.quantite }}" 
+                                                               class="form-control form-control-sm" 
+                                                               style="width: 70px;"
+                                                               onchange="this.form.submit()">
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <h6 class="text-primary mb-0">{{ item.total|number_format(2, ',', ' ') }} €</h6>
+                                                </div>
+                                                <div class="col-md-1 text-end">
+                                                    <a href="{{ path('app_panier_remove', {id: item.id}) }}" 
+                                                       class="btn btn-sm btn-outline-danger"
+                                                       onclick="return confirm('Retirer cet article du panier ?')">
+                                                        <i class="bx bx-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                        <div class="text-end mt-3">
+                                            <a href="{{ path('app_dash') }}" class="btn btn-outline-secondary">
+                                                <i class="bx bx-arrow-back me-2"></i>Continuer mes achats
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if items is not empty %}
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Récapitulatif</h5>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sous-total :</td>
+                                                    <td class="text-end">{{ total|number_format(2, ',', ' ') }} €</td>
+                                                </tr>
+                                                <tr class="border-top">
+                                                    <th>Total :</th>
+                                                    <th class="text-end"><h4 class="text-primary mb-0">{{ total|number_format(2, ',', ' ') }} €</h4></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <form action="{{ path('app_panier_valider') }}" method="POST" class="mt-4">
+                                        <button type="submit" class="btn btn-success btn-lg w-100 waves-effect waves-light">
+                                            <i class="bx bx-check-circle me-2"></i>Valider ma commande
+                                        </button>
+                                    </form>
+
+                                    <div class="alert alert-info mt-3 mb-0">
+                                        <small><i class="bx bx-info-circle me-1"></i>Vous recevrez un email avec les instructions de paiement</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Paiement sécurisé</h6>
+                                    <p class="card-text text-muted small">
+                                        <i class="bx bx-lock-alt me-1"></i>Vos données sont protégées<br>
+                                        <i class="bx bx-time me-1"></i>Validation sous 24-48h<br>
+                                        <i class="bx bx-support me-1"></i>Support client disponible
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {{ include('partials/footer.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('partials/right-sidebar.html.twig') }}
+    {{ include('partials/vendor-scripts.html.twig') }}
+    <script src="/js/app.js"></script>
+</body>
+</html>

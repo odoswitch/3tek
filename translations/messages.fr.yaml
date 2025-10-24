@@ -1,0 +1,12 @@
+# Traductions pour les formulaires
+form:
+  collection:
+    add: 'Ajouter une image'
+    empty: 'Aucune image'
+    
+# Traductions EasyAdmin
+easyadmin:
+  form:
+    empty_value: 'Aucune image ajoutée'
+  action:
+    add_new_item: 'Ajouter une image'

@@ -56,9 +56,24 @@ class Lot
     #[ORM\Column]
     private ?float $prix = null;
 
+    #[ORM\Column]
+    private ?int $quantite = 0;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, LotImage>
+     */
+    #[ORM\OneToMany(targetEntity: LotImage::class, mappedBy: 'lot', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $images;
+
     public function __construct()
     {
         $this->types = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -176,5 +191,75 @@ class Lot
         // TRÈS IMPORTANT : Mettre à jour un champ mappé si un nouveau fichier est fourni.
         // Cela force Doctrine à détecter un changement et à déclencher les listeners de Vich.
 
+    }
+
+    /**
+     * @return Collection<int, LotImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(LotImage $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setLot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(LotImage $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getLot() === $this) {
+                $image->setLot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(int $quantite): static
+    {
+        $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->quantite > 0;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the main image (first image or fallback to old image field)
+     */
+    public function getMainImage(): ?string
+    {
+        if ($this->images->count() > 0) {
+            return $this->images->first()->getImageName();
+        }
+        return $this->image;
     }
 }

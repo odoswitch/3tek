@@ -25,13 +25,28 @@ class LotRepository extends ServiceEntityRepository
         return $resultat->fetchAllAssociative();
     }
 
+    public function lotUserQuery($param){
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.images', 'images')
+            ->addSelect('images')
+            ->leftJoin('l.types', 'lt')
+            ->addSelect('lt')
+            ->leftJoin('l.cat', 'cat')
+            ->addSelect('cat')
+            ->innerJoin('App\Entity\User', 'u', 'WITH', 'u.id = :userId')
+            ->innerJoin('u.categorie', 'uc')
+            ->leftJoin('u.type', 'ut')
+            ->where('uc = l.cat')
+            ->andWhere('u.isVerified = 1')
+            ->andWhere('ut MEMBER OF l.types OR u.type IS NULL')
+            ->setParameter('userId', $param)
+            ->orderBy('l.quantite', 'DESC')
+            ->addOrderBy('l.id', 'DESC')
+            ->getQuery();
+     }
+
     public function lotUser($param){
-        $sql = "SELECT * FROM `lot` l JOIN user_category uc ON uc.category_id = l.cat_id JOIN lot_type lt JOIN user u ON u.lot_id = lt.type_id AND lt.lot_id = l.id WHERE u.is_verified = 1 AND u.id = " .$param;
-        //$sql ="SELECT *  FROM `lot` l  JOIN user u  ON l.id = u.lot_id JOIN lot_type lt ON lt.lot_id = u.lot_id JOIN user_category uc ON uc.user_id = u.id WHERE u.is_verified = 1 AND u.id =  " .$a ;
-        // $sql = 'SELECT * FROM lot INNER JOIN user on lot.id = user.lot_id WHERE user.id = '.$a .'AND user.is_verified = 0';
-         $con = $this->getEntityManager()->getConnection();
-         $resultat = $con->query($sql);
-         return $resultat->fetchAllAssociative();
+        return $this->lotUserQuery($param)->getResult();
      }
 
 

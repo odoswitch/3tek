@@ -1,0 +1,117 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+  {{ include('partials/title-meta.html.twig', {title: 'Vérifiez votre email'}) }}
+  {{ include('partials/head-css.html.twig') }}
+</head>
+
+{{ include('partials/body.html.twig') }}
+<div class="auth-page">
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-12">
+        <div class="auth-full-page-content d-flex p-sm-4 p-3">
+          <div class="w-100">
+            <div class="d-flex flex-column h-100">
+              <div class="auth-content my-auto">
+                <div class="text-center">
+                  <div class="mb-3">
+                    <img src="/images/3tek-logo.png" alt="" height="40" class="mb-3">
+                  </div>
+                  <div class="avatar-lg mx-auto mb-4">
+                    <div class="avatar-title bg-light text-primary display-4 rounded-circle">
+                      <i class="bx bx-mail-send"></i>
+                    </div>
+                  </div>
+                  <h5 class="mb-3">Email de confirmation envoyé !</h5>
+                  <p class="text-muted">
+                    Un email de confirmation vient d'être envoyé à l'adresse :
+                  </p>
+                  <p class="text-primary fw-bold mb-3">{{ email }}</p>
+                  
+                  <div class="alert alert-info" role="alert">
+                    <i class="mdi mdi-information-outline me-2"></i>
+                    <strong>Important :</strong> Le lien de vérification est valable pendant <strong>1 heure</strong>.
+                  </div>
+                  
+                  <p class="text-muted mt-3">
+                    Veuillez consulter votre boîte de réception et cliquer sur le lien de confirmation pour activer votre compte.
+                  </p>
+                  
+                  <div class="mt-4">
+                    <p class="text-muted small mb-2">Vous n'avez pas reçu l'email ?</p>
+                    <ul class="list-unstyled text-muted small">
+                      <li class="mb-1"><i class="mdi mdi-check-circle text-success me-1"></i> Vérifiez votre dossier spam/courrier indésirable</li>
+                      <li class="mb-1"><i class="mdi mdi-check-circle text-success me-1"></i> Assurez-vous que l'adresse email est correcte</li>
+                      <li class="mb-1"><i class="mdi mdi-check-circle text-success me-1"></i> Attendez quelques minutes, l'email peut prendre du temps</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="mt-5 text-center">
+                  <p class="text-muted mb-0">Retour à <a href="{{ path('app_login') }}" class="text-primary fw-semibold">la page de connexion</a></p>
+                </div>
+              </div>
+
+              <div class="mt-4 mt-md-5 text-center">
+                <p class="mb-0">© {{ "now"|date("Y") }} 3Tek-Europe. Développé avec <i class="mdi mdi-heart text-danger"></i> par Odoip</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xxl-8 col-xl-7 col-lg-6 col-md-5 d-none d-md-block">
+        <div class="auth-bg pt-md-5 p-4 d-flex">
+          <div class="bg-overlay bg-primary"></div>
+          <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <div class="row justify-content-center align-items-center">
+            <div class="col-xl-7">
+              <div class="p-0 p-sm-4 px-xl-0">
+                <div id="reviewcarouselIndicators" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-indicators carousel-indicators-rounded justify-content-start ms-0 mb-0">
+                    <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                  </div>
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <div class="testi-contain text-white">
+                        <i class="bx bxs-quote-alt-left text-success display-6"></i>
+                        <h4 class="mt-4 fw-medium lh-base text-white">"Bienvenue dans notre communauté ! Nous sommes ravis de vous compter parmi nous."</h4>
+                        <div class="mt-4 pt-3 pb-5">
+                          <div class="d-flex align-items-start">
+                            <img src="/images/users/avatar-1.jpg" class="avatar-md img-fluid rounded-circle" alt="...">
+                            <div class="flex-1 ms-3 mb-4">
+                              <h5 class="font-size-18 text-white">L'équipe 3Tek-Europe</h5>
+                              <p class="mb-0 text-white-50">Support Client</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ include('partials/vendor-scripts.html.twig') }}
+
+</body>
+</html>

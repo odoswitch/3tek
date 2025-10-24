@@ -39,8 +39,8 @@ class UserCrudController extends AbstractCrudController
             TextField::new('code', 'Code Postale'),
             TextField::new('ville', 'Votre ville'),
             FormField::addTab('Type Compte'),
-            AssociationField::new('lot', 'Type Client')->autocomplete(),
-            AssociationField::new('categorie', 'Centre d\'interert')->autocomplete(),
+            AssociationField::new('type', 'Type Client')->autocomplete(),
+            AssociationField::new('categorie', 'Centres d\'intérêt')->autocomplete(),
 
         ];
     }

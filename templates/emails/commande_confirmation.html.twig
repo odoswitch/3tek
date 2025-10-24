@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 3px solid #667eea;
+        }
+        .content {
+            padding: 30px 0;
+        }
+        .commande-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .commande-numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .total {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: right;
+            margin: 20px 0;
+        }
+        .rib-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .rib-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        .rib-info {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ logoUrl }}" alt="3Tek-Europe" style="max-width: 180px; height: auto;">
+    </div>
+
+    <div class="content">
+        <h2>Confirmation de commande</h2>
+        
+        <p>Bonjour {{ user.name }} {{ user.lastname }},</p>
+
+        <p>Nous avons bien reçu votre commande et vous en remercions.</p>
+
+        <div class="commande-box">
+            <div class="commande-numero">Commande N° {{ commande.numeroCommande }}</div>
+            
+            <div class="info-line">
+                <span class="info-label">Date :</span>
+                <span>{{ commande.createdAt|date('d/m/Y à H:i') }}</span>
+            </div>
+            
+            <div class="info-line">
+                <span class="info-label">Article :</span>
+                <span>{{ lot.name }}</span>
+            </div>
+            
+            <div class="info-line">
+                <span class="info-label">Quantité :</span>
+                <span>{{ commande.quantite }}</span>
+            </div>
+            
+            <div class="info-line">
+                <span class="info-label">Prix unitaire :</span>
+                <span>{{ commande.prixUnitaire|number_format(2, ',', ' ') }} €</span>
+            </div>
+            
+            <div class="total">
+                TOTAL : {{ commande.prixTotal|number_format(2, ',', ' ') }} €
+            </div>
+        </div>
+
+        <div class="alert-warning">
+            <strong>⚠️ Important :</strong> Votre commande sera validée une fois le paiement reçu et vérifié par nos services.
+        </div>
+
+        <h3 style="color: #667eea; margin-top: 30px;">💳 Modes de paiement acceptés</h3>
+
+        <div class="rib-box">
+            <div class="rib-title">🏦 Option 1 : Virement bancaire</div>
+            <div class="rib-info">
+                <strong>Bénéficiaire :</strong> 3 TEK EUROPE<br>
+                <strong>IBAN :</strong> FR76 1027 8062 1400 0208 9890 195<br>
+                <strong>BIC :</strong> CMCIFR2A<br>
+                <strong>Banque :</strong> Crédit Mutuel<br>
+                <strong>Domiciliation :</strong> CCM SARTROUVILLE LA VAUDOIRE<br>
+                <strong>Référence obligatoire :</strong> {{ commande.numeroCommande }}
+            </div>
+        </div>
+
+        <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: bold; color: #1976d2; margin-bottom: 15px;">
+                💳 Option 2 : Paiement par carte bancaire
+            </div>
+            <p style="margin: 10px 0;">
+                Pour payer par carte bancaire, veuillez nous contacter :<br>
+                <strong>📞 Téléphone :</strong> +33 1 83 61 18 36<br>
+                <strong>📧 Email :</strong> contact@3tek-europe.com<br>
+                <em>Nous vous enverrons un lien de paiement sécurisé.</em>
+            </p>
+        </div>
+
+        <p><strong>Instructions pour le virement bancaire :</strong></p>
+        <ol>
+            <li>Effectuez un virement bancaire du montant de <strong>{{ commande.prixTotal|number_format(2, ',', ' ') }} €</strong></li>
+            <li>Indiquez <strong>IMPÉRATIVEMENT</strong> la référence <strong>{{ commande.numeroCommande }}</strong> dans le libellé du virement</li>
+            <li>Une fois le paiement reçu, nous validerons votre commande</li>
+            <li>Vous recevrez un email de confirmation de validation</li>
+        </ol>
+
+        <p><strong>Délai de traitement :</strong> 24 à 48 heures après réception du paiement.</p>
+
+        <p>Pour toute question concernant votre commande, n'hésitez pas à nous contacter en indiquant votre numéro de commande.</p>
+    </div>
+
+    <div class="footer">
+        <p>
+            <strong>3Tek-Europe</strong><br>
+            Email : contact@3tek-europe.com<br>
+            Téléphone : +33 1 83 61 18 36
+        </p>
+        <p style="font-size: 12px; color: #999;">
+            Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+        </p>
+    </div>
+</body>
+</html>

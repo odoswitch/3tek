@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 3px solid #667eea;
+        }
+        .content {
+            padding: 30px 0;
+        }
+        .lot-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .lot-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+        .lot-category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .lot-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+        .lot-description {
+            color: #666;
+            margin: 15px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .cta-button:hover {
+            background: #5568d3;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ logoUrl }}" alt="3Tek-Europe" class="logo" style="max-width: 180px; height: auto;">
+    </div>
+
+    <div class="content">
+        <p class="greeting">Bonjour {{ user.name }} {{ user.lastname }},</p>
+
+        <p>Nous avons le plaisir de vous informer qu'un nouveau lot est maintenant disponible sur votre espace 3Tek-Europe !</p>
+
+        <div class="lot-card">
+            <h2 class="lot-title">{{ lot.name }}</h2>
+            
+            <span class="lot-category">{{ lot.cat.name }}</span>
+
+            {% if hasImage and imageUrl %}
+            <div style="text-align: center; margin: 20px 0; background: #fff; padding: 10px; border-radius: 8px;">
+                <img src="{{ imageUrl }}" alt="{{ lot.name }}" width="350" height="250" style="width: 350px; height: 250px; max-width: 100%; border-radius: 8px; object-fit: cover; display: block; margin: 0 auto;">
+            </div>
+            {% endif %}
+
+            <div class="lot-price">{{ lot.prix|number_format(2, ',', ' ') }} €</div>
+
+            <div class="lot-description">
+                {{ lot.description|striptags|slice(0, 200) }}{% if lot.description|length > 200 %}...{% endif %}
+            </div>
+        </div>
+
+        <p><strong>Ce lot correspond à vos critères et est maintenant disponible à la commande.</strong></p>
+
+        <div style="text-align: center;">
+            <a href="{{ url('app_lot_view', {id: lot.id}) }}" class="cta-button" style="display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">
+                Voir le lot et commander
+            </a>
+        </div>
+
+        <p style="margin-top: 30px;">
+            Connectez-vous à votre espace client pour consulter tous les détails, voir toutes les photos et passer commande.
+        </p>
+
+        <p>
+            <strong>Pourquoi ce lot vous est proposé ?</strong><br>
+            Ce lot fait partie de la catégorie <strong>{{ lot.cat.name }}</strong> à laquelle vous êtes abonné(e).
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>
+            <strong>3Tek-Europe</strong><br>
+            Votre partenaire en équipements professionnels
+        </p>
+        <p style="font-size: 12px; color: #999;">
+            Vous recevez cet email car vous êtes inscrit(e) sur 3Tek-Europe.<br>
+            Pour gérer vos préférences, connectez-vous à votre espace client.
+        </p>
+    </div>
+</body>
+</html>

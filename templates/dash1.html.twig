@@ -26,11 +26,8 @@
         {{ include('partials/page-title.html.twig', {pagetitle: '3Tek-Europe', title: 'Espace Abonné'}) }}
 
         <div class="row align-items-center">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="mb-3">
-
-
-
               {% if is_granted('IS_AUTHENTICATED_FULLY') %}
               <h5 class="card-title">Votre Espace : {{ app.user.name|upper }}
                 <span class="text-muted fw-normal ms-2">{{ app.user.lastname|capitalize }}</span>
@@ -39,43 +36,36 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <form action="{{ path('app_dash') }}" method="GET" class="app-search d-none d-lg-block">
+                <div class="position-relative">
+                  <input type="text" 
+                         name="search" 
+                         class="form-control" 
+                         placeholder="Rechercher un lot..." 
+                         value="{{ search|default('') }}">
+                  <button class="btn btn-primary" type="submit">
+                    <i class="bx bx-search-alt align-middle"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-md-4">
             <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
               <div>
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills" id="viewToggle">
                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="List">
+                    <a class="nav-link" href="#" id="listView" data-view="list" data-bs-toggle="tooltip" data-bs-placement="top" title="Vue liste">
                       <i class="bx bx-list-ul"></i>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Grid">
+                    <a class="nav-link active" href="#" id="gridView" data-view="grid" data-bs-toggle="tooltip" data-bs-placement="top" title="Vue grille">
                       <i class="bx bx-grid-alt"></i>
                     </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <a href="#" class="btn btn-light">
-                  <i class="bx bx-plus me-1"></i>
-                  Ajout panier</a>
-              </div>
-
-              <div class="dropdown">
-                <a class="btn btn-link text-muted py-1 font-size-16 shadow-none dropdown-toggle" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bx bx-dots-horizontal-rounded"></i>
-                </a>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <a class="dropdown-item" href="#">Action</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Another action</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Something else here</a>
                   </li>
                 </ul>
               </div>
@@ -85,23 +75,102 @@
         </div>
         <!-- end row -->
 
+        {% if search is defined and search is not empty %}
         <div class="row">
-          {% for item in data %}
-          <div class="col-xl-4 col-sm-6">
+          <div class="col-12">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+              <i class="bx bx-search me-2"></i>
+              Résultats de recherche pour : <strong>"{{ search }}"</strong>
+              {% if data|length == 0 %}
+                - Aucun lot trouvé
+              {% else %}
+                - {{ pagination.totalItemCount }} lot(s) trouvé(s)
+              {% endif %}
+              <a href="{{ path('app_dash') }}" class="btn btn-sm btn-outline-secondary ms-3">
+                <i class="bx bx-x"></i> Effacer la recherche
+              </a>
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if data|length == 0 %}
+        <div class="row">
+          <div class="col-12">
             <div class="card">
-              <div class="">
-                <img src="/uploads/images/{{item.image}}" alt="" class="img-fluid">
+              <div class="card-body text-center py-5">
+                <i class="bx bx-search-alt font-size-48 text-muted mb-3"></i>
+                <h5>Aucun lot trouvé</h5>
+                <p class="text-muted">
+                  {% if search is defined and search is not empty %}
+                    Aucun lot ne correspond à votre recherche "{{ search }}"
+                  {% else %}
+                    Aucun lot disponible pour le moment
+                  {% endif %}
+                </p>
+                <a href="{{ path('app_dash') }}" class="btn btn-primary">
+                  <i class="bx bx-refresh me-2"></i>Voir tous les lots
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="row" id="lotsContainer">
+          {% for item in data %}
+          <div class="col-xl-4 col-sm-6 lot-item mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+            <div class="card h-100">
+              <div class="position-relative">
+                {% if item.images|length > 0 %}
+                  <img src="{{ vich_uploader_asset(item.images[0], 'imageFile') }}" alt="{{item.name}}" class="img-fluid" style="height: 250px; object-fit: cover; width: 100%; {% if item.quantite == 0 %}opacity: 0.5; filter: grayscale(50%);{% endif %}">
+                  {% if item.quantite == 0 %}
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                      <span class="badge bg-danger font-size-16 px-3 py-2">
+                        <i class="bx bx-x-circle"></i> RUPTURE DE STOCK
+                      </span>
+                    </div>
+                  {% endif %}
+                  {% if item.images|length > 1 %}
+                    <span class="badge bg-primary position-absolute" style="top: 10px; right: 10px;">
+                      <i class="bx bx-images"></i> {{ item.images|length }} photos
+                    </span>
+                  {% endif %}
+                {% else %}
+                  <div class="text-center py-5 bg-light">
+                    <i class="bx bx-image font-size-48 text-muted"></i>
+                    <p class="text-muted mt-2">Aucune image</p>
+                  </div>
+                {% endif %}
               </div>
               <div class="card-body">
-                <p class="text-muted mb-2">{{"now"|date}}</p>
+                <p class="text-muted mb-2">
+                  <i class="bx bx-calendar"></i> <strong>Date d'entrée :</strong> {{ item.createdAt ? item.createdAt|date('d/m/Y H:i') : 'Date non disponible' }}
+                </p>
                 <h5 class="">
-                  <a href="#" class="text-body">{{item.name|upper }}</a>
+                  <a href="{{ path('app_lot_view', {id: item.id}) }}" class="text-body">{{item.name|upper }}</a>
                 </h5>
-                <p class="mb-0 font-size-15">{{item.description|striptags}}</p>
+                <p class="mb-0 font-size-15">{{item.description|striptags|slice(0, 100)}}{% if item.description|length > 100 %}...{% endif %}</p>
                 <div class="mt-3">
-                  <a href="#" class="align-middle font-size-15">Read more
-                    <i class="mdi mdi-chevron-right"></i>
-                  </a>
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="text-primary mb-0">{{ item.prix|number_format(2, ',', ' ') }} €</h5>
+                    <span class="badge {% if item.quantite > 10 %}bg-success{% elseif item.quantite > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                      {% if item.quantite > 0 %}
+                        <i class="bx bx-store"></i> Stock en magasin: {{ item.quantite }}
+                      {% else %}
+                        <i class="bx bx-x-circle"></i> Rupture de stock
+                      {% endif %}
+                    </span>
+                  </div>
+                  {% if item.quantite > 0 %}
+                    <a href="{{ path('app_lot_view', {id: item.id}) }}" class="btn btn-primary btn-sm w-100">
+                      <i class="bx bx-cart me-1"></i> Voir et commander <i class="mdi mdi-chevron-right"></i>
+                    </a>
+                  {% else %}
+                    <a href="{{ path('app_lot_view', {id: item.id}) }}" class="btn btn-outline-secondary btn-sm w-100">
+                      <i class="bx bx-info-circle me-1"></i> Voir les détails <i class="mdi mdi-chevron-right"></i>
+                    </a>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -109,10 +178,8 @@
           </div>
           {% endfor %}
           <!-- end col -->
-
-          <!-- end card -->
         </div>
-        <!-- end col -->
+        <!-- end row -->
 
         <!-- end card -->
       </div>
@@ -129,29 +196,66 @@
   <!-- end col -->
 </div>
 <!-- end row -->
+{% endif %}
 
+{% if pagination.pageCount > 1 %}
 <div class="row justify-content-center mb-4">
-  <div class="col-md-3">
-    <div class="">
-      <ul class="pagination mb-sm-0">
-        <li class="page-item disabled">
-          <a href="#" class="page-link">
-            <i class="mdi mdi-chevron-left"></i>
-          </a>
-        </li>
-        <li class="page-item">
-          <a href="#" class="page-link">1</a>
-        </li>
+  <div class="col-md-6">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="text-muted">
+        Affichage de {{ pagination.currentItemCount }} lots sur {{ pagination.totalItemCount }} au total
+      </div>
+      <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+          {% if pagination.currentPageNumber > 1 %}
+          <li class="page-item">
+            <a href="{{ path('app_dash', {page: pagination.currentPageNumber - 1, search: search|default('')}) }}" class="page-link">
+              <i class="mdi mdi-chevron-left"></i>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              <i class="mdi mdi-chevron-left"></i>
+            </span>
+          </li>
+          {% endif %}
 
-        <li class="page-item">
-          <a href="#" class="page-link">
-            <i class="mdi mdi-chevron-right"></i>
-          </a>
-        </li>
-      </ul>
+          {% for page in 1..pagination.pageCount %}
+            {% if page == pagination.currentPageNumber %}
+              <li class="page-item active">
+                <span class="page-link">{{ page }}</span>
+              </li>
+            {% elseif page == 1 or page == pagination.pageCount or (page >= pagination.currentPageNumber - 2 and page <= pagination.currentPageNumber + 2) %}
+              <li class="page-item">
+                <a href="{{ path('app_dash', {page: page, search: search|default('')}) }}" class="page-link">{{ page }}</a>
+              </li>
+            {% elseif page == pagination.currentPageNumber - 3 or page == pagination.currentPageNumber + 3 %}
+              <li class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if pagination.currentPageNumber < pagination.pageCount %}
+          <li class="page-item">
+            <a href="{{ path('app_dash', {page: pagination.currentPageNumber + 1, search: search|default('')}) }}" class="page-link">
+              <i class="mdi mdi-chevron-right"></i>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              <i class="mdi mdi-chevron-right"></i>
+            </span>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
     </div>
   </div>
 </div>
+{% endif %}
 <!-- end row -->
 
 </div>
@@ -171,6 +275,93 @@
 {{ include('partials/vendor-scripts.html.twig') }}
 
 <script src="/js/app.js"></script>
+
+<style>
+  .lot-item {
+    transition: all 0.3s ease;
+  }
+  
+  .lot-item.list-view {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  .lot-item.list-view .card {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .lot-item.list-view .card .position-relative {
+    flex: 0 0 300px;
+    max-width: 300px;
+  }
+  
+  .lot-item.list-view .card .card-body {
+    flex: 1;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .lot-item {
+    animation: fadeIn 0.5s ease-out;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const listView = document.getElementById('listView');
+    const gridView = document.getElementById('gridView');
+    const lotsContainer = document.getElementById('lotsContainer');
+    const lotItems = document.querySelectorAll('.lot-item');
+    
+    // Charger la vue sauvegardée
+    const savedView = localStorage.getItem('dashboardView') || 'grid';
+    if (savedView === 'list') {
+        switchToListView();
+    }
+    
+    listView.addEventListener('click', function(e) {
+        e.preventDefault();
+        switchToListView();
+        localStorage.setItem('dashboardView', 'list');
+    });
+    
+    gridView.addEventListener('click', function(e) {
+        e.preventDefault();
+        switchToGridView();
+        localStorage.setItem('dashboardView', 'grid');
+    });
+    
+    function switchToListView() {
+        listView.classList.add('active');
+        gridView.classList.remove('active');
+        
+        lotItems.forEach(item => {
+            item.classList.remove('col-xl-4', 'col-sm-6');
+            item.classList.add('col-12', 'list-view');
+        });
+    }
+    
+    function switchToGridView() {
+        gridView.classList.add('active');
+        listView.classList.remove('active');
+        
+        lotItems.forEach(item => {
+            item.classList.remove('col-12', 'list-view');
+            item.classList.add('col-xl-4', 'col-sm-6');
+        });
+    }
+});
+</script>
 
 </body>
 

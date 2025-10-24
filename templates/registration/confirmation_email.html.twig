@@ -1,11 +1,135 @@
-<h1>Hi! Please confirm your email!</h1>
-
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl|raw }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
-
-<p>
-    Cheers!
-</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de votre email - 3Tek-Europe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .email-header img {
+            max-width: 180px;
+            height: auto;
+        }
+        .email-header h1 {
+            color: #ffffff;
+            margin: 20px 0 10px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .email-body {
+            padding: 40px 30px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .email-body p {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        .confirm-button {
+            display: inline-block;
+            margin: 30px 0;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .confirm-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .button-container {
+            text-align: center;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666666;
+        }
+        .email-footer {
+            background-color: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+        .email-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <div style="margin-bottom: 20px;">
+                <div style="display: inline-block; background-color: #ffffff; padding: 15px 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h2 style="margin: 0; color: #667eea; font-size: 32px; font-weight: 700; letter-spacing: -1px;">
+                        <span style="color: #667eea;">3</span><span style="color: #764ba2;">TEK-EUROPE</span>
+                    </h2>
+                </div>
+            </div>
+            <h1>🎉 Bienvenue sur 3Tek-Europe !</h1>
+            <p style="color: #ffffff; margin: 0; font-size: 16px;">Confirmez votre adresse email pour activer votre compte</p>
+        </div>
+        
+        <div class="email-body">
+            <p>Bonjour,</p>
+            
+            <p>Merci de vous être inscrit sur <strong>3Tek-Europe</strong> ! Nous sommes ravis de vous accueillir dans notre communauté.</p>
+            
+            <p>Pour finaliser votre inscription et activer votre compte, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous :</p>
+            
+            <div class="button-container">
+                <a href="{{ signedUrl|raw }}" class="confirm-button">
+                    ✓ Confirmer mon email
+                </a>
+            </div>
+            
+            <div class="info-box">
+                <p><strong>⏱️ Important :</strong> Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.</p>
+                <p>Si vous n'avez pas créé de compte sur 3Tek-Europe, vous pouvez ignorer cet email en toute sécurité.</p>
+            </div>
+            
+            <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+            <p style="word-break: break-all; color: #667eea; font-size: 14px;">{{ signedUrl|raw }}</p>
+            
+            <p style="margin-top: 30px;">Cordialement,<br><strong>L'équipe 3Tek-Europe</strong></p>
+        </div>
+        
+        <div class="email-footer">
+            <p>© {{ "now"|date("Y") }} 3Tek-Europe. Tous droits réservés.</p>
+            <p>Développé avec ❤️ par Odoip</p>
+        </div>
+    </div>
+</body>
+</html>

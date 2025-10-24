@@ -5,6 +5,68 @@
   {{ include('partials/title-meta.html.twig', {title: 'Register'}) }}
 
   {{ include('partials/head-css.html.twig') }}
+  
+  <style>
+    .form-error, .form-error-message, ul.form-error-list li {
+      color: #dc3545 !important;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+    .form-text {
+      margin-top: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .invalid-feedback, .form-error-icon {
+      display: block;
+      color: #dc3545 !important;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    /* Style pour les erreurs Symfony */
+    .form-control.is-invalid, .was-validated .form-control:invalid {
+      border-color: #dc3545;
+    }
+    /* Messages d'erreur de formulaire */
+    form .invalid-feedback, form .form-error {
+      display: none !important;
+    }
+    /* Masquer les erreurs par défaut de Symfony pour utiliser nos bandeaux */
+    form ul.form-error-list {
+      display: none !important;
+    }
+    /* Bandeau d'alerte pour les erreurs */
+    .alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c2c7;
+      color: #842029;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #dc3545;
+      border-radius: 0.25rem;
+    }
+    .alert-danger strong {
+      color: #dc3545;
+    }
+    .alert-danger ul {
+      margin: 0.5rem 0 0 0;
+      padding-left: 1.5rem;
+      list-style-type: none;
+    }
+    .alert-danger ul li {
+      color: #842029;
+      margin: 0.25rem 0;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    .alert-danger ul li:before {
+      content: "✗";
+      position: absolute;
+      left: 0;
+      color: #dc3545;
+      font-weight: bold;
+    }
+  </style>
 
 </head>
 
@@ -12,21 +74,25 @@
 <div class="auth-page">
   <div class="container-fluid p-0">
     <div class="row g-0">
-      <div class="col-xxl-3 col-lg-1 col-md-2">
-        <div class="auth-full-page-content d-flex p-sm-3 p-4">
+      <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-12">
+        <div class="auth-full-page-content d-flex p-sm-4 p-3">
           <div class="w-100">
             <div class="d-flex flex-column h-100">
-              <div class="mb-4 mb-md-5 text-center">
-                <a href="{{ path('app_login') }}" class="d-block auth-logo">
-                  <img src="/images/3tek-logo.png" alt="" height="28">
-                  <span class="logo-txt"></span>
-                </a>
-              </div>
               <div class="auth-content my-auto">
                 <div class="text-center">
-                  <h5 class="mb-0">Créer un compte</h5>
-                  <p class="text-muted mt-2">Get your free 3Tek-Europe account now.</p>
-                  {{ form_errors(registrationForm) }}
+                  <div class="mb-3">
+                    <img src="/images/3tek-logo.png" alt="" height="40" class="mb-3">
+                    <h5 class="mb-0">Créer un compte</h5>
+                  </div>
+                  <p class="text-muted mt-2">Obtenez votre compte 3Tek-Europe gratuitement.</p>
+                  
+                  {% if form_errors(registrationForm) %}
+                  <div class="alert alert-danger" role="alert">
+                    <strong><i class="mdi mdi-alert-circle"></i> Erreur !</strong>
+                    {{ form_errors(registrationForm) }}
+                  </div>
+                  {% endif %}
+                  
                   {{ form_start(registrationForm, {attr:{novalidate : 'novalidate',
                                     class: 'needs-validation mt-2 pt-1'}}
                   ) }}
@@ -91,92 +157,127 @@
 
                   </div>
                   <div class="mb-3">
-
-                    {{ form_row(registrationForm.address, {
-                                        label: 'Votre adresse',
-                                        class: 'form-label',
-                                        attr:{
-                                        placeholder : 'Saisir votre adresse Postale',
-                                        class : 'form-control',
-                                        }
-                                        }) }}
-
-                  </div>
-                  <div class="mb-3">
-
-                    {{ form_row(registrationForm.ville, {
-                                        label: 'Ville',
-                                        class: 'form-label',
-                                        attr:{
-                                        placeholder : 'Saisir votre ville',
-                                        class : 'form-control',
-                                        }
-                                        }) }}
-
-                  </div>
-                  <div class="mb-3">
-
-                    {{ form_row(registrationForm.code, {
-                                        label: 'Votre code Postale',
-                                        class: 'form-label',
-                                        attr:{
-                                        placeholder : 'Saisir votre code postale',
-                                        class : 'form-control',
-                                        }
-                                        }) }}
-
-                  </div>
-                  <div class="mb-3">
-
-                    {{ form_row(registrationForm.pays, {
-                                        label: 'Pays',
-                                        class: 'form-label',
-                                        attr:{
-                                        placeholder : 'Saisir votre email',
-                                        class : 'form-control',
-                                        }
-                                        }) }}
-
-                  </div>
-                  {{ form_row(registrationForm.plainPassword, {
-                                    label: 'Password',
-                                    class: 'form-label',
-                                    attr:{
-                                    placeholder :'Saisir votre mot de pass',
-                                    class : 'form-control',
-                                    }
-                                    }) }}
-                  <div class="mb-4">
-                    <p class="mb-0">By registering you agree to the 3Tek-Europe
-                      <a href="#" class="text-primary">Terms of Use</a>
-                    </p>
-                  </div>
-
-                  <div class="mt-4 pt-2 text-center">
-                    <div class="signin-other-title">
-                      <h5 class="font-size-14 mb-3 text-muted fw-medium">- Sign up using -</h5>
-                      {{form_row(registrationForm.categorie)}}
+                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', {
+                      label_attr: {class: 'form-label'}
+                    }) }}
+                    {{ form_widget(registrationForm.plainPassword, {
+                      attr: {
+                        placeholder: 'Saisir votre mot de passe',
+                        class: 'form-control' ~ (form_errors(registrationForm.plainPassword) ? ' is-invalid' : '')
+                      }
+                    }) }}
+                    <div class="form-text text-muted small" id="password-help">
+                      <i class="mdi mdi-information-outline"></i> 
+                      Le mot de passe doit contenir entre 8 et 20 caractères, au moins une majuscule, une minuscule et un chiffre.
                     </div>
-
+                    {% if form_errors(registrationForm.plainPassword) %}
+                    <div class="alert alert-danger mt-2 mb-0" role="alert">
+                      <strong><i class="mdi mdi-alert-circle"></i> Erreur :</strong>
+                      {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                    {% endif %}
                   </div>
 
-                  {{ form_row(registrationForm.agreeTerms, {
-                                    label :'Agréement',
-                                    class : 'form-check-label',
-                                    for : 'Agrée',
-                                    attr: {
-                                    class: 'form-check-input'
-                                    }
-                                    }) }}
+                  <div class="mt-4 pt-2">
+                    <div class="signin-other-title">
+                      <h5 class="font-size-14 mb-3 text-muted fw-medium text-center">- Choisissez votre catégorie -</h5>
+                      <div class="row g-3">
+                        {% for choice in registrationForm.categorie.vars.choices %}
+                        <div class="col-md-6 col-lg-4">
+                          <div class="category-box">
+                            <input type="checkbox" 
+                                   name="{{ registrationForm.categorie.vars.full_name }}[]" 
+                                   id="category_{{ choice.value }}" 
+                                   value="{{ choice.value }}"
+                                   class="category-checkbox">
+                            <label for="category_{{ choice.value }}" class="category-label">
+                              <div class="category-card">
+                                <i class="bx bx-category mb-1"></i>
+                                <h6 class="mb-0">{{ choice.label|capitalize }}</h6>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                      
+                      {# Masquer les checkboxes par défaut de Symfony #}
+                      <div style="display: none;">
+                        {{ form_widget(registrationForm.categorie) }}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <style>
+                    .category-box {
+                      position: relative;
+                    }
+                    
+                    .category-checkbox {
+                      position: absolute;
+                      opacity: 0;
+                      cursor: pointer;
+                    }
+                    
+                    .category-label {
+                      cursor: pointer;
+                      margin: 0;
+                    }
+                    
+                    .category-card {
+                      border: 2px solid #e9ecef;
+                      border-radius: 8px;
+                      padding: 15px 10px;
+                      text-align: center;
+                      transition: all 0.3s ease;
+                      background: #fff;
+                      height: 100%;
+                      min-height: 90px;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                    }
+                    
+                    .category-card:hover {
+                      border-color: #667eea;
+                      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.1);
+                      transform: translateY(-2px);
+                    }
+                    
+                    .category-checkbox:checked + .category-label .category-card {
+                      border-color: #667eea;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      color: white;
+                    }
+                    
+                    .category-checkbox:checked + .category-label .category-card i {
+                      color: white;
+                    }
+                    
+                    .category-card i {
+                      color: #667eea;
+                      transition: color 0.3s ease;
+                      font-size: 20px;
+                    }
+                    
+                    .category-card h6 {
+                      font-weight: 600;
+                      text-transform: capitalize;
+                      font-size: 14px;
+                    }
+                  </style>
 
-                  <button class="btn" type="submit">Register</button>
+                  <div class="mb-3 d-grid mt-4">
+                    <button class="btn btn-primary btn-lg waves-effect waves-light" type="submit">S'inscrire</button>
+                  </div>
                   {{ form_end(registrationForm) }}
                 </div>
 
                 <div class="mt-5 text-center">
-                  <p class="text-muted mb-0">Already have an account ?
+                  <p class="text-muted mb-0">Vous avez déjà un compte ?
                     <a href="{{ path('app_login') }}" class="text-primary fw-semibold">
-                      Login
+                      Se connecter
                     </a>
                   </p>
                 </div>
@@ -197,7 +298,7 @@
         <!-- end auth full page content -->
       </div>
       <!-- end col -->
-      <div class="col-xxl-9 col-lg-8 col-md-7">
+      <div class="col-xxl-8 col-xl-7 col-lg-6 col-md-5 d-none d-md-block">
         <div class="auth-bg pt-md-5 p-4 d-flex">
           <div class="bg-overlay bg-primary"></div>
           <ul class="bg-bubbles">
@@ -228,8 +329,7 @@
                       <div class="testi-contain text-white">
                         <i class="bx bxs-quote-alt-left text-success display-6"></i>
 
-                        <h4 class="mt-4 fw-medium lh-base text-white">“I feel confident imposing change on myself. It's a lot more progressing fun than looking back. That's why I ultricies enim at malesuada nibh diam on tortor neaded to throw curve balls.”
-                        </h4>
+                        <h4 class="mt-4 fw-medium lh-base text-white">"Je me sens confiant en imposant le changement sur moi-même. C'est beaucoup plus amusant et progressif que de regarder en arrière. C'est pourquoi j'ai besoin de lancer des balles courbes."</h4>
                         <div class="mt-4 pt-3 pb-5">
                           <div class="d-flex align-items-start">
                             <div class="flex-shrink-0">
@@ -238,7 +338,7 @@
                             <div class="flex-grow-1 ms-3 mb-4">
                               <h5 class="font-size-18 text-white">Richard Drews
                               </h5>
-                              <p class="mb-0 text-white-50">Web Designer</p>
+                              <p class="mb-0 text-white-50">Designer Web</p>
                             </div>
                           </div>
                         </div>
@@ -249,7 +349,7 @@
                       <div class="testi-contain text-white">
                         <i class="bx bxs-quote-alt-left text-success display-6"></i>
 
-                        <h4 class="mt-4 fw-medium lh-base text-white">“Our task must be to free ourselves by widening our circle of compassion to embrace all living creatures and the whole of quis consectetur nunc sit amet semper justo. nature and its beauty.”</h4>
+                        <h4 class="mt-4 fw-medium lh-base text-white">"Notre tâche doit être de nous libérer en élargissant notre cercle de compassion pour embrasser toutes les créatures vivantes et toute la nature dans sa beauté."</h4>
                         <div class="mt-4 pt-3 pb-5">
                           <div class="d-flex align-items-start">
                             <div class="flex-shrink-0">
@@ -258,7 +358,7 @@
                             <div class="flex-grow-1 ms-3 mb-4">
                               <h5 class="font-size-18 text-white">Rosanna French
                               </h5>
-                              <p class="mb-0 text-white-50">Web Developer</p>
+                              <p class="mb-0 text-white-50">Développeuse Web</p>
                             </div>
                           </div>
                         </div>
@@ -269,13 +369,13 @@
                       <div class="testi-contain text-white">
                         <i class="bx bxs-quote-alt-left text-success display-6"></i>
 
-                        <h4 class="mt-4 fw-medium lh-base text-white">“I've learned that people will forget what you said, people will forget what you did, but people will never forget how donec in efficitur lectus, nec lobortis metus you made them feel.”</h4>
+                        <h4 class="mt-4 fw-medium lh-base text-white">"J'ai appris que les gens oublieront ce que vous avez dit, les gens oublieront ce que vous avez fait, mais les gens n'oublieront jamais ce que vous leur avez fait ressentir."</h4>
                         <div class="mt-4 pt-3 pb-5">
                           <div class="d-flex align-items-start">
                             <img src="/images/users/avatar-3.jpg" class="avatar-md img-fluid rounded-circle" alt="...">
                             <div class="flex-1 ms-3 mb-4">
                               <h5 class="font-size-18 text-white">Ilse R. Eaton</h5>
-                              <p class="mb-0 text-white-50">Manager
+                              <p class="mb-0 text-white-50">Responsable
                               </p>
                             </div>
                           </div>
@@ -302,6 +402,47 @@
 
 <!-- validation init -->
 <script src="/js/pages/validation.init.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('registration_form_plainPassword');
+    
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const helpText = this.parentElement.querySelector('.form-text');
+            
+            // Vérifications
+            const hasMinLength = password.length >= 8;
+            const hasMaxLength = password.length <= 20;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            
+            // Changer la couleur du texte d'aide en fonction de la validité
+            if (password.length > 0) {
+                if (hasMinLength && hasMaxLength && hasUpperCase && hasLowerCase && hasNumber) {
+                    helpText.style.color = '#28a745'; // Vert si valide
+                    helpText.innerHTML = '<i class="mdi mdi-check-circle"></i> Mot de passe valide !';
+                } else {
+                    helpText.style.color = '#dc3545'; // Rouge si invalide
+                    let messages = [];
+                    if (!hasMinLength) messages.push('au moins 8 caractères');
+                    if (!hasMaxLength) messages.push('maximum 20 caractères');
+                    if (!hasUpperCase) messages.push('une majuscule');
+                    if (!hasLowerCase) messages.push('une minuscule');
+                    if (!hasNumber) messages.push('un chiffre');
+                    
+                    helpText.innerHTML = '<i class="mdi mdi-alert-circle"></i> Requis: ' + messages.join(', ');
+                }
+            } else {
+                helpText.style.color = '#6c757d'; // Gris par défaut
+                helpText.innerHTML = '<i class="mdi mdi-information-outline"></i> Le mot de passe doit contenir entre 8 et 20 caractères, au moins une majuscule, une minuscule et un chiffre.';
+            }
+        });
+    }
+});
+</script>
 
 </body>
 

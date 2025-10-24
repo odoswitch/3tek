@@ -6,9 +6,11 @@ use App\Entity\Lot;
 use App\Entity\Type;
 use App\Entity\User;
 use App\Entity\Category;
+use App\Entity\Commande;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -46,15 +48,33 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('3tek');
+            ->setTitle('<img src="/images/3tek-logo.png" style="height: 30px; margin-right: 10px;"> 3Tek-Europe')
+            ->setFaviconPath('/images/favicon.ico')
+            ->setLocales(['fr' => '🇫🇷 Français'])
+            ->setDefaultColorScheme('light');
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->addCssFile('/css/admin-custom.css');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Dashboard Admin', 'fa fa-home');
+        
+        yield MenuItem::section('Gestion');
         yield MenuItem::linkToCrud('Liste clients', 'fa-solid fa-user', User::class);
-        yield MenuItem::linkToCrud('The Category', 'fas fa-list', Category::class);
-        yield MenuItem::linkToCrud('The Lots', 'fa-solid fa-gift', Lot::class);
-        yield MenuItem::linkToCrud('The Type Client', 'fa-solid fa-face-smile', Type::class);
+        yield MenuItem::linkToCrud('Catégories', 'fas fa-list', Category::class);
+        yield MenuItem::linkToCrud('Lots', 'fa-solid fa-gift', Lot::class);
+        yield MenuItem::linkToCrud('Types Client', 'fa-solid fa-face-smile', Type::class);
+        
+        yield MenuItem::section('Commandes');
+        yield MenuItem::linkToCrud('Toutes les commandes', 'fa fa-shopping-bag', Commande::class);
+        
+        yield MenuItem::section('Vue Client');
+        yield MenuItem::linkToRoute('Dashboard Client', 'fa fa-shopping-cart', 'app_dash')
+            ->setLinkTarget('_blank');
     }
 }

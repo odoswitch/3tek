@@ -21,12 +21,19 @@ class Type
     #[ORM\ManyToMany(targetEntity: Lot::class, mappedBy: 'types')]
     private Collection $lots;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'type')]
+    private Collection $users;
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     public function __construct()
     {
         $this->lots = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     public function __toString()
     {
@@ -73,6 +80,35 @@ class Type
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            if ($user->getType() === $this) {
+                $user->setType(null);
+            }
+        }
 
         return $this;
     }

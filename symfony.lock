@@ -47,6 +47,9 @@
             "./config/routes/easyadmin.yaml"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.9.1"
+    },
     "phpunit/phpunit": {
         "version": "11.5",
         "recipe": {

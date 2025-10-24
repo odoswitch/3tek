@@ -27,58 +27,14 @@
       <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
         <i class="fa fa-fw fa-bars"></i>
       </button>
-
-      <!-- App Search-->
-      <form class="app-search d-none d-lg-block">
-        <div class="position-relative">
-          <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}...">
-          <button class="btn btn-primary" type="button">
-            <i class="bx bx-search-alt align-middle"></i>
-          </button>
-        </div>
-      </form>
     </div>
 
     <div class="d-flex">
 
-      <div class="dropdown d-inline-block d-lg-none ms-2">
-        <button type="button" class="btn header-item" id="page-header-search-dropdown" data-bs-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <i data-feather="search" class="icon-lg"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-search-dropdown">
-
-          <form class="p-3">
-            <div class="form-group m-0">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..."
-                  aria-label="Search Result">
-
-                <button class="btn btn-primary" type="submit">
-                  <i class="mdi mdi-magnify"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
       <div class="dropdown d-none d-sm-inline-block">
         <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
-          {% if app.request.locale == 'en' %}
-          <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
-          {% elseif app.request.locale == 'es' %}
-          <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
-          {% elseif app.request.locale == 'de' %}
-          <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16">
-          {% elseif app.request.locale == 'it' %}
-          <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16">
-          {% elseif app.request.locale == 'ru' %}
-          <img class="header-lang-img" src="/images/flags/russia.jpg" alt="Header Language" height="16">
-          {% else %}
-          <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
-          {% endif %}
+          <img class="header-lang-img" src="/images/flags/french.jpg" alt="Français" height="16">
         </button>
         <div class="dropdown-menu dropdown-menu-end">
 
@@ -132,163 +88,88 @@
         </button>
       </div>
 
-      <div class="dropdown d-none d-lg-inline-block ms-1">
-        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          <i data-feather="grid" class="icon-lg"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <div class="p-2">
-            <div class="row g-0">
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/github.png" alt="Github">
-                  <span>GitHub</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/bitbucket.png" alt="bitbucket">
-                  <span>Bitbucket</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/dribbble.png" alt="dribbble">
-                  <span>Dribbble</span>
-                </a>
-              </div>
-            </div>
-
-            <div class="row g-0">
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/dropbox.png" alt="dropbox">
-                  <span>Dropbox</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/mail_chimp.png" alt="mail_chimp">
-                  <span>Mail Chimp</span>
-                </a>
-              </div>
-              <div class="col">
-                <a class="dropdown-icon-item" href="#">
-                  <img src="/images/brands/slack.png" alt="slack">
-                  <span>Slack</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="dropdown d-inline-block">
+        {% set commandesEnAttente = app.user.commandes|filter(c => c.statut == 'en_attente') %}
+        {% set commandesValidees = app.user.commandes|filter(c => c.statut == 'validee')|slice(0, 3) %}
+        {% set totalNotifications = commandesEnAttente|length + commandesValidees|length %}
+        
         <button type="button" class="btn header-item noti-icon position-relative"
           id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i data-feather="bell" class="icon-lg"></i>
-          <span class="badge bg-danger rounded-pill">5</span>
+          {% if totalNotifications > 0 %}
+          <span class="badge bg-danger rounded-pill">{{ totalNotifications }}</span>
+          {% endif %}
         </button>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
           aria-labelledby="page-header-notifications-dropdown">
           <div class="p-3">
             <div class="row align-items-center">
               <div class="col">
-                <h6 class="m-0">
-                  {% trans %}Notifications{% endtrans %}
-                </h6>
+                <h6 class="m-0">Notifications</h6>
               </div>
               <div class="col-auto">
-                <a href="#!" class="small text-reset text-decoration-underline">
-                  {% trans %}Unread{% endtrans %}
-                  (3)</a>
+                <a href="{{ path('app_mes_commandes') }}" class="small text-reset text-decoration-underline">
+                  Voir tout ({{ totalNotifications }})
+                </a>
               </div>
             </div>
           </div>
-          <div data-simplebar="data-simplebar" style="max-height: 230px;">
-            <a href="#!" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <img src="/images/users/avatar-3.jpg" class="rounded-circle avatar-sm" alt="user-pic">
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{% trans %}James Lemire{% endtrans %}</h6>
-                  <div class="font-size-13 text-muted">
-                    <p class="mb-1">{% trans %}It will seem like simplified English{% endtrans %}.
-                    </p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}1 hour ago{% endtrans %}</span>
-                    </p>
+          <div data-simplebar="data-simplebar" style="max-height: 300px;">
+            {% if totalNotifications == 0 %}
+            <div class="text-center p-4">
+              <i class="bx bx-bell-off font-size-24 text-muted mb-2"></i>
+              <p class="text-muted">Aucune notification</p>
+            </div>
+            {% else %}
+              {% for commande in commandesEnAttente %}
+              <a href="{{ path('app_commande_view', {id: commande.id}) }}" class="text-reset notification-item">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 avatar-sm me-3">
+                    <span class="avatar-title bg-warning rounded-circle font-size-16">
+                      <i class="bx bx-time-five"></i>
+                    </span>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">Commande en attente</h6>
+                    <div class="font-size-13 text-muted">
+                      <p class="mb-1">{{ commande.lot.name }} - {{ commande.prixTotal|number_format(2, ',', ' ') }} €</p>
+                      <p class="mb-0">
+                        <i class="mdi mdi-clock-outline"></i>
+                        <span>{{ commande.createdAt|date('d/m/Y à H:i') }}</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </a>
-            <a href="#!" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 avatar-sm me-3">
-                  <span class="avatar-title bg-primary rounded-circle font-size-16">
-                    <i class="bx bx-cart"></i>
-                  </span>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{% trans %}Your order is placed{% endtrans %}</h6>
-                  <div class="font-size-13 text-muted">
-                    <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans
-                      %}</p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}3 min ago{% endtrans %}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href="#!" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 avatar-sm me-3">
-                  <span class="avatar-title bg-success rounded-circle font-size-16">
-                    <i class="bx bx-badge-check"></i>
-                  </span>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{% trans %}Your item is shipped{% endtrans %}</h6>
-                  <div class="font-size-13 text-muted">
-                    <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans
-                      %}</p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}3 min ago{% endtrans %}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
+              </a>
+              {% endfor %}
 
-            <a href="#!" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <img src="/images/users/avatar-6.jpg" class="rounded-circle avatar-sm" alt="user-pic">
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{% trans %}Salena Layfield{% endtrans %}</h6>
-                  <div class="font-size-13 text-muted">
-                    <p class="mb-1">{% trans %}As a skeptical Cambridge friend of mine occidental{% endtrans %}.</p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      <span>{% trans %}1 hour ago{% endtrans %}</span>
-                    </p>
+              {% for commande in commandesValidees %}
+              <a href="{{ path('app_commande_view', {id: commande.id}) }}" class="text-reset notification-item">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 avatar-sm me-3">
+                    <span class="avatar-title bg-success rounded-circle font-size-16">
+                      <i class="bx bx-check-circle"></i>
+                    </span>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">Commande validée</h6>
+                    <div class="font-size-13 text-muted">
+                      <p class="mb-1">{{ commande.lot.name }} - {{ commande.prixTotal|number_format(2, ',', ' ') }} €</p>
+                      <p class="mb-0">
+                        <i class="mdi mdi-clock-outline"></i>
+                        <span>{{ commande.validatedAt|date('d/m/Y à H:i') }}</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </a>
+              </a>
+              {% endfor %}
+            {% endif %}
           </div>
           <div class="p-2 border-top d-grid">
-            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+            <a class="btn btn-sm btn-link font-size-14 text-center" href="{{ path('app_mes_commandes') }}">
               <i class="mdi mdi-arrow-right-circle me-1"></i>
-              <span>{% trans %}View More{% endtrans
-                %}..</span>
+              <span>Voir toutes les commandes</span>
             </a>
           </div>
         </div>
@@ -303,25 +184,32 @@
       <div class="dropdown d-inline-block">
         <button type="button" class="btn header-item bg-light-subtle border-start border-end"
           id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="rounded-circle header-profile-user" src="/images/users/avatar-1.jpg" alt="Header Avatar">
+          {% if app.user.profileImage %}
+          <img class="rounded-circle header-profile-user" src="/uploads/profile_images/{{ app.user.profileImage }}" alt="Profile" style="width: 32px; height: 32px; object-fit: cover;">
+          {% else %}
+          <div class="rounded-circle header-profile-user d-inline-flex align-items-center justify-content-center bg-primary text-white" style="width: 32px; height: 32px; font-size: 14px;">
+            {{ app.user.name|first|upper }}{{ app.user.lastname|first|upper }}
+          </div>
+          {% endif %}
           <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ app.user.lastname|capitalize }}
           </span>
           <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-end">
           <!-- item-->
-          <a class="dropdown-item" href="javascript:void(0)">
+          <a class="dropdown-item" href="{{ path('app_profile') }}">
             <i class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i>
-            {% trans %}Profile{% endtrans %}</a>
-          <a class="dropdown-item" href="auth-lock-screen">
-            <i class="mdi mdi-lock font-size-16 align-middle me-1"></i>
-            {% trans %}Lock Screen{% endtrans
-            %}</a>
+            Mon Profil</a>
+          <a class="dropdown-item" href="{{ path('app_mes_commandes') }}">
+            <i class="mdi mdi-package-variant font-size-16 align-middle me-1"></i>
+            Mes Commandes</a>
+          <a class="dropdown-item" href="{{ path('app_favoris') }}">
+            <i class="mdi mdi-heart font-size-16 align-middle me-1"></i>
+            Mes Favoris</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ path('app_logout') }}">
             <i class="mdi mdi-logout font-size-16 align-middle me-1"></i>
-            {% trans %}Logout{% endtrans
-            %}</a>
+            Déconnexion</a>
         </div>
       </div>
 

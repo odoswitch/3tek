@@ -1,0 +1,10 @@
+action:
+  add_new_item: '+ Ajouter une image'
+  
+form:
+  empty_value: 'Aucune image'
+  
+collection:
+  add: 'Ajouter une image'
+  delete: 'Supprimer'
+  empty: 'Aucune image ajoutée'

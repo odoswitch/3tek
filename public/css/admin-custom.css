@@ -1,0 +1,724 @@
+/* 3Tek-Europe Admin Custom Styles */
+
+:root {
+    --primary-color: #0066cc;
+    --secondary-color: #0052a3;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-color: #1f2937;
+    --bg-light: #f9fafb;
+}
+
+/* Body et fond général */
+body, .wrapper, .content-wrapper {
+    background-color: #f3f4f6 !important;
+}
+
+/* Sidebar personnalisé */
+.sidebar {
+    background: linear-gradient(180deg, #0066cc 0%, #0052a3 100%) !important;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    min-width: 260px !important;
+    width: 260px !important;
+}
+
+.sidebar .menu-item a {
+    color: rgba(255, 255, 255, 0.95) !important;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 4px 12px;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.sidebar .menu-item a i,
+.sidebar .menu-item a .fa,
+.sidebar .menu-item a .fas,
+.sidebar .menu-item a .far,
+.sidebar .menu-item a svg {
+    font-size: 20px !important;
+    margin-right: 14px !important;
+    width: 28px !important;
+    height: 20px !important;
+    text-align: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)) !important;
+}
+
+.sidebar .menu-item a:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    transform: translateX(5px);
+}
+
+.sidebar .menu-item.active a,
+.sidebar .menu-item a.active {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.sidebar .menu-header {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 12px !important;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700 !important;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    padding: 8px 16px !important;
+}
+
+/* Sidebar logo */
+.sidebar .sidebar-header,
+.sidebar .logo {
+    padding: 20px 16px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    margin-bottom: 16px;
+}
+
+.sidebar .sidebar-header img,
+.sidebar .logo img {
+    max-height: 40px !important;
+    width: auto !important;
+}
+
+/* Header */
+.header-logo {
+    background: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    background: white !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Content avec sidebar élargie */
+.content-wrapper {
+    margin-left: 260px !important;
+    padding: 20px !important;
+    width: calc(100% - 260px) !important;
+    min-height: 100vh !important;
+}
+
+.content, .main-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Centrer les tables et contenus */
+.datagrid-wrapper, .table-responsive {
+    width: 100% !important;
+    margin: 0 !important;
+    overflow-x: auto !important;
+}
+
+/* Container principal */
+.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Table responsive */
+.table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+    .content-wrapper {
+        padding: 15px !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .sidebar {
+        min-width: 220px !important;
+        width: 220px !important;
+    }
+    
+    .sidebar .menu-item a {
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+    
+    .sidebar .menu-item a i,
+    .sidebar .menu-item a .fa {
+        font-size: 16px !important;
+        margin-right: 10px !important;
+    }
+    
+    .content-wrapper {
+        margin-left: 220px !important;
+        width: calc(100% - 220px) !important;
+        padding: 15px !important;
+    }
+    
+    .table {
+        font-size: 13px !important;
+    }
+    
+    .table thead th {
+        font-size: 12px !important;
+        padding: 12px 8px !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    .table tbody td {
+        padding: 10px 8px !important;
+        font-size: 13px !important;
+    }
+    
+    .content-header-title, .content-title, .content-header h1, .page-title {
+        font-size: 24px !important;
+    }
+    
+    .btn {
+        font-size: 13px !important;
+        padding: 8px 14px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .sidebar {
+        position: fixed !important;
+        left: -260px !important;
+        transition: left 0.3s ease !important;
+        z-index: 1000 !important;
+        height: 100vh !important;
+    }
+    
+    .sidebar.show {
+        left: 0 !important;
+    }
+    
+    .content-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px !important;
+    }
+    
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 12px !important;
+    }
+    
+    .table {
+        font-size: 12px !important;
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+    }
+    
+    .table thead th {
+        font-size: 11px !important;
+        padding: 10px 6px !important;
+    }
+    
+    .table tbody td {
+        padding: 10px 6px !important;
+        font-size: 12px !important;
+    }
+    
+    .btn {
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+    }
+    
+    .content-header-title, .content-title, .content-header h1, .page-title {
+        font-size: 22px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .card {
+        margin-bottom: 15px !important;
+    }
+    
+    /* Améliorer les actions sur mobile */
+    .action-index, .action-detail, .action-edit {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .content-wrapper {
+        padding: 10px !important;
+    }
+    
+    .content-header-title, .content-title, .content-header h1, .page-title {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .table {
+        font-size: 11px !important;
+    }
+    
+    .table thead th {
+        font-size: 10px !important;
+        padding: 8px 4px !important;
+    }
+    
+    .table tbody td {
+        padding: 8px 4px !important;
+        font-size: 11px !important;
+    }
+    
+    .btn {
+        font-size: 11px !important;
+        padding: 6px 10px !important;
+    }
+    
+    /* Hamburger menu pour mobile */
+    .navbar-toggler {
+        display: block !important;
+        font-size: 24px !important;
+    }
+}
+
+/* Cards et conteneurs */
+.card {
+    border: none !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    transform: translateY(-2px);
+}
+
+/* Tables */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    background: white !important;
+}
+
+.table thead th {
+    background: #0066cc !important;
+    color: white !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+    letter-spacing: 1px !important;
+    border: none !important;
+    padding: 16px 14px !important;
+    white-space: nowrap !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Améliorer la lisibilité des en-têtes */
+.table thead th a,
+.table thead th span {
+    color: white !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+}
+
+.table thead th i {
+    color: white !important;
+    opacity: 0.9 !important;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+    background: white !important;
+}
+
+.table tbody tr:hover {
+    background-color: #f0f9ff !important;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 14px;
+    color: #374151 !important;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Boutons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4) !important;
+}
+
+.btn-secondary {
+    background: #6b7280 !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.btn-success {
+    background: var(--success-color) !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.btn-warning {
+    background: var(--warning-color) !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.btn-danger {
+    background: var(--danger-color) !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+/* Badges */
+.badge {
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.badge-success {
+    background: var(--success-color) !important;
+}
+
+.badge-warning {
+    background: var(--warning-color) !important;
+}
+
+.badge-danger {
+    background: var(--danger-color) !important;
+}
+
+/* Formulaires */
+.form-control, .form-select {
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 10px 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+.form-label {
+    font-weight: 600 !important;
+    color: var(--dark-color) !important;
+    margin-bottom: 8px !important;
+    font-size: 13px !important;
+}
+
+/* Actions */
+.action-index, .action-detail, .action-edit, .action-new {
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    transition: all 0.2s ease !important;
+}
+
+.action-index:hover, .action-detail:hover, .action-edit:hover {
+    transform: scale(1.05) !important;
+}
+
+/* Pagination */
+.pagination {
+    gap: 5px;
+}
+
+.page-link {
+    border-radius: 6px !important;
+    border: 1px solid #e5e7eb !important;
+    color: var(--primary-color) !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.page-link:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.breadcrumb-item.active {
+    color: #6b7280 !important;
+}
+
+/* Content header */
+.content-header-title, .content-title, .content-header h1, .page-title {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin-bottom: 24px !important;
+}
+
+/* Améliorer la barre de recherche */
+.form-control, .form-select {
+    font-size: 15px !important;
+    color: #374151 !important;
+}
+
+/* Icônes dans le header */
+.navbar .btn, .navbar button, .navbar a {
+    font-size: 16px !important;
+}
+
+.navbar i, .navbar .fa, .navbar .fas {
+    font-size: 18px !important;
+}
+
+/* Content area */
+.content, .main-content {
+    background: #f3f4f6 !important;
+}
+
+/* Datagrid wrapper */
+.datagrid, .datagrid-wrapper {
+    background: white !important;
+    border-radius: 10px !important;
+    padding: 15px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    margin-top: 20px !important;
+}
+
+/* Page header */
+.content-header, .page-header {
+    margin-bottom: 20px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 2px solid #e5e7eb !important;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 15px 20px !important;
+    font-weight: 500 !important;
+}
+
+.alert-success {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+.alert-warning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.alert-danger {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+}
+
+.alert-info {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+/* Filters */
+.filters-row {
+    background: #f9fafb !important;
+    border-radius: 10px !important;
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Search */
+.form-action-search input {
+    border-radius: 20px !important;
+    padding-left: 40px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+    }
+    
+    .content {
+        margin-left: 0 !important;
+    }
+    
+    .table {
+        font-size: 12px !important;
+    }
+    
+    .btn {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+}
+
+/* Force light mode - disable dark mode */
+body, .wrapper, .content-wrapper, .main-content {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+.card {
+    background: white !important;
+    color: #111827 !important;
+}
+
+.table {
+    background: white !important;
+    color: #111827 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .table, .alert {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* Logo dans le header */
+.header-logo img {
+    max-height: 35px;
+    width: auto;
+}
+
+/* Stats cards */
+.stats-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Amélioration de la lisibilité globale */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Texte dans les cellules */
+.table td, .table th {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+/* Liens dans les tables */
+.table a {
+    color: #0066cc !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+
+.table a:hover {
+    color: #0052a3 !important;
+    text-decoration: underline !important;
+}
+
+/* Checkbox et actions */
+.form-check-input {
+    border: 2px solid #d1d5db !important;
+    border-radius: 4px !important;
+}
+
+.form-check-input:checked {
+    background-color: #0066cc !important;
+    border-color: #0066cc !important;
+}
+
+/* Actions dropdown */
+.dropdown-menu {
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    border-radius: 8px !important;
+}
+
+.dropdown-item {
+    padding: 10px 16px !important;
+    color: #374151 !important;
+    transition: all 0.2s ease !important;
+}
+
+.dropdown-item:hover {
+    background: #f3f4f6 !important;
+    color: #0066cc !important;
+}
