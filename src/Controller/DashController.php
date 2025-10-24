@@ -63,10 +63,10 @@ final class DashController extends AbstractController
                 ->addSelect('cat')
                 ->innerJoin('App\Entity\User', 'u', 'WITH', 'u.id = :userId')
                 ->innerJoin('u.categorie', 'uc')
-                ->leftJoin('u.type', 'ut')
+                ->innerJoin('u.type', 'ut')
                 ->where('uc = l.cat')
                 ->andWhere('u.isVerified = 1')
-                ->andWhere('ut MEMBER OF l.types OR u.type IS NULL')
+                ->andWhere('ut MEMBER OF l.types')
                 ->setParameter('userId', $user);
             
             // Ajouter la recherche si présente

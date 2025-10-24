@@ -28,7 +28,34 @@ class LotController extends AbstractController
     #[Route('/lots', name: 'app_lots_list')]
     public function list(LotRepository $lotRepository): Response
     {
-        $lots = $lotRepository->findAll();
+        $user = $this->getUser();
+        
+        // Admin voit tous les lots
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $lots = $lotRepository->findAll();
+        } else {
+            // Utilisateur normal : filtrer par catégorie et type
+            if (!$user || !$user->getCategorie() || !$user->getType()) {
+                // Si pas de catégorie ou type, aucun lot
+                $lots = [];
+            } else {
+                // Filtrer les lots selon la catégorie et le type de l'utilisateur
+                $lots = $lotRepository->createQueryBuilder('l')
+                    ->leftJoin('l.images', 'images')
+                    ->addSelect('images')
+                    ->leftJoin('l.types', 'lt')
+                    ->addSelect('lt')
+                    ->where('l.cat = :categorie')
+                    ->andWhere(':userType MEMBER OF l.types')
+                    ->andWhere('l.quantite > 0')
+                    ->setParameter('categorie', $user->getCategorie())
+                    ->setParameter('userType', $user->getType())
+                    ->orderBy('l.quantite', 'DESC')
+                    ->addOrderBy('l.id', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+            }
+        }
         
         return $this->render('lot/list.html.twig', [
             'lots' => $lots,
