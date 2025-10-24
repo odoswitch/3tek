@@ -184,6 +184,39 @@ MAILER_DSN=smtp://noreply@3tek-europe.com:PASSWORD@mail.3tek-europe.com:587
 MAILER_DSN=gmail+smtp://votre-email@gmail.com:mot-de-passe-app@default
 ```
 
+## 🆕 Nouvelles fonctionnalités à déployer
+
+### 1. Système de logs emails (EmailLog)
+```bash
+# Créer la table email_log via migration
+php bin/console doctrine:migrations:migrate --no-interaction
+```
+
+**Vérification :**
+- Accéder à `/admin` → Menu "Logs Emails"
+- Vérifier que les emails envoyés sont bien enregistrés
+- Tester l'action "Supprimer logs > 30 jours"
+
+### 2. Pages RGPD
+Les nouvelles routes sont disponibles :
+- `/rgpd/privacy-policy` - Politique de confidentialité
+- `/rgpd/legal-notice` - Mentions légales
+- `/rgpd/my-data` - Mes données personnelles (nécessite connexion)
+
+**À faire :**
+- Personnaliser le contenu dans `templates/rgpd/` selon vos besoins légaux
+- Vérifier les liens dans le footer
+
+### 3. Timeout de session (30 minutes)
+Configuré automatiquement via `SessionTimeoutListener`
+- Déconnexion automatique après 30 min d'inactivité
+- Message flash informatif pour l'utilisateur
+
+### 4. Améliorations diverses
+- Timezone Europe/Paris configurée
+- Amélioration du système de notifications
+- Corrections de bugs EmailLogCrudController
+
 ## 📝 Checklist de déploiement
 
 - [ ] Base de données créée
@@ -281,4 +314,14 @@ En cas de problème :
 
 ---
 
-**Dernière mise à jour :** {{ "now"|date("d/m/Y") }}
+**Dernière mise à jour :** 24/10/2025
+
+## 🔄 Historique des déploiements
+
+### Version 24/10/2025
+- ✅ Correction EmailLogCrudController (suppression actions dupliquées)
+- ✅ Ajout système de logs emails avec interface admin
+- ✅ Ajout pages RGPD (confidentialité, mentions légales, mes données)
+- ✅ Ajout timeout de session (30 minutes)
+- ✅ Configuration timezone Europe/Paris
+- ✅ Améliorations diverses et corrections de bugs
