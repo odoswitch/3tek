@@ -59,10 +59,12 @@
                                                         {% endif %}
                                                     </td>
                                                 </tr>
+                                                {% if is_granted('ROLE_ADMIN') %}
                                                 <tr>
                                                     <th>Type de client</th>
                                                     <td>{{ user.type ? user.type.name : 'Non défini' }}</td>
                                                 </tr>
+                                                {% endif %}
                                                 <tr>
                                                     <th>Compte vérifié</th>
                                                     <td>

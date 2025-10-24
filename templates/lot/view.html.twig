@@ -221,7 +221,7 @@
                                 
                                 <div class="mb-4">
                                     <h5 class="font-size-16 mb-2">Description</h5>
-                                    <div class="text-muted">{{ lot.description|raw|replace({'&nbsp;': ' '}) }}</div>
+                                    <div class="text-muted">{{ lot.description|nl2br|replace({'&nbsp;': ' '}) }}</div>
                                 </div>
                                 
                                 <div class="d-grid gap-2">
