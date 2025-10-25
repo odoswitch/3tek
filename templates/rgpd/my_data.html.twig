@@ -7,10 +7,12 @@
 
 <body>
     <div id="layout-wrapper">
+        {% if app.user is defined and app.user %}
         {{ include('partials/topbar.html.twig') }}
         {{ include('partials/sidebar.html.twig') }}
+        {% endif %}
 
-        <div class="main-content">
+        <div class="main-content" {% if not (app.user is defined and app.user) %}style="margin-left: 0;"{% endif %}>
             <div class="page-content">
                 <div class="container-fluid">
                     {{ include('partials/page-title.html.twig', {

@@ -1,2 +1,4 @@
+{% if app.user is defined and app.user %}
 {{ include('partials/topbar.html.twig') }}
 {{ include('partials/sidebar.html.twig') }}
+{% endif %}

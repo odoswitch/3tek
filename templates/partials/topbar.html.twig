@@ -89,9 +89,15 @@
       </div>
 
       <div class="dropdown d-inline-block">
+        {% if app.user is defined and app.user %}
         {% set commandesEnAttente = app.user.commandes|filter(c => c.statut == 'en_attente') %}
         {% set commandesValidees = app.user.commandes|filter(c => c.statut == 'validee')|slice(0, 3) %}
         {% set totalNotifications = commandesEnAttente|length + commandesValidees|length %}
+        {% else %}
+        {% set commandesEnAttente = [] %}
+        {% set commandesValidees = [] %}
+        {% set totalNotifications = 0 %}
+        {% endif %}
         
         <button type="button" class="btn header-item noti-icon position-relative"
           id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -181,6 +187,7 @@
         </button>
       </div>
 
+      {% if app.user is defined and app.user %}
       <div class="dropdown d-inline-block">
         <button type="button" class="btn header-item bg-light-subtle border-start border-end"
           id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -212,6 +219,7 @@
             Déconnexion</a>
         </div>
       </div>
+      {% endif %}
 
     </div>
   </div>

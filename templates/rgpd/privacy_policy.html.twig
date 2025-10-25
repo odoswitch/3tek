@@ -7,16 +7,28 @@
 
 <body>
     <div id="layout-wrapper">
+        {% if app.user is defined and app.user %}
         {{ include('partials/topbar.html.twig') }}
         {{ include('partials/sidebar.html.twig') }}
+        {% endif %}
 
-        <div class="main-content">
+        <div class="main-content" {% if not (app.user is defined and app.user) %}style="margin-left: 0;"{% endif %}>
             <div class="page-content">
                 <div class="container-fluid">
                     {{ include('partials/page-title.html.twig', {
                         pagetitle: 'RGPD',
                         title: 'Politique de confidentialité'
                     }) }}
+
+                    {% if not (app.user is defined and app.user) %}
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <a href="{{ path('app_login') }}" class="btn btn-primary">
+                                <i class="mdi mdi-login me-1"></i> Retour à la connexion
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
 
                     <div class="row">
                         <div class="col-12">

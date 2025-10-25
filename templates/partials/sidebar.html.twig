@@ -20,9 +20,11 @@
           <a href="{{ path('app_panier') }}">
             <i data-feather="shopping-cart"></i>
             <span data-key="t-panier">Mon Panier</span>
+            {% if app.user is defined and app.user %}
             {% set panierCount = app.user.paniers|length %}
             {% if panierCount > 0 %}
             <span class="badge rounded-pill bg-primary float-end">{{ panierCount }}</span>
+            {% endif %}
             {% endif %}
           </a>
         </li>
@@ -31,9 +33,11 @@
           <a href="{{ path('app_mes_commandes') }}">
             <i data-feather="package"></i>
             <span data-key="t-commandes">Mes Commandes</span>
+            {% if app.user is defined and app.user %}
             {% set commandesEnAttente = app.user.commandes|filter(c => c.statut == 'en_attente')|length %}
             {% if commandesEnAttente > 0 %}
             <span class="badge rounded-pill bg-warning float-end">{{ commandesEnAttente }}</span>
+            {% endif %}
             {% endif %}
           </a>
         </li>
