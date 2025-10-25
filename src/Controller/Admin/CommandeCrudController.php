@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Commande;
+use App\Repository\FileAttenteRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -13,9 +14,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 
 class CommandeCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private FileAttenteRepository $fileAttenteRepository,
+        private MailerInterface $mailer
+    ) {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Commande::class;
@@ -49,12 +59,14 @@ class CommandeCrudController extends AbstractCrudController
             }),
             ChoiceField::new('statut', 'Statut')
                 ->setChoices([
-                    'En attente de paiement' => 'en_attente',
+                    'En attente' => 'en_attente',
+                    'Réservé' => 'reserve',
                     'Validée' => 'validee',
                     'Annulée' => 'annulee',
                 ])
                 ->renderAsBadges([
                     'en_attente' => 'warning',
+                    'reserve' => 'info',
                     'validee' => 'success',
                     'annulee' => 'danger',
                 ]),
@@ -83,17 +95,101 @@ class CommandeCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Commande) {
-            // Si la commande passe à "validée", réduire le stock
-            if ($entityInstance->getStatut() === 'validee' && !$entityInstance->getValidatedAt()) {
-                $lot = $entityInstance->getLot();
-                $nouvelleQuantite = $lot->getQuantite() - $entityInstance->getQuantite();
-                $lot->setQuantite(max(0, $nouvelleQuantite));
+            $lot = $entityInstance->getLot();
+            $ancienStatut = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance)['statut'] ?? null;
+            
+            // Si la commande passe à "validée"
+            if ($entityInstance->getStatut() === 'validee' && $ancienStatut !== 'validee') {
+                // Marquer le lot comme vendu
+                $lot->setStatut('vendu');
+                $lot->setQuantite(0);
                 $entityInstance->setValidatedAt(new \DateTimeImmutable());
                 
                 $entityManager->persist($lot);
             }
+            
+            // Si la commande est annulée
+            if ($entityInstance->getStatut() === 'annulee' && $ancienStatut !== 'annulee') {
+                // Libérer le lot et notifier le prochain dans la file d'attente
+                $this->libererLot($lot, $entityManager);
+            }
         }
 
         parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    /**
+     * Libère un lot réservé et notifie le prochain utilisateur dans la file d'attente
+     */
+    private function libererLot($lot, EntityManagerInterface $entityManager): void
+    {
+        // Remettre le lot comme disponible ET restaurer la quantité
+        $lot->setStatut('disponible');
+        $lot->setReservePar(null);
+        $lot->setReserveAt(null);
+        
+        // Restaurer la quantité (remettre à 1 si c'était un lot unique)
+        if ($lot->getQuantite() == 0) {
+            $lot->setQuantite(1);
+        }
+        
+        // Chercher le premier utilisateur dans la file d'attente
+        $premierEnAttente = $this->fileAttenteRepository->findFirstInQueue($lot);
+        
+        if ($premierEnAttente) {
+            // Notifier l'utilisateur
+            $this->notifierDisponibilite($premierEnAttente);
+            
+            // Marquer comme notifié
+            $premierEnAttente->setStatut('notifie');
+            $premierEnAttente->setNotifiedAt(new \DateTimeImmutable());
+            $entityManager->persist($premierEnAttente);
+        }
+        
+        $entityManager->persist($lot);
+    }
+
+    /**
+     * Envoie un email pour notifier qu'un lot est disponible
+     */
+    private function notifierDisponibilite($fileAttente): void
+    {
+        $user = $fileAttente->getUser();
+        $lot = $fileAttente->getLot();
+        
+        $email = (new Email())
+            ->from(new Address('noreply@3tek-europe.com', '3Tek-Europe'))
+            ->to($user->getEmail())
+            ->replyTo('noreply@3tek-europe.com')
+            ->subject('Le lot "' . $lot->getName() . '" est maintenant disponible !')
+            ->html(sprintf(
+                '<h2>Bonne nouvelle !</h2>
+                <p>Bonjour %s,</p>
+                <p>Le lot <strong>%s</strong> pour lequel vous étiez en file d\'attente est maintenant disponible.</p>
+                <p>Connectez-vous rapidement à votre espace client pour le réserver avant qu\'il ne soit pris par quelqu\'un d\'autre.</p>
+                <p><a href="%s" style="display: inline-block; padding: 12px 30px; background: #0066cc; color: white; text-decoration: none; border-radius: 5px;">Voir le lot</a></p>
+                <p>Cordialement,<br>L\'équipe 3Tek-Europe</p>',
+                $user->getName(),
+                $lot->getName(),
+                'https://app.3tek-europe.com/lot/' . $lot->getId()
+            ))
+            ->text(sprintf(
+                "Bonjour %s,\n\nLe lot \"%s\" pour lequel vous étiez en file d'attente est maintenant disponible.\n\nConnectez-vous rapidement à votre espace client pour le réserver.\n\nCordialement,\nL'équipe 3Tek-Europe",
+                $user->getName(),
+                $lot->getName()
+            ));
+        
+        // Ajouter des en-têtes
+        $headers = $email->getHeaders();
+        $headers->addTextHeader('X-Mailer', '3Tek-Europe Notification System');
+        $headers->addTextHeader('X-Priority', '2');
+        $headers->addTextHeader('Importance', 'High');
+        
+        try {
+            $this->mailer->send($email);
+        } catch (\Exception $e) {
+            // Logger l'erreur mais ne pas bloquer le processus
+            error_log('Erreur envoi email notification disponibilité: ' . $e->getMessage());
+        }
     }
 }

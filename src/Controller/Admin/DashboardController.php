@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Category;
 use App\Entity\Commande;
 use App\Entity\EmailLog;
+use App\Entity\FileAttente;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -179,6 +180,7 @@ class DashboardController extends AbstractDashboardController
         
         yield MenuItem::section('Commandes');
         yield MenuItem::linkToCrud('Toutes les commandes', 'fa fa-shopping-bag', Commande::class);
+        yield MenuItem::linkToCrud('Files d\'attente', 'fa fa-clock', FileAttente::class);
         
         yield MenuItem::section('Système');
         yield MenuItem::linkToCrud('Logs Emails', 'fa fa-envelope', EmailLog::class);

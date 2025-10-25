@@ -26,22 +26,45 @@ try {
     // Créer le mailer
     $mailer = new Mailer($transport);
     
-    // Créer l'email
-    $email = (new Email())
-        ->from($from)
-        ->to('noreply@odoip.net')
-        ->subject('Test Email 3TEK - ' . date('Y-m-d H:i:s'))
-        ->text('Ceci est un email de test depuis l\'application 3TEK.')
-        ->html('<p>Ceci est un <strong>email de test</strong> depuis l\'application 3TEK.</p>');
+    // Adresses de test
+    $testEmails = [
+        'toufic.khreish@gmail.com',
+        'congocrei2000@gmail.com',
+        'toufic.khreish@3tek-europe.com'
+    ];
     
-    echo "Envoi de l'email...\n";
+    echo "Envoi vers : " . implode(', ', $testEmails) . "\n\n";
     
-    // Envoyer l'email
-    $mailer->send($email);
-    
-    echo "✅ Email envoyé avec succès!\n";
+    foreach ($testEmails as $recipient) {
+        echo "Envoi vers $recipient...\n";
+        
+        // Créer l'email avec améliorations
+        $email = (new Email())
+            ->from($from)
+            ->to($recipient)
+            ->replyTo($from)
+            ->subject('Test Email 3TEK - ' . date('Y-m-d H:i:s'))
+            ->text('Ceci est un email de test depuis l\'application 3TEK.' . "\n\nEnvoyé à : " . $recipient)
+            ->html('<p>Ceci est un <strong>email de test</strong> depuis l\'application 3TEK.</p><p>Envoyé à : ' . $recipient . '</p>');
+        
+        // Ajouter des en-têtes pour améliorer la délivrabilité
+        $headers = $email->getHeaders();
+        $headers->addTextHeader('X-Mailer', '3Tek-Europe Notification System');
+        $headers->addTextHeader('X-Priority', '3');
+        $headers->addTextHeader('Importance', 'Normal');
+        
+        try {
+            // Envoyer l'email
+            $mailer->send($email);
+            echo "  ✅ Envoyé avec succès à $recipient\n";
+        } catch (\Exception $e) {
+            echo "  ❌ ERREUR pour $recipient: " . $e->getMessage() . "\n";
+        }
+        
+        echo "\n";
+    }
     
 } catch (\Exception $e) {
-    echo "❌ ERREUR lors de l'envoi: " . $e->getMessage() . "\n";
+    echo "❌ ERREUR GLOBALE: " . $e->getMessage() . "\n";
     echo "Trace: " . $e->getTraceAsString() . "\n";
 }

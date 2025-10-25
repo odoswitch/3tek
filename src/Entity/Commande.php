@@ -180,10 +180,31 @@ class Commande
     public function getStatutLabel(): string
     {
         return match($this->statut) {
-            'en_attente' => 'En attente de paiement',
+            'en_attente' => 'En attente',
+            'reserve' => 'Réservé',
             'validee' => 'Validée',
             'annulee' => 'Annulée',
             default => 'Inconnu',
         };
+    }
+
+    public function isEnAttente(): bool
+    {
+        return $this->statut === 'en_attente';
+    }
+
+    public function isReserve(): bool
+    {
+        return $this->statut === 'reserve';
+    }
+
+    public function isValidee(): bool
+    {
+        return $this->statut === 'validee';
+    }
+
+    public function isAnnulee(): bool
+    {
+        return $this->statut === 'annulee';
     }
 }

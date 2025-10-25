@@ -111,7 +111,14 @@ class LotNotificationService
         $email = (new Email())
             ->from(new Address($this->mailFromAddress, $this->mailFromName))
             ->to($user->getEmail())
+            ->replyTo($this->mailFromAddress)
             ->subject('Nouveau lot disponible : ' . $lot->getName());
+
+        // Ajouter des en-têtes pour améliorer la délivrabilité
+        $headers = $email->getHeaders();
+        $headers->addTextHeader('X-Mailer', '3Tek-Europe Notification System');
+        $headers->addTextHeader('X-Priority', '3');
+        $headers->addTextHeader('Importance', 'Normal');
 
         // Ajouter le contenu HTML avec URLs absolues
         $email->html(
@@ -123,6 +130,13 @@ class LotNotificationService
                 'logoUrl' => $logoUrl,
             ])
         );
+        
+        // Ajouter une version texte pour améliorer la délivrabilité
+        $email->text(sprintf(
+            "Bonjour %s,\n\nUn nouveau lot est disponible : %s\n\nConnectez-vous à votre espace client pour le découvrir.\n\nCordialement,\nL'équipe 3Tek-Europe",
+            $user->getName(),
+            $lot->getName()
+        ));
 
         // Envoyer l'email et logger
         try {

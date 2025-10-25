@@ -62,6 +62,16 @@ class Lot
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $statut = 'disponible';
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $reservePar = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $reserveAt = null;
+
     /**
      * @var Collection<int, LotImage>
      */
@@ -261,5 +271,63 @@ class Lot
             return $this->images->first()->getImageName();
         }
         return $this->image;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
+    public function getReservePar(): ?User
+    {
+        return $this->reservePar;
+    }
+
+    public function setReservePar(?User $reservePar): static
+    {
+        $this->reservePar = $reservePar;
+        return $this;
+    }
+
+    public function getReserveAt(): ?\DateTimeImmutable
+    {
+        return $this->reserveAt;
+    }
+
+    public function setReserveAt(?\DateTimeImmutable $reserveAt): static
+    {
+        $this->reserveAt = $reserveAt;
+        return $this;
+    }
+
+    public function isReserve(): bool
+    {
+        return $this->statut === 'reserve';
+    }
+
+    public function isDisponible(): bool
+    {
+        return $this->statut === 'disponible' && $this->quantite > 0;
+    }
+
+    public function isVendu(): bool
+    {
+        return $this->statut === 'vendu';
+    }
+
+    public function getStatutLabel(): string
+    {
+        return match($this->statut) {
+            'disponible' => 'Disponible',
+            'reserve' => 'Réservé',
+            'vendu' => 'Vendu',
+            default => 'Inconnu',
+        };
     }
 }

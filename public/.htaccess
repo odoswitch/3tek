@@ -1,5 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # Force /admin route to go through Symfony (not the physical directory)
+    RewriteRule ^admin(/.*)?$ index.php [QSA,L]
+    
+    # Standard Symfony rewrite rules
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [QSA,L]
