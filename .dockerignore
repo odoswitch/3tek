@@ -1,13 +1,50 @@
+# Git
 .git
 .gitignore
+.github
+
+# Environment files
 .env.local
 .env.*.local
-var/
+.env.test
+.env.dev
+
+# Cache and logs
+var/cache/*
+var/log/*
+var/sessions/*
+
+# Dependencies (will be installed in container)
 vendor/
 node_modules/
+
+# IDE
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
+
+# Documentation
 *.md
+!README.md
+
+# Docker files
 docker-compose*.yml
+docker-compose*.yaml
+compose*.yaml
 .dockerignore
 Dockerfile
+
+# Scripts
+*.sh
+!docker-entrypoint.sh
+*.bat
+
+# Tests
+tests/
+phpunit.dist.xml
+
+# Other
+.DS_Store
+Thumbs.db

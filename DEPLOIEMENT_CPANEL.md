@@ -6,6 +6,7 @@
 - Base de données MySQL 8.0+
 - Accès SSH (recommandé) ou FTP
 - Composer installé sur le serveur
+- Configuration email SMTP (ODOIP TELECOM)
 
 ## 🚀 Étapes de déploiement
 
@@ -13,24 +14,48 @@
 
 ```bash
 # Tester en mode production localement
-APP_ENV=prod php bin/console cache:clear
-APP_ENV=prod php bin/console cache:warmup
+docker compose exec php php bin/console cache:clear --env=prod
+docker compose exec php php bin/console cache:warmup --env=prod
 
 # Vérifier qu'il n'y a pas d'erreurs
-docker compose exec php php bin/console about
+docker compose exec php php bin/console about --env=prod
+
+# Tester l'envoi d'email
+docker compose exec php php test_email.php
 ```
 
 ### 2. Configuration cPanel
 
 #### A. Créer la base de données
 1. Aller dans **MySQL® Databases**
-2. Créer une nouvelle base de données : `3tek_prod`
-3. Créer un utilisateur MySQL
+2. Créer une nouvelle base de données : `db_3tek`
+3. Créer un utilisateur MySQL avec un mot de passe fort
 4. Associer l'utilisateur à la base avec tous les privilèges
+5. Noter les informations de connexion
 
 #### B. Configurer le domaine
 1. Aller dans **Domains** ou **Addon Domains**
 2. Pointer le document root vers : `/public_html/3tek/public`
+3. S'assurer que PHP 8.2 est sélectionné
+
+#### C. Configuration PHP (via Select PHP Version)
+Extensions requises :
+- ✅ pdo_mysql
+- ✅ mbstring
+- ✅ exif
+- ✅ pcntl
+- ✅ bcmath
+- ✅ gd
+- ✅ zip
+- ✅ intl
+
+Paramètres recommandés :
+```ini
+memory_limit = 256M
+max_execution_time = 300
+upload_max_filesize = 100M
+post_max_size = 100M
+```
 
 ### 3. Upload des fichiers
 
@@ -41,8 +66,11 @@ ssh votre-user@votre-domaine.com
 
 # Cloner le repository
 cd public_html
-git clone https://github.com/votre-repo/3tek.git
+git clone https://github.com/odoswitch/3tek.git
 cd 3tek
+
+# Installer les dépendances
+composer install --no-dev --optimize-autoloader
 ```
 
 #### Option B : Via FTP
@@ -64,16 +92,40 @@ nano .env
 **Configurer les variables :**
 
 ```env
+###> symfony/framework-bundle ###
 APP_ENV=prod
 APP_SECRET=GENERER_UNE_CLE_SECRETE_32_CARACTERES
-APP_DEBUG=0
+###< symfony/framework-bundle ###
 
-DATABASE_URL="mysql://user_3tek:PASSWORD@localhost:3306/3tek_prod?serverVersion=8.0&charset=utf8mb4"
+###> doctrine/doctrine-bundle ###
+DATABASE_URL="mysql://user_3tek:PASSWORD@localhost:3306/db_3tek?serverVersion=8.0&charset=utf8mb4"
+###< doctrine/doctrine-bundle ###
 
-MAILER_DSN=smtp://noreply@3tek-europe.com:PASSWORD@mail.3tek-europe.com:587
+###> symfony/mailer ###
+# Configuration SMTP cPanel ODOIP TELECOM
+# Email: ngamba@congoelectronicenter.com
+# Serveur: mail.congoelectronicenter.com
+# Port 465 avec SSL
+# Note: Le @ est encodé en %40 et le tiret (-) en %2D pour l'URL
+MAILER_DSN=smtp://ngamba%40congoelectronicenter.com:Ngamba%2D123@mail.congoelectronicenter.com:465?encryption=ssl
+MAILER_FROM=ngamba@congoelectronicenter.com
+###< symfony/mailer ###
 
-APP_URL=https://3tek-europe.com
+###> symfony/messenger ###
+MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
+###< symfony/messenger ###
+
+###> MySQL Configuration ###
+MYSQL_VERSION=8.0
+MYSQL_DATABASE=db_3tek
+MYSQL_ROOT_PASSWORD=VOTRE_MOT_DE_PASSE_ROOT
+###< MySQL Configuration ###
 ```
+
+**⚠️ Important** : 
+- Générez un `APP_SECRET` unique avec : `php bin/console secrets:generate-keys`
+- Remplacez les mots de passe par vos vraies valeurs
+- Pour l'encodage URL du MAILER_DSN : `@` = `%40`, `-` = `%2D`
 
 ### 5. Installation des dépendances
 
