@@ -92,3 +92,4 @@ echo "5. Vérifier que la description HTML est rendue\n\n";
 echo "=== FIN DU DIAGNOSTIC ===\n";
 
 
+

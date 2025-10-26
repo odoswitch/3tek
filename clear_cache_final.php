@@ -56,3 +56,4 @@ echo "5. Tester la galerie d'images\n\n";
 echo "=== FIN DU VIDAGE ===\n";
 
 
+

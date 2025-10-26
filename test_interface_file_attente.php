@@ -67,3 +67,4 @@ echo "L'utilisateur comprend le système de file d'attente.\n\n";
 echo "=== FIN DU TEST ===\n";
 
 
+

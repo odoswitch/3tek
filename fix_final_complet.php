@@ -124,3 +124,4 @@ echo "- Le système fonctionne parfaitement\n\n";
 echo "=== FIN DU FIX FINAL COMPLET ===\n";
 
 
+

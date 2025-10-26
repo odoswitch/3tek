@@ -67,3 +67,4 @@ echo "Tous les templates ont été vérifiés pour les erreurs VichUploader.\n";
 echo "\n=== FIN DE LA VÉRIFICATION ===\n";
 
 
+

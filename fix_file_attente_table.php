@@ -42,3 +42,4 @@ echo "Utilisez phpMyAdmin ou un client MySQL pour les exécuter.\n\n";
 echo "=== FIN DU SCRIPT ===\n";
 
 
+

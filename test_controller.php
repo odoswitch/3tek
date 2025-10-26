@@ -22,3 +22,4 @@ echo "4. Tester la logique de mise à jour manuellement\n\n";
 echo "=== FIN DU TEST ===\n";
 
 
+

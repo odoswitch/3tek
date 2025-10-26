@@ -181,3 +181,4 @@ echo "6. User3 devrait toujours voir le lot comme 'réservé' (par User2)\n\n";
 echo "=== FIN DE LA CRÉATION DE LA LOGIQUE CORRIGÉE ===\n";
 
 
+

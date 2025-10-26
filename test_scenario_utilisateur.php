@@ -178,3 +178,4 @@ echo "4. Et que User2 (premier en file) est notifié\n\n";
 echo "=== FIN DE LA CRÉATION DU SCÉNARIO ===\n";
 
 
+

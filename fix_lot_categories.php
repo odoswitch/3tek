@@ -88,3 +88,4 @@ echo "Ils devraient maintenant s'afficher sur l'interface utilisateur.\n\n";
 echo "=== FIN DU FIX ===\n";
 
 
+

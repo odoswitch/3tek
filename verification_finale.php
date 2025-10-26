@@ -74,3 +74,4 @@ if (strpos(implode('', $output), 'disponible') !== false && strpos(file_get_cont
 echo "\n=== FIN DE LA VÉRIFICATION ===\n";
 
 
+

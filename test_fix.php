@@ -25,3 +25,4 @@ echo "6. Vérifier que le statut passe à 'reserve'\n\n";
 echo "=== FIN DU TEST ===\n";
 
 
+

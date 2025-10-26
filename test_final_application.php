@@ -46,3 +46,4 @@ echo "Le problème de mise à jour du stock est résolu.\n\n";
 echo "=== FIN DU TEST FINAL ===\n";
 
 
+

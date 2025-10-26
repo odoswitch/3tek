@@ -44,3 +44,4 @@ echo "4. Tester la galerie d'images\n\n";
 echo "=== FIN DE LA VÉRIFICATION ===\n";
 
 
+

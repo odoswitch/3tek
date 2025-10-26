@@ -144,3 +144,4 @@ echo "- Commande créée et lot réservé\n\n";
 echo "=== FIN DE LA SIMULATION ===\n";
 
 
+

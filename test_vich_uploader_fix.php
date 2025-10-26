@@ -56,3 +56,4 @@ echo "Les images des lots s'affichent sans problème.\n\n";
 echo "=== FIN DU TEST ===\n";
 
 
+

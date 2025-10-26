@@ -47,3 +47,4 @@ echo "- Plus d'erreur 'Object could not be converted to string' dans EasyAdmin\n
 echo "=== FIN DU TEST ===\n";
 
 
+

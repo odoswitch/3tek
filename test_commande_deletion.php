@@ -67,3 +67,4 @@ echo "7. Vérifiez que la première personne de la file d'attente est notifiée\
 echo "=== FIN DU TEST ===\n";
 
 
+

@@ -124,3 +124,4 @@ echo "- File d'attente créée\n\n";
 echo "=== FIN DE LA SIMULATION ===\n";
 
 
+

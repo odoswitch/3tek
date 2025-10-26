@@ -20,3 +20,4 @@ echo "Résultat:\n$verifyOutput\n\n";
 echo "=== FIN DE LA CORRECTION ===\n";
 
 
+

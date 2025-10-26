@@ -78,3 +78,4 @@ echo "- Le système de file d'attente fonctionne normalement\n\n";
 echo "=== FIN DE LA CORRECTION IMMÉDIATE ===\n";
 
 
+

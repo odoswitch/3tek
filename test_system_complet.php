@@ -58,3 +58,4 @@ echo "L'application gère parfaitement le workflow de réservation.\n\n";
 echo "=== FIN DU TEST COMPLET ===\n";
 
 
+
