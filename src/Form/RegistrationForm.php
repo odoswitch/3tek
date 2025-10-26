@@ -22,7 +22,6 @@ class RegistrationForm extends AbstractType
         $builder
             ->add('office')
             ->add('email')
-            ->add('name')
             ->add('lastname')
             ->add('phone')
             ->add('plainPassword', PasswordType::class, [

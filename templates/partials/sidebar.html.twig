@@ -21,10 +21,10 @@
             <i data-feather="shopping-cart"></i>
             <span data-key="t-panier">Mon Panier</span>
             {% if app.user is defined and app.user %}
-            {% set panierCount = app.user.paniers|length %}
-            {% if panierCount > 0 %}
-            <span class="badge rounded-pill bg-primary float-end">{{ panierCount }}</span>
-            {% endif %}
+              {% set panierCount = app.user.paniers | length %}
+              {% if panierCount > 0 %}
+                <span class="badge rounded-pill bg-primary float-end">{{ panierCount }}</span>
+              {% endif %}
             {% endif %}
           </a>
         </li>
@@ -34,10 +34,10 @@
             <i data-feather="package"></i>
             <span data-key="t-commandes">Mes Commandes</span>
             {% if app.user is defined and app.user %}
-            {% set commandesEnAttente = app.user.commandes|filter(c => c.statut == 'en_attente')|length %}
-            {% if commandesEnAttente > 0 %}
-            <span class="badge rounded-pill bg-warning float-end">{{ commandesEnAttente }}</span>
-            {% endif %}
+              {% set commandesEnAttente = app.user.commandes | filter(c => c.statut == 'en_attente') | length %}
+              {% if commandesEnAttente > 0 %}
+                <span class="badge rounded-pill bg-warning float-end">{{ commandesEnAttente }}</span>
+              {% endif %}
             {% endif %}
           </a>
         </li>
@@ -50,6 +50,19 @@
         </li>
 
         <li>
+          <a href="{{ path('app_mes_files_attente') }}">
+            <i data-feather="clock"></i>
+            <span data-key="t-files-attente">Files d'Attente</span>
+            {% if app.user is defined and app.user %}
+              {% set filesCount = app.user.filesAttente | length %}
+              {% if filesCount > 0 %}
+                <span class="badge rounded-pill bg-warning float-end">{{ filesCount }}</span>
+              {% endif %}
+            {% endif %}
+          </a>
+        </li>
+
+        <li>
           <a href="{{ path('app_my_data') }}">
             <i data-feather="shield"></i>
             <span data-key="t-rgpd">Mes Données (RGPD)</span>
@@ -57,12 +70,12 @@
         </li>
 
         {% if is_granted('ROLE_ADMIN') %}
-        <li>
-          <a href="{{ path('app_admin') }}">
-            <i data-feather="shield"></i>
-            <span data-key="t-admin">Administration</span>
-          </a>
-        </li>
+          <li>
+            <a href="{{ path('app_admin') }}">
+              <i data-feather="shield"></i>
+              <span data-key="t-admin">Administration</span>
+            </a>
+          </li>
         {% endif %}
 
         <li class="menu-title mt-2" data-key="t-components">{% trans %}Surprise avec 3Tek-Europe{% endtrans %}</li>
@@ -80,7 +93,8 @@
             <h5 class="alertcard-title font-size-16 text-white">Accès Illimité</h5>
             <p class="font-size-13 text-white-50">Passez à un plan Business pour débloquer toutes les fonctionnalités premium de 3Tek-Europe</p>
             <a href="#!" class="btn btn-light btn-sm mt-2 waves-effect waves-light">
-              <i class="bx bx-rocket me-1"></i> Découvrir les offres
+              <i class="bx bx-rocket me-1"></i>
+              Découvrir les offres
             </a>
           </div>
         </div>

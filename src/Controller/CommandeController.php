@@ -23,14 +23,15 @@ class CommandeController extends AbstractController
         private MailerInterface $mailer,
         private Environment $twig,
         private string $projectDir
-    ) {
-    }
+    ) {}
 
     #[Route('/commande/create/{lotId}', name: 'app_commande_create', methods: ['POST'])]
     public function create(int $lotId, Request $request, LotRepository $lotRepository, FileAttenteRepository $fileAttenteRepository): Response
     {
+        error_log("DEBUG COMMANDE: Début de la méthode create pour lot ID=" . $lotId);
+
         $lot = $lotRepository->find($lotId);
-        
+
         if (!$lot) {
             $this->addFlash('error', 'Lot introuvable');
             return $this->redirectToRoute('app_dash');
@@ -51,7 +52,7 @@ class CommandeController extends AbstractController
             $fileAttente->setLot($lot);
             $fileAttente->setUser($user);
             $fileAttente->setPosition($fileAttenteRepository->getNextPosition($lot));
-            
+
             $this->entityManager->persist($fileAttente);
             $this->entityManager->flush();
 
@@ -72,53 +73,58 @@ class CommandeController extends AbstractController
             return $this->redirectToRoute('app_lot_view', ['id' => $lotId]);
         }
 
-        // Créer la commande et réserver le lot
+        // Créer la commande en attente de paiement
         $commande = new Commande();
         $commande->setUser($user);
         $commande->setLot($lot);
         $commande->setQuantite($quantite);
         $commande->setPrixUnitaire($lot->getPrix());
         $commande->setPrixTotal($lot->getPrix() * $quantite);
-        $commande->setStatut('reserve');
+        $commande->setStatut('en_attente'); // En attente de paiement
 
         // Persister d'abord la commande
         $this->entityManager->persist($commande);
         $this->entityManager->flush();
-        
-        // Décrémenter la quantité dès la réservation avec une requête directe
+
+        // Décrémenter la quantité et gérer le statut selon votre logique métier
         $nouvelleQuantite = $lot->getQuantite() - $quantite;
-        
-        $connection = $this->entityManager->getConnection();
-        
-        // Marquer le lot comme réservé SEULEMENT si le stock atteint 0
+
+        // Log de débogage
+        error_log("DEBUG COMMANDE: Lot ID=" . $lot->getId() . ", Quantité actuelle=" . $lot->getQuantite() . ", Quantité commandée=" . $quantite . ", Nouvelle quantité=" . $nouvelleQuantite);
+
+        // Si le stock atteint 0, marquer le lot comme réservé pour ce client
         if ($nouvelleQuantite <= 0) {
-            $sql = 'UPDATE lot SET quantite = :quantite, statut = :statut, reserve_par_id = :user_id, reserve_at = :reserve_at WHERE id = :id';
-            $connection->executeStatement($sql, [
-                'quantite' => 0,
-                'statut' => 'reserve',
-                'user_id' => $user->getId(),
-                'reserve_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
-                'id' => $lot->getId()
-            ]);
+            $lot->setQuantite(0);
+            $lot->setStatut('reserve');
+            $lot->setReservePar($user);
+            $lot->setReserveAt(new \DateTimeImmutable());
+
+            error_log("DEBUG COMMANDE: Stock atteint 0, marquage comme réservé");
         } else {
-            $sql = 'UPDATE lot SET quantite = :quantite WHERE id = :id';
-            $connection->executeStatement($sql, [
-                'quantite' => $nouvelleQuantite,
-                'id' => $lot->getId()
-            ]);
+            // Si le stock reste > 0, juste décrémenter la quantité
+            $lot->setQuantite($nouvelleQuantite);
+
+            error_log("DEBUG COMMANDE: Décrémentation de la quantité à " . $nouvelleQuantite);
         }
-        
-        // Rafraîchir l'entité pour avoir les nouvelles valeurs
-        $this->entityManager->refresh($lot);
+
+        // Persister les changements
+        $this->entityManager->persist($lot);
+        $this->entityManager->flush();
+
+        error_log("DEBUG COMMANDE: Stock mis à jour avec succès");
 
         // Envoyer l'email de confirmation au client
         $this->sendCommandeConfirmation($commande);
-        
+
         // Envoyer une notification à l'admin
         $this->sendAdminNotification($commande);
 
-        $this->addFlash('success', 'Votre commande a été enregistrée et le lot est maintenant réservé pour vous ! Vous recevrez un email de confirmation.');
-        
+        if ($nouvelleQuantite <= 0) {
+            $this->addFlash('success', 'Votre commande a été enregistrée et le lot est maintenant réservé pour vous ! Vous recevrez un email de confirmation.');
+        } else {
+            $this->addFlash('success', 'Votre commande a été enregistrée ! Le lot reste disponible pour d\'autres clients jusqu\'à votre paiement. Vous recevrez un email de confirmation.');
+        }
+
         return $this->redirectToRoute('app_commande_view', ['id' => $commande->getId()]);
     }
 
@@ -126,11 +132,11 @@ class CommandeController extends AbstractController
     public function mesCommandes(): Response
     {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         $commandes = $user->getCommandes();
 
         return $this->render('commande/list.html.twig', [
@@ -154,7 +160,7 @@ class CommandeController extends AbstractController
     {
         $user = $commande->getUser();
         $lot = $commande->getLot();
-        
+
         // Générer l'URL du logo dynamiquement
         $baseUrl = $this->generateUrl('app_dash', [], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
         $logoUrl = str_replace('/dash', '/images/3tek-logo.png', $baseUrl);
@@ -179,7 +185,7 @@ class CommandeController extends AbstractController
     {
         $user = $commande->getUser();
         $lot = $commande->getLot();
-        
+
         // Récupérer tous les utilisateurs avec le rôle ADMIN
         $admins = $this->entityManager->getRepository(\App\Entity\User::class)
             ->createQueryBuilder('u')
@@ -187,11 +193,11 @@ class CommandeController extends AbstractController
             ->setParameter('role', '%ROLE_ADMIN%')
             ->getQuery()
             ->getResult();
-        
+
         if (empty($admins)) {
             return; // Pas d'admin trouvé
         }
-        
+
         foreach ($admins as $admin) {
             $email = (new Email())
                 ->from(new Address('noreply@3tek-europe.com', '3Tek-Europe'))
@@ -244,13 +250,13 @@ class CommandeController extends AbstractController
                     $lot->getQuantite(),
                     $lot->getStatutLabel()
                 ));
-            
+
             // Ajouter des en-têtes
             $headers = $email->getHeaders();
             $headers->addTextHeader('X-Mailer', '3Tek-Europe Notification System');
             $headers->addTextHeader('X-Priority', '2');
             $headers->addTextHeader('Importance', 'High');
-            
+
             try {
                 $this->mailer->send($email);
             } catch (\Exception $e) {

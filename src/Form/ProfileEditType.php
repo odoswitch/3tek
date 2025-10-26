@@ -55,6 +55,26 @@ class ProfileEditType extends AbstractType
                     new NotBlank(['message' => 'L\'entreprise est obligatoire']),
                 ],
             ])
+            ->add('address', TextType::class, [
+                'label' => 'Adresse',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('code', TextType::class, [
+                'label' => 'Code postal',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('ville', TextType::class, [
+                'label' => 'Ville',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('pays', TextType::class, [
+                'label' => 'Pays',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('profileImageFile', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,

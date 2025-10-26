@@ -1,350 +1,376 @@
 {{ include('partials/main.html.twig') }}
 
 <head>
-    {{ include('partials/title-meta.html.twig', {title: lot.name}) }}
-    {{ include('partials/head-css.html.twig') }}
-    
-    <style>
-        .main-image-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 75%; /* Ratio 4:3 */
-            overflow: hidden;
-            border-radius: 8px;
-            cursor: zoom-in;
-            background: #f8f9fa;
-        }
-        
-        .main-image-container::after {
-            content: '🔍 Cliquer pour agrandir';
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        .main-image-container:hover::after {
-            opacity: 1;
-        }
-        
-        .main-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-        
-        .main-image:hover {
-            transform: scale(1.02);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .main-image-container {
-                padding-bottom: 100%; /* Ratio 1:1 sur mobile */
-            }
-        }
-        
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .main-image-container {
-                padding-bottom: 85%; /* Ratio intermédiaire sur tablette */
-            }
-        }
-        
-        .thumbnail-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-        
-        .thumbnail {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .thumbnail:hover {
-            border-color: #667eea;
-            transform: scale(1.05);
-        }
-        
-        .thumbnail.active {
-            border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
-        }
-        
-        /* Modal Gallery */
-        .gallery-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-        }
-        
-        .gallery-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content-gallery {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-        
-        .close-gallery {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10000;
-        }
-        
-        .gallery-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            font-size: 30px;
-            padding: 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        
-        .gallery-nav:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-        
-        .gallery-prev {
-            left: 20px;
-        }
-        
-        .gallery-next {
-            right: 20px;
-        }
-    </style>
+  {{ include('partials/title-meta.html.twig', {title: lot.name}) }}
+  {{ include('partials/head-css.html.twig') }}
+
+  <style>
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 75%;
+      /* Ratio 4:3 */
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: zoom-in;
+      background: #f8f9fa;
+    }
+
+    .main-image-container::after {
+      content: '🔍 Cliquer pour agrandir';
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .main-image-container:hover::after {
+      opacity: 1;
+    }
+
+    .main-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .main-image:hover {
+      transform: scale(1.02);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .main-image-container {
+        padding-bottom: 100%;
+        /* Ratio 1:1 sur mobile */
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .main-image-container {
+        padding-bottom: 85%;
+        /* Ratio intermédiaire sur tablette */
+      }
+    }
+
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover {
+      border-color: #667eea;
+      transform: scale(1.05);
+    }
+
+    .thumbnail.active {
+      border-color: #667eea;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    }
+
+    /* Modal Gallery */
+    .gallery-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+    }
+
+    .gallery-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content-gallery {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .close-gallery {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10000;
+    }
+
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      font-size: 30px;
+      padding: 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .gallery-nav:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .gallery-prev {
+      left: 20px;
+    }
+
+    .gallery-next {
+      right: 20px;
+    }
+  </style>
 </head>
 
 {{ include('partials/body.html.twig') }}
 
 <div id="layout-wrapper">
-    {{ include('partials/menu.html.twig') }}
+  {{ include('partials/menu.html.twig') }}
 
-    <div class="main-content" {% if not (app.user is defined and app.user) %}style="margin-left: 0;"{% endif %}>
-        <div class="page-content">
-            <div class="container-fluid">
-                {{ include('partials/page-title.html.twig', {pagetitle: 'Lots', title: lot.name}) }}
+  <div class="main-content" {% if not (app.user is defined and app.user) %} style="margin-left: 0;" {% endif %}>
+    <div class="page-content">
+      <div class="container-fluid">
+        {{ include('partials/page-title.html.twig', {pagetitle: 'Lots', title: lot.name}) }}
 
-                {% if not (app.user is defined and app.user) %}
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            <i class="mdi mdi-information me-2"></i>
-                            <strong>Connectez-vous</strong> pour ajouter ce lot à votre panier et passer commande.
-                            <a href="{{ path('app_login') }}" class="btn btn-primary btn-sm ms-3">
-                                <i class="mdi mdi-login me-1"></i> Se connecter
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <div class="row">
-                    <div class="col-lg-7">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Galerie d'images</h5>
-                                
-                                {% if lot.images|length > 0 %}
-                                    <!-- Image principale -->
-                                    <div class="main-image-container" onclick="openGallery(0)">
-                                        <img id="mainImage" 
-                                             src="{{ vich_uploader_asset(lot.images[0], 'imageFile') }}" 
-                                             alt="{{ lot.name }}" 
-                                             class="main-image">
-                                    </div>
-                                    
-                                    <!-- Miniatures -->
-                                    <div class="thumbnail-container">
-                                        {% for key, image in lot.images %}
-                                            <img src="{{ vich_uploader_asset(image, 'imageFile') }}" 
-                                                 alt="Image {{ key + 1 }}" 
-                                                 class="thumbnail {% if key == 0 %}active{% endif %}"
-                                                 onclick="changeMainImage('{{ vich_uploader_asset(image, 'imageFile') }}', this, {{ key }})">
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    <div class="text-center py-5">
-                                        <i class="bx bx-image font-size-48 text-muted"></i>
-                                        <p class="text-muted mt-3">Aucune image disponible</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title mb-3">{{ lot.name }}</h4>
-                                
-                                <div class="mb-3">
-                                    <span class="badge bg-primary font-size-14">{{ lot.cat.name|capitalize }}</span>
-                                </div>
-                                
-                                <h3 class="text-primary mb-3">{{ lot.prix|number_format(2, ',', ' ') }} €</h3>
-                                
-                                <div class="mb-4">
-                                    <span class="badge {% if lot.quantite > 10 %}bg-success{% elseif lot.quantite > 0 %}bg-warning{% else %}bg-danger{% endif %} font-size-14">
-                                        {% if lot.quantite > 0 %}
-                                            <i class="bx bx-check-circle"></i> En stock ({{ lot.quantite }} disponible{{ lot.quantite > 1 ? 's' : '' }})
-                                        {% else %}
-                                            <i class="bx bx-x-circle"></i> Rupture de stock
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                
-                                <div class="mb-4">
-                                    <h5 class="font-size-16 mb-2">Description</h5>
-                                    <div class="text-muted">{{ lot.description|nl2br|replace({'&nbsp;': ' '}) }}</div>
-                                </div>
-                                
-                                <div class="d-grid gap-2">
-                                    {% if lot.quantite > 0 %}
-                                        <form action="{{ path('app_panier_add', {lotId: lot.id}) }}" method="POST">
-                                            <div class="mb-3">
-                                                <label for="quantite" class="form-label">Quantité</label>
-                                                <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" max="{{ lot.quantite }}" required>
-                                                <small class="text-muted">Maximum disponible : {{ lot.quantite }}</small>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary btn-lg w-100 waves-effect waves-light">
-                                                <i class="bx bx-cart-add me-2"></i> Ajouter au panier
-                                            </button>
-                                        </form>
-                                    {% else %}
-                                        <button class="btn btn-secondary btn-lg" disabled>
-                                            <i class="bx bx-x-circle me-2"></i> Produit indisponible
-                                        </button>
-                                    {% endif %}
-                                    <a href="{{ path('app_panier') }}" class="btn btn-outline-primary waves-effect mt-2">
-                                        <i class="bx bx-shopping-bag me-2"></i> Voir mon panier
-                                    </a>
-                                    <a href="{{ path('app_favori_toggle', {lotId: lot.id}) }}" class="btn btn-outline-{% if isFavorite %}danger{% else %}secondary{% endif %} waves-effect mt-2">
-                                        <i class="bx {% if isFavorite %}bxs-heart{% else %}bx-heart{% endif %} me-2"></i> 
-                                        {% if isFavorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        {% if not(app.user is defined and app.user) %}
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="alert alert-info">
+                <i class="mdi mdi-information me-2"></i>
+                <strong>Connectez-vous</strong>
+                pour ajouter ce lot à votre panier et passer commande.
+                <a href="{{ path('app_login') }}" class="btn btn-primary btn-sm ms-3">
+                  <i class="mdi mdi-login me-1"></i>
+                  Se connecter
+                </a>
+              </div>
             </div>
-        </div>
+          </div>
+        {% endif %}
 
-        {{ include('partials/footer.html.twig') }}
+        <div class="row">
+          <div class="col-lg-7">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Galerie d'images</h5>
+
+                {% if lot.images | length > 0 %}
+                  <!-- Image principale -->
+                  <div class="main-image-container" onclick="openGallery(0)">
+                    <img id="mainImage" src="{{ vich_uploader_asset(lot.images[0], 'imageFile') }}" alt="{{ lot.name }}" class="main-image">
+                  </div>
+
+                  <!-- Miniatures -->
+                  <div class="thumbnail-container">
+                    {% for key, image in lot.images %}
+                      <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="Image {{ key + 1 }}" class="thumbnail {% if key == 0 %}active{% endif %}" onclick="changeMainImage('{{ vich_uploader_asset(image, 'imageFile') }}', this, {{ key }})">
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="text-center py-5">
+                    <i class="bx bx-image font-size-48 text-muted"></i>
+                    <p class="text-muted mt-3">Aucune image disponible</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title mb-3">{{ lot.name }}</h4>
+
+                <div class="mb-3">
+                  <span class="badge bg-primary font-size-14">{{ lot.cat.name|capitalize }}</span>
+                </div>
+
+                <h3 class="text-primary mb-3">{{ lot.prix|number_format(2, ',', ' ') }}
+                  €</h3>
+
+                <div class="mb-4">
+                  <span class="badge {% if lot.quantite > 10 %}bg-success{% elseif lot.quantite > 0 %}bg-warning{% else %}bg-danger{% endif %} font-size-14">
+                    {% if lot.quantite > 0 %}
+                      <i class="bx bx-check-circle"></i>
+                      En stock ({{ lot.quantite }}
+                      disponible{{ lot.quantite > 1 ? 's' : '' }})
+                    {% else %}
+                      <i class="bx bx-x-circle"></i>
+                      Rupture de stock
+                    {% endif %}
+                  </span>
+                </div>
+
+                <div class="mb-4">
+                  <h5 class="font-size-16 mb-2">Description</h5>
+                  <div class="text-muted">{{ lot.description|raw }}</div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  {% if app.user and lot.isDisponiblePour(app.user) %}
+                    <form action="{{ path('app_panier_add', {lotId: lot.id}) }}" method="POST">
+                      <div class="mb-3">
+                        <label for="quantite" class="form-label">Quantité</label>
+                        <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" max="{{ lot.quantite }}" required="required">
+                        <small class="text-muted">Maximum disponible :
+                          {{ lot.quantite }}</small>
+                      </div>
+                      <button type="submit" class="btn btn-primary btn-lg w-100 waves-effect waves-light">
+                        <i class="bx bx-cart-add me-2"></i>
+                        Ajouter au panier
+                      </button>
+                    </form>
+                  {% elseif lot.statut == 'reserve' %}
+                    <div class="alert alert-warning">
+                      <i class="bx bx-info-circle me-2"></i>
+                      <strong>Ce lot est réservé par un autre client</strong><br>
+                      <small>Réservé par :
+                        {{ lot.reservePar.email }}</small><br>
+                      <small class="text-muted">En attente de son paiement sous 1 jour. Si le paiement n'est pas effectué, le lot sera libéré selon la position dans la file d'attente.</small>
+                    </div>
+                    {% if app.user and lot.reservePar != app.user %}
+                      <form action="{{ path('app_file_attente_rejoindre', {lotId: lot.id}) }}" method="POST">
+                        <button type="submit" class="btn btn-warning btn-lg w-100 waves-effect waves-light">
+                          <i class="bx bx-clock me-2"></i>
+                          Rejoindre la file d'attente pour réserver
+                        </button>
+                      </form>
+                    {% endif %}
+                  {% elseif lot.statut == 'vendu' %}
+                    <button class="btn btn-secondary btn-lg" disabled="disabled">
+                      <i class="bx bx-x-circle me-2"></i>
+                      Produit vendu
+                    </button>
+                  {% else %}
+                    <button class="btn btn-secondary btn-lg" disabled="disabled">
+                      <i class="bx bx-x-circle me-2"></i>
+                      Produit indisponible
+                    </button>
+                  {% endif %}
+                  <a href="{{ path('app_panier') }}" class="btn btn-outline-primary waves-effect mt-2">
+                    <i class="bx bx-shopping-bag me-2"></i>
+                    Voir mon panier
+                  </a>
+                  <a href="{{ path('app_favori_toggle', {lotId: lot.id}) }}" class="btn btn-outline-{% if isFavorite %}danger{% else %}secondary{% endif %} waves-effect mt-2">
+                    <i class="bx {% if isFavorite %}bxs-heart{% else %}bx-heart{% endif %} me-2"></i>
+                    {% if isFavorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    {{ include('partials/footer.html.twig') }}
+  </div>
 </div>
 
 <!-- Modal Gallery -->
 <div id="galleryModal" class="gallery-modal">
-    <span class="close-gallery" onclick="closeGallery()">&times;</span>
-    <button class="gallery-nav gallery-prev" onclick="changeGalleryImage(-1)">&#10094;</button>
-    <img id="galleryImage" class="modal-content-gallery" src="">
-    <button class="gallery-nav gallery-next" onclick="changeGalleryImage(1)">&#10095;</button>
+  <span class="close-gallery" onclick="closeGallery()">&times;</span>
+  <button class="gallery-nav gallery-prev" onclick="changeGalleryImage(-1)">&#10094;</button>
+  <img id="galleryImage" class="modal-content-gallery" src="">
+  <button class="gallery-nav gallery-next" onclick="changeGalleryImage(1)">&#10095;</button>
 </div>
 
 {{ include('partials/right-sidebar.html.twig') }}
 {{ include('partials/vendor-scripts.html.twig') }}
 
 <script>
-    let currentImageIndex = 0;
-    const images = [
-        {% for image in lot.images %}
-            '{{ vich_uploader_asset(image, 'imageFile') }}'{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
+  let currentImageIndex = 0;
+  const images = [{% for image in lot.images %}
+      '{{ vich_uploader_asset(image, 'imageFile') }}'{% if not loop.last %},{% endif %}
+    {% endfor %}];
 
-    function changeMainImage(src, element, index) {
-        document.getElementById('mainImage').src = src;
-        currentImageIndex = index;
-        
-        // Remove active class from all thumbnails
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        
-        // Add active class to clicked thumbnail
-        element.classList.add('active');
-    }
+  function changeMainImage(src, element, index) {
+    document.getElementById('mainImage').src = src;
+    currentImageIndex = index;
 
-    function openGallery(index) {
-        currentImageIndex = index;
-        document.getElementById('galleryModal').classList.add('active');
-        document.getElementById('galleryImage').src = images[currentImageIndex];
-    }
-
-    function closeGallery() {
-        document.getElementById('galleryModal').classList.remove('active');
-    }
-
-    function changeGalleryImage(direction) {
-        currentImageIndex += direction;
-        
-        if (currentImageIndex < 0) {
-            currentImageIndex = images.length - 1;
-        } else if (currentImageIndex >= images.length) {
-            currentImageIndex = 0;
-        }
-        
-        document.getElementById('galleryImage').src = images[currentImageIndex];
-    }
-
-    // Close modal on ESC key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeGallery();
-        }
+    // Remove active class from all thumbnails
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+      thumb.classList.remove('active');
     });
 
-    // Navigate with arrow keys
-    document.addEventListener('keydown', function(event) {
-        if (document.getElementById('galleryModal').classList.contains('active')) {
-            if (event.key === 'ArrowLeft') {
-                changeGalleryImage(-1);
-            } else if (event.key === 'ArrowRight') {
-                changeGalleryImage(1);
-            }
-        }
-    });
+    // Add active class to clicked thumbnail
+    element.classList.add('active');
+  }
+
+  function openGallery(index) {
+    currentImageIndex = index;
+    document.getElementById('galleryModal').classList.add('active');
+    document.getElementById('galleryImage').src = images[currentImageIndex];
+  }
+
+  function closeGallery() {
+    document.getElementById('galleryModal').classList.remove('active');
+  }
+
+  function changeGalleryImage(direction) {
+    currentImageIndex += direction;
+
+    if (currentImageIndex < 0) {
+      currentImageIndex = images.length - 1;
+    } else if (currentImageIndex >= images.length) {
+      currentImageIndex = 0;
+    }
+
+    document.getElementById('galleryImage').src = images[currentImageIndex];
+  }
+
+  // Close modal on ESC key
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeGallery();
+    }
+  });
+
+  // Navigate with arrow keys
+  document.addEventListener('keydown', function (event) {
+    if (document.getElementById('galleryModal').classList.contains('active')) {
+      if (event.key === 'ArrowLeft') {
+        changeGalleryImage(-1);
+      } else if (event.key === 'ArrowRight') {
+        changeGalleryImage(1);
+      }
+    }
+  });
 </script>
 
 </body>

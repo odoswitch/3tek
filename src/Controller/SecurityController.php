@@ -18,7 +18,7 @@ class SecurityController extends AbstractController
             //Switch entre le Dashbord user et admi 
 
             if ($this->isGranted('ROLE_ADMIN')) {
-                return $this->redirectToRoute('admin');
+                return $this->redirectToRoute('app_admin');
             } else {
                 return $this->redirectToRoute('app_dash');
             }
@@ -42,15 +42,13 @@ class SecurityController extends AbstractController
     public function test(MailerInterface $mailer): Response
     {
         $email = (new Email())->from('test@odoip.fr')
-        ->to('info@odoip.fr')
-        ->cc('congocrei2000@gmail.com')
-        ->replyTo('info@odoip.fr')
-        ->subject('NGAMBA TEST MAIl')
-        ->text('Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn')
-        ->html('<h2>Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn</h2>');
+            ->to('info@odoip.fr')
+            ->cc('congocrei2000@gmail.com')
+            ->replyTo('info@odoip.fr')
+            ->subject('NGAMBA TEST MAIl')
+            ->text('Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn')
+            ->html('<h2>Bonjour si vous avez reçu ce message cela veut dire tout est ok pour vous sur le partir dsn</h2>');
         $mailer->send($email);
         return $this->redirectToRoute('app_login');
     }
-
-    
 }

@@ -5,9 +5,11 @@
   {{ include('partials/title-meta.html.twig', {title: 'Register'}) }}
 
   {{ include('partials/head-css.html.twig') }}
-  
+
   <style>
-    .form-error, .form-error-message, ul.form-error-list li {
+    .form-error,
+    .form-error-message,
+    ul.form-error-list li {
       color: #dc3545 !important;
       font-size: 0.875rem;
       margin-top: 0.25rem;
@@ -17,18 +19,21 @@
       margin-top: 0.25rem;
       margin-bottom: 0.5rem;
     }
-    .invalid-feedback, .form-error-icon {
+    .form-error-icon,
+    .invalid-feedback {
       display: block;
       color: #dc3545 !important;
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
     /* Style pour les erreurs Symfony */
-    .form-control.is-invalid, .was-validated .form-control:invalid {
+    .form-control.is-invalid,
+    .was-validated .form-control:invalid {
       border-color: #dc3545;
     }
     /* Messages d'erreur de formulaire */
-    form .invalid-feedback, form .form-error {
+    form .form-error,
+    form .invalid-feedback {
       display: none !important;
     }
     /* Masquer les erreurs par défaut de Symfony pour utiliser nos bandeaux */
@@ -49,7 +54,7 @@
       color: #dc3545;
     }
     .alert-danger ul {
-      margin: 0.5rem 0 0 0;
+      margin: 0.5rem 0 0;
       padding-left: 1.5rem;
       list-style-type: none;
     }
@@ -85,14 +90,21 @@
                     <h5 class="mb-0">Créer un compte</h5>
                   </div>
                   <p class="text-muted mt-2">Obtenez votre compte 3Tek-Europe gratuitement.</p>
-                  
-                  {% if form_errors(registrationForm) %}
-                  <div class="alert alert-danger" role="alert">
-                    <strong><i class="mdi mdi-alert-circle"></i> Erreur !</strong>
-                    {{ form_errors(registrationForm) }}
+                  <div class="alert alert-info" role="alert">
+                    <i class="mdi mdi-information-outline"></i>
+                    <strong>Note :</strong>
+                    Vous pourrez compléter vos informations d'adresse plus tard depuis votre profil.
                   </div>
+
+                  {% if form_errors(registrationForm) %}
+                    <div class="alert alert-danger" role="alert">
+                      <strong>
+                        <i class="mdi mdi-alert-circle"></i>
+                        Erreur !</strong>
+                      {{ form_errors(registrationForm) }}
+                    </div>
                   {% endif %}
-                  
+
                   {{ form_start(registrationForm, {attr:{novalidate : 'novalidate',
                                     class: 'needs-validation mt-2 pt-1'}}
                   ) }}
@@ -115,18 +127,6 @@
                                         class: 'form-label',
                                         attr:{
                                         placeholder : 'Saisir votre email',
-                                        class : 'form-control',
-                                        }
-                                        }) }}
-
-                  </div>
-                  <div class="mb-3">
-
-                    {{ form_row(registrationForm.name, {
-                                        label: 'Votre Nom',
-                                        class: 'form-label',
-                                        attr:{
-                                        placeholder : 'Saisir votre nom',
                                         class : 'form-control',
                                         }
                                         }) }}
@@ -167,14 +167,16 @@
                       }
                     }) }}
                     <div class="form-text text-muted small" id="password-help">
-                      <i class="mdi mdi-information-outline"></i> 
+                      <i class="mdi mdi-information-outline"></i>
                       Le mot de passe doit contenir entre 8 et 20 caractères, au moins une majuscule, une minuscule et un chiffre.
                     </div>
                     {% if form_errors(registrationForm.plainPassword) %}
-                    <div class="alert alert-danger mt-2 mb-0" role="alert">
-                      <strong><i class="mdi mdi-alert-circle"></i> Erreur :</strong>
-                      {{ form_errors(registrationForm.plainPassword) }}
-                    </div>
+                      <div class="alert alert-danger mt-2 mb-0" role="alert">
+                        <strong>
+                          <i class="mdi mdi-alert-circle"></i>
+                          Erreur :</strong>
+                        {{ form_errors(registrationForm.plainPassword) }}
+                      </div>
                     {% endif %}
                   </div>
 
@@ -183,47 +185,43 @@
                       <h5 class="font-size-14 mb-3 text-muted fw-medium text-center">- Choisissez votre catégorie -</h5>
                       <div class="row g-3">
                         {% for choice in registrationForm.categorie.vars.choices %}
-                        <div class="col-md-6 col-lg-4">
-                          <div class="category-box">
-                            <input type="checkbox" 
-                                   name="{{ registrationForm.categorie.vars.full_name }}[]" 
-                                   id="category_{{ choice.value }}" 
-                                   value="{{ choice.value }}"
-                                   class="category-checkbox">
-                            <label for="category_{{ choice.value }}" class="category-label">
-                              <div class="category-card">
-                                <i class="bx bx-category mb-1"></i>
-                                <h6 class="mb-0">{{ choice.label|capitalize }}</h6>
-                              </div>
-                            </label>
+                          <div class="col-md-6 col-lg-4">
+                            <div class="category-box">
+                              <input type="checkbox" name="{{ registrationForm.categorie.vars.full_name }}[]" id="category_{{ choice.value }}" value="{{ choice.value }}" class="category-checkbox">
+                              <label for="category_{{ choice.value }}" class="category-label">
+                                <div class="category-card">
+                                  <i class="bx bx-category mb-1"></i>
+                                  <h6 class="mb-0">{{ choice.label|capitalize }}</h6>
+                                </div>
+                              </label>
+                            </div>
                           </div>
-                        </div>
                         {% endfor %}
                       </div>
-                      
+
                       {# Masquer les checkboxes par défaut de Symfony #}
                       <div style="display: none;">
                         {{ form_widget(registrationForm.categorie) }}
                       </div>
                     </div>
                   </div>
-                  
+
                   <style>
                     .category-box {
                       position: relative;
                     }
-                    
+
                     .category-checkbox {
                       position: absolute;
                       opacity: 0;
                       cursor: pointer;
                     }
-                    
+
                     .category-label {
                       cursor: pointer;
                       margin: 0;
                     }
-                    
+
                     .category-card {
                       border: 2px solid #e9ecef;
                       border-radius: 8px;
@@ -238,29 +236,29 @@
                       align-items: center;
                       justify-content: center;
                     }
-                    
+
                     .category-card:hover {
                       border-color: #667eea;
                       box-shadow: 0 4px 8px rgba(102, 126, 234, 0.1);
                       transform: translateY(-2px);
                     }
-                    
+
                     .category-checkbox:checked + .category-label .category-card {
                       border-color: #667eea;
                       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                       color: white;
                     }
-                    
+
                     .category-checkbox:checked + .category-label .category-card i {
                       color: white;
                     }
-                    
+
                     .category-card i {
                       color: #667eea;
                       transition: color 0.3s ease;
                       font-size: 20px;
                     }
-                    
+
                     .category-card h6 {
                       font-weight: 600;
                       text-transform: capitalize;
@@ -295,7 +293,9 @@
                   <a href="{{ path('app_legal_notice') }}" class="text-muted">Mentions légales</a>
                 </p>
                 <p class="mb-0 small text-muted">
-                  Développé <i class="mdi mdi-heart text-danger"></i> par Odoip
+                  Développé
+                  <i class="mdi mdi-heart text-danger"></i>
+                  par Odoip
                 </p>
               </div>
             </div>
@@ -410,44 +410,49 @@
 <script src="/js/pages/validation.init.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const passwordInput = document.getElementById('registration_form_plainPassword');
-    
+
     if (passwordInput) {
-        passwordInput.addEventListener('input', function() {
-            const password = this.value;
-            const helpText = this.parentElement.querySelector('.form-text');
+      passwordInput.addEventListener('input', function () {
+        const password = this.value;
+        const helpText = this.parentElement.querySelector('.form-text');
+
+        // Vérifications
+        const hasMinLength = password.length >= 8;
+        const hasMaxLength = password.length <= 20;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+
+        // Changer la couleur du texte d'aide en fonction de la validité
+        if (password.length > 0) {
+          if (hasMinLength && hasMaxLength && hasUpperCase && hasLowerCase && hasNumber) {
+            helpText.style.color = '#28a745'; // Vert si valide
+            helpText.innerHTML = '<i class="mdi mdi-check-circle"></i> Mot de passe valide !';
+          } else {
+            helpText.style.color = '#dc3545'; // Rouge si invalide
+            let messages = [];
+            if (!hasMinLength) 
+              messages.push('au moins 8 caractères');
+            if (!hasMaxLength) 
+              messages.push('maximum 20 caractères');
+            if (!hasUpperCase) 
+              messages.push('une majuscule');
+            if (!hasLowerCase) 
+              messages.push('une minuscule');
+            if (!hasNumber) 
+              messages.push('un chiffre');
             
-            // Vérifications
-            const hasMinLength = password.length >= 8;
-            const hasMaxLength = password.length <= 20;
-            const hasUpperCase = /[A-Z]/.test(password);
-            const hasLowerCase = /[a-z]/.test(password);
-            const hasNumber = /\d/.test(password);
-            
-            // Changer la couleur du texte d'aide en fonction de la validité
-            if (password.length > 0) {
-                if (hasMinLength && hasMaxLength && hasUpperCase && hasLowerCase && hasNumber) {
-                    helpText.style.color = '#28a745'; // Vert si valide
-                    helpText.innerHTML = '<i class="mdi mdi-check-circle"></i> Mot de passe valide !';
-                } else {
-                    helpText.style.color = '#dc3545'; // Rouge si invalide
-                    let messages = [];
-                    if (!hasMinLength) messages.push('au moins 8 caractères');
-                    if (!hasMaxLength) messages.push('maximum 20 caractères');
-                    if (!hasUpperCase) messages.push('une majuscule');
-                    if (!hasLowerCase) messages.push('une minuscule');
-                    if (!hasNumber) messages.push('un chiffre');
-                    
-                    helpText.innerHTML = '<i class="mdi mdi-alert-circle"></i> Requis: ' + messages.join(', ');
-                }
-            } else {
-                helpText.style.color = '#6c757d'; // Gris par défaut
-                helpText.innerHTML = '<i class="mdi mdi-information-outline"></i> Le mot de passe doit contenir entre 8 et 20 caractères, au moins une majuscule, une minuscule et un chiffre.';
-            }
-        });
+            helpText.innerHTML = '<i class="mdi mdi-alert-circle"></i> Requis: ' + messages.join(', ');
+          }
+        } else {
+          helpText.style.color = '#6c757d'; // Gris par défaut
+          helpText.innerHTML = '<i class="mdi mdi-information-outline"></i> Le mot de passe doit contenir entre 8 et 20 caractères, au moins une majuscule, une minuscule et un chiffre.';
+        }
+      });
     }
-});
+  });
 </script>
 
 </body>

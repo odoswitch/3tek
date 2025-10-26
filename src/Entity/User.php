@@ -48,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'users')]
     private Collection $categorie;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -99,12 +99,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Favori::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $favoris;
 
+    /**
+     * @var Collection<int, FileAttente>
+     */
+    #[ORM\OneToMany(targetEntity: FileAttente::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $filesAttente;
+
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
         $this->commandes = new ArrayCollection();
         $this->paniers = new ArrayCollection();
         $this->favoris = new ArrayCollection();
+        $this->filesAttente = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,5 +453,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, FileAttente>
+     */
+    public function getFilesAttente(): Collection
+    {
+        return $this->filesAttente;
+    }
+
+    public function addFilesAttente(FileAttente $filesAttente): static
+    {
+        if (!$this->filesAttente->contains($filesAttente)) {
+            $this->filesAttente->add($filesAttente);
+            $filesAttente->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFilesAttente(FileAttente $filesAttente): static
+    {
+        if ($this->filesAttente->removeElement($filesAttente)) {
+            if ($filesAttente->getUser() === $this) {
+                $filesAttente->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name . ' ' . $this->lastname . ' (' . $this->email . ')';
     }
 }

@@ -1,0 +1,13 @@
+[wsl2]
+# Limite la mémoire RAM utilisée par WSL (ajustez selon votre RAM)
+memory=4GB
+# Limite le nombre de processeurs
+processors=4
+# Améliore les performances I/O
+vmIdleTimeout=60000
+# Optimise le swap
+swap=2GB
+# Améliore les performances réseau
+networkingMode=mirrored
+# Optimise le cache
+kernelCommandLine=vsyscall=emulate

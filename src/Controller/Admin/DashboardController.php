@@ -22,29 +22,20 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        // return parent::index();
+        // Vérifier si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-        // return $this->redirectToRoute('admin_user_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
+        // Vérifier si l'utilisateur a le rôle admin
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            // Rediriger les utilisateurs normaux vers leur dashboard
+            return $this->redirectToRoute('app_dash');
+        }
+
+        // L'utilisateur est admin, continuer vers l'interface d'administration
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
-        //return $this->redirectToRoute('app_dash');
-        //Touficreturn $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -171,20 +162,20 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard Admin', 'fa fa-home');
-        
+
         yield MenuItem::section('Gestion');
         yield MenuItem::linkToCrud('Liste clients', 'fa-solid fa-user', User::class);
         yield MenuItem::linkToCrud('Catégories', 'fas fa-list', Category::class);
         yield MenuItem::linkToCrud('Lots', 'fa-solid fa-gift', Lot::class);
         yield MenuItem::linkToCrud('Types Client', 'fa-solid fa-face-smile', Type::class);
-        
+
         yield MenuItem::section('Commandes');
         yield MenuItem::linkToCrud('Toutes les commandes', 'fa fa-shopping-bag', Commande::class);
         yield MenuItem::linkToCrud('Files d\'attente', 'fa fa-clock', FileAttente::class);
-        
+
         yield MenuItem::section('Système');
         yield MenuItem::linkToCrud('Logs Emails', 'fa fa-envelope', EmailLog::class);
-        
+
         yield MenuItem::section('Vue Client');
         yield MenuItem::linkToRoute('Dashboard Client', 'fa fa-shopping-cart', 'app_dash')
             ->setLinkTarget('_blank');

@@ -93,4 +93,36 @@ class FileAttenteRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($fileAttente);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * Trouve la dernière position dans la file d'attente pour un lot
+     */
+    public function getLastPositionForLot(Lot $lot): int
+    {
+        $result = $this->createQueryBuilder('f')
+            ->select('MAX(f.position)')
+            ->where('f.lot = :lot')
+            ->andWhere('f.statut = :statut')
+            ->setParameter('lot', $lot)
+            ->setParameter('statut', 'en_attente')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ?? 0;
+    }
+
+    /**
+     * Trouve les files d'attente d'un utilisateur
+     */
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('f')
+            ->where('f.user = :user')
+            ->andWhere('f.statut = :statut')
+            ->setParameter('user', $user)
+            ->setParameter('statut', 'en_attente')
+            ->orderBy('f.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

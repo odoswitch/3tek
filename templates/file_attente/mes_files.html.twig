@@ -1,0 +1,123 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+  {{ include('partials/title-meta.html.twig', { title: 'Mes Files d\'Attente' }) }}
+    {{ include('partials/head-css.html.twig') }}
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        {{ include('partials/menu.html.twig') }}
+        
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0"><i class="bx bx-clock me-2"></i>Mes Files d'Attente</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="{{ path('app_dash') }}">Dashboard</a></li>
+                                        <li class="breadcrumb-item active">Files d'Attente</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bx bx-check-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bx bx-error-circle me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% if files is empty %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body text-center py-5">
+                                        <i class="bx bx-clock display-4 text-muted mb-3"></i>
+                                        <h5 class="text-muted">Aucune file d'attente</h5>
+                                        <p class="text-muted">Vous n'êtes actuellement dans aucune file d'attente.</p>
+                                        <a href="{{ path('app_dash') }}" class="btn btn-primary">
+                                            <i class="bx bx-search me-2"></i> Parcourir les lots
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            {% for file in files %}
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <h6 class="card-title mb-0">{{ file.lot.name }}</h6>
+<span class="badge bg-warning">Position
+  {{ file.position }}</span>
+</div>
+
+<div class="mb-3">
+<img src="{{ file.lot.image ? '/uploads/lots/' ~ file.lot.image : '/images/default-lot.jpg' }}" class="img-fluid rounded" alt="{{ file.lot.name }}" style="height: 150px; object-fit: cover; width: 100%;">
+</div>
+
+<div class="mb-3">
+<h5 class="text-primary mb-1">{{ file.lot.prix|number_format(2, ',', ' ') }}
+  €</h5>
+<small class="text-muted">Catégorie:
+  {{ file.lot.cat.name }}</small>
+</div>
+
+<div class="mb-3">
+<div class="d-flex align-items-center mb-2">
+  <i class="bx bx-info-circle me-2 text-info"></i>
+  <small class="text-muted">Statut du lot:
+    <span class="badge bg-{% if file.lot.statut == 'reserve' %}warning{% elseif file.lot.statut == 'vendu' %}danger{% else %}secondary{% endif %}">
+      {{ file.lot.statut|title }}
+    </span>
+  </small>
+</div>
+
+{% if file.lot.reservePar %}
+  <div class="d-flex align-items-center mb-2">
+    <i class="bx bx-user me-2 text-info"></i>
+    <small class="text-muted">Réservé par:
+      {{ file.lot.reservePar.email }}</small>
+  </div>
+{% endif %}
+
+<div class="d-flex align-items-center">
+  <i class="bx bx-calendar me-2 text-info"></i>
+  <small class="text-muted">Rejoint le:
+    {{ file.createdAt|date('d/m/Y H:i') }}</small>
+</div>
+</div>
+
+<div class="d-grid gap-2">
+<a href="{{ path('app_lot_view', {id: file.lot.id}) }}" class="btn btn-outline-primary btn-sm">
+  <i class="bx bx-eye me-1"></i>
+  Voir le lot
+</a>
+
+<a href="{{ path('app_file_attente_quitter', {id: file.id}) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir quitter cette file d\'attente ?')">
+  <i class="bx bx-x me-1"></i>
+  Quitter la file
+</a>
+</div>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+</div></div> </div></div>{{ include('partials/vendor-scripts.html.twig') }}</body></html>

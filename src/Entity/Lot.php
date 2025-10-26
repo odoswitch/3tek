@@ -5,6 +5,7 @@ namespace App\Entity;
 
 ##use Assert\Type;
 use App\Entity\Type;
+use App\Entity\FileAttente;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LotRepository;
@@ -47,6 +48,9 @@ class Lot
     #[ORM\ManyToOne(inversedBy: 'lots')]
     private ?Category $cat = null;
 
+    #[ORM\OneToMany(mappedBy: 'lot', targetEntity: FileAttente::class, cascade: ['persist', 'remove'])]
+    private Collection $filesAttente;
+
     /**
      * @var Collection<int, Type>
      */
@@ -83,6 +87,7 @@ class Lot
     {
         $this->types = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->filesAttente = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -316,6 +321,30 @@ class Lot
         return $this->statut === 'disponible' && $this->quantite > 0;
     }
 
+    /**
+     * Vérifie si le lot est disponible pour un utilisateur spécifique
+     * (considère la file d'attente)
+     */
+    public function isDisponiblePour(User $user): bool
+    {
+        // Si le lot est vraiment disponible, il l'est pour tout le monde
+        if ($this->statut === 'disponible' && $this->quantite > 0) {
+            return true;
+        }
+
+        // Si le lot est réservé, vérifier si l'utilisateur est le premier en file d'attente
+        if ($this->statut === 'reserve' && $this->quantite > 0) {
+            // Vérifier si l'utilisateur est le premier en file d'attente
+            foreach ($this->filesAttente as $fileAttente) {
+                if ($fileAttente->getUser() === $user && $fileAttente->getPosition() === 1) {
+                    return true; // L'utilisateur est le premier en file, il peut voir le lot comme disponible
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function isVendu(): bool
     {
         return $this->statut === 'vendu';
@@ -323,11 +352,46 @@ class Lot
 
     public function getStatutLabel(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'disponible' => 'Disponible',
             'reserve' => 'Réservé',
             'vendu' => 'Vendu',
             default => 'Inconnu',
         };
+    }
+
+    /**
+     * @return Collection<int, FileAttente>
+     */
+    public function getFilesAttente(): Collection
+    {
+        return $this->filesAttente;
+    }
+
+    public function addFilesAttente(FileAttente $filesAttente): static
+    {
+        if (!$this->filesAttente->contains($filesAttente)) {
+            $this->filesAttente->add($filesAttente);
+            $filesAttente->setLot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFilesAttente(FileAttente $filesAttente): static
+    {
+        if ($this->filesAttente->removeElement($filesAttente)) {
+            // set the owning side to null (unless already changed)
+            if ($filesAttente->getLot() === $this) {
+                $filesAttente->setLot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? 'Lot sans nom';
     }
 }

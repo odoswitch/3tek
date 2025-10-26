@@ -25,14 +25,13 @@ class PanierController extends AbstractController
         private MailerInterface $mailer,
         private Environment $twig,
         private string $projectDir
-    ) {
-    }
+    ) {}
 
     #[Route('', name: 'app_panier')]
     public function index(PanierRepository $panierRepository): Response
     {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -49,7 +48,7 @@ class PanierController extends AbstractController
     public function add(int $lotId, Request $request, LotRepository $lotRepository, PanierRepository $panierRepository): Response
     {
         $lot = $lotRepository->find($lotId);
-        
+
         if (!$lot) {
             $this->addFlash('error', 'Lot introuvable');
             return $this->redirectToRoute('app_dash');
@@ -61,11 +60,11 @@ class PanierController extends AbstractController
         }
 
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         $quantite = (int) $request->request->get('quantite', 1);
 
         if ($quantite > $lot->getQuantite()) {
@@ -97,7 +96,7 @@ class PanierController extends AbstractController
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Lot ajouté au panier');
-        
+
         return $this->redirectToRoute('app_panier');
     }
 
@@ -109,7 +108,7 @@ class PanierController extends AbstractController
         }
 
         $quantite = (int) $request->request->get('quantite', 1);
-        
+
         if ($quantite > $panier->getLot()->getQuantite()) {
             $this->addFlash('error', 'Quantité demandée non disponible');
             return $this->redirectToRoute('app_panier');
@@ -140,11 +139,11 @@ class PanierController extends AbstractController
     public function valider(PanierRepository $panierRepository, UserRepository $userRepository): Response
     {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         $items = $panierRepository->findByUser($user);
 
         if (empty($items)) {
@@ -177,6 +176,33 @@ class PanierController extends AbstractController
             $commandes[] = $commande;
             $totalGeneral += $item->getTotal();
 
+            // Mettre à jour le stock du lot
+            $lot = $item->getLot();
+            $nouvelleQuantite = $lot->getQuantite() - $item->getQuantite();
+
+            if ($_ENV['APP_ENV'] === 'dev') {
+                error_log("DEBUG PANIER: Lot ID=" . $lot->getId() . ", Quantité actuelle=" . $lot->getQuantite() . ", Quantité commandée=" . $item->getQuantite() . ", Nouvelle quantité=" . $nouvelleQuantite);
+            }
+
+            if ($nouvelleQuantite <= 0) {
+                $lot->setQuantite(0);
+                $lot->setStatut('reserve');
+                $lot->setReservePar($user);
+                $lot->setReserveAt(new \DateTimeImmutable());
+
+                if ($_ENV['APP_ENV'] === 'dev') {
+                    error_log("DEBUG PANIER: Stock atteint 0, marquage comme réservé");
+                }
+            } else {
+                $lot->setQuantite($nouvelleQuantite);
+
+                if ($_ENV['APP_ENV'] === 'dev') {
+                    error_log("DEBUG PANIER: Décrémentation de la quantité à " . $nouvelleQuantite);
+                }
+            }
+
+            $this->entityManager->persist($lot);
+
             // Supprimer l'article du panier
             $this->entityManager->remove($item);
         }
@@ -190,7 +216,7 @@ class PanierController extends AbstractController
         $this->sendAdminNotification($user, $commandes, $totalGeneral, $userRepository);
 
         $this->addFlash('success', 'Votre commande a été enregistrée ! Vous recevrez un email de confirmation avec les instructions de paiement.');
-        
+
         return $this->redirectToRoute('app_mes_commandes');
     }
 
