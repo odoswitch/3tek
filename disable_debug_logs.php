@@ -23,3 +23,5 @@ echo "- Performance optimisée en production\n";
 echo "- Sécurité améliorée\n\n";
 
 echo "=== FIN DU SCRIPT ===\n";
+
+

@@ -243,13 +243,36 @@ class DashboardController extends AbstractDashboardController
                     z-index: 9999 !important;
                 }
                 
-                /* Fix for last table rows */
-                .ea-content .table tbody tr:nth-last-child(-n+3) .dropdown-menu {
-                    top: auto !important;
-                    bottom: 100% !important;
-                    transform: translateY(-5px) !important;
-                }
-            </style>');
+                   /* Fix for last table rows */
+                   .ea-content .table tbody tr:nth-last-child(-n+3) .dropdown-menu {
+                       top: auto !important;
+                       bottom: 100% !important;
+                       transform: translateY(-5px) !important;
+                   }
+               </style>
+               <script>
+               // Calcul automatique du prix total pour les commandes
+               document.addEventListener(\'DOMContentLoaded\', function() {
+                   const quantiteField = document.querySelector(\'input[name="Commande[quantite]"]\');
+                   const prixUnitaireField = document.querySelector(\'input[name="Commande[prixUnitaire]"]\');
+                   const prixTotalField = document.querySelector(\'input[name="Commande[prixTotal]"]\');
+                   
+                   if (quantiteField && prixUnitaireField && prixTotalField) {
+                       function calculateTotal() {
+                           const quantite = parseFloat(quantiteField.value) || 0;
+                           const prixUnitaire = parseFloat(prixUnitaireField.value) || 0;
+                           const total = quantite * prixUnitaire;
+                           prixTotalField.value = total.toFixed(2);
+                       }
+                       
+                       quantiteField.addEventListener(\'input\', calculateTotal);
+                       prixUnitaireField.addEventListener(\'input\', calculateTotal);
+                       
+                       // Calcul initial
+                       calculateTotal();
+                   }
+               });
+               </script>');
     }
 
     public function configureMenuItems(): iterable

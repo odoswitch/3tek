@@ -30,8 +30,13 @@ chmod -R 775 var public/uploads 2>/dev/null || true
 # S'assurer que les sous-répertoires du cache existent avec les bonnes permissions
 mkdir -p var/cache/prod/pools var/cache/dev/pools
 mkdir -p var/cache/prod/vich_uploader var/cache/dev/vich_uploader
+mkdir -p var/cache/prod/asset_mapper var/cache/dev/asset_mapper
 chown -R www-data:www-data var/cache 2>/dev/null || true
 chmod -R 777 var/cache 2>/dev/null || true
+
+# S'assurer que les permissions sont correctes pour tous les sous-répertoires
+find var/cache -type d -exec chmod 777 {} \; 2>/dev/null || true
+find var/cache -type f -exec chmod 666 {} \; 2>/dev/null || true
 
 # Installer les dépendances si nécessaire
 if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
@@ -49,6 +54,30 @@ sleep 2
 # Exécuter les tâches d'initialisation en arrière-plan
 (
     echo "Running initialization tasks..."
+    
+    # Correction automatique des permissions
+    echo "🔧 Correction automatique des permissions..."
+    chown -R www-data:www-data /var/www/html/var/cache 2>/dev/null || true
+    chmod -R 777 /var/www/html/var/cache 2>/dev/null || true
+    
+    # Création des répertoires manquants
+    mkdir -p /var/www/html/var/cache/prod/easyadmin
+    mkdir -p /var/www/html/var/cache/prod/asset_mapper
+    mkdir -p /var/www/html/var/cache/prod/pools/system
+    mkdir -p /var/www/html/var/cache/prod/vich_uploader
+    
+    # Correction des permissions spécifiques
+    chown -R www-data:www-data /var/www/html/var/cache/prod/easyadmin 2>/dev/null || true
+    chmod -R 777 /var/www/html/var/cache/prod/easyadmin 2>/dev/null || true
+    
+    chown -R www-data:www-data /var/www/html/var/cache/prod/asset_mapper 2>/dev/null || true
+    chmod -R 777 /var/www/html/var/cache/prod/asset_mapper 2>/dev/null || true
+    
+    chown -R www-data:www-data /var/www/html/var/cache/prod/pools 2>/dev/null || true
+    chmod -R 777 /var/www/html/var/cache/prod/pools 2>/dev/null || true
+    
+    chown -R www-data:www-data /var/www/html/var/cache/prod/vich_uploader 2>/dev/null || true
+    chmod -R 777 /var/www/html/var/cache/prod/vich_uploader 2>/dev/null || true
     
     # Vérifier si l'environnement est en production
     if [ "$APP_ENV" = "prod" ]; then

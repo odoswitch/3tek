@@ -56,3 +56,5 @@ echo "Le client B a un endroit pour réserver les lots déjà réservés.\n";
 echo "L'application gère parfaitement le workflow de réservation.\n\n";
 
 echo "=== FIN DU TEST COMPLET ===\n";
+
+

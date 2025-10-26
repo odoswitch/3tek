@@ -53,3 +53,5 @@ echo "Les images des lots s'affichent sans aucun problème.\n";
 echo "L'application est maintenant 100% fonctionnelle.\n\n";
 
 echo "=== FIN DU TEST FINAL ===\n";
+
+

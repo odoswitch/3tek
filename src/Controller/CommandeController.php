@@ -147,8 +147,15 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/commande/{id}', name: 'app_commande_view', requirements: ['id' => '\d+'])]
-    public function view(Commande $commande): Response
+    public function view(int $id): Response
     {
+        $commandeRepository = $this->entityManager->getRepository(Commande::class);
+        $commande = $commandeRepository->find($id);
+
+        if (!$commande) {
+            throw $this->createNotFoundException('Commande non trouvée');
+        }
+
         if ($commande->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
@@ -159,8 +166,15 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/commande/{id}/annuler', name: 'app_commande_cancel', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function cancel(Commande $commande): Response
+    public function cancel(int $id): Response
     {
+        $commandeRepository = $this->entityManager->getRepository(Commande::class);
+        $commande = $commandeRepository->find($id);
+
+        if (!$commande) {
+            throw $this->createNotFoundException('Commande non trouvée');
+        }
+
         $user = $this->getUser();
 
         // Vérifier que l'utilisateur peut annuler cette commande

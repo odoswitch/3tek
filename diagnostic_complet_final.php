@@ -90,3 +90,5 @@ echo "4. Vérifier que le lot passe à 'disponible'\n";
 echo "5. Vérifier que la description HTML est rendue\n\n";
 
 echo "=== FIN DU DIAGNOSTIC ===\n";
+
+

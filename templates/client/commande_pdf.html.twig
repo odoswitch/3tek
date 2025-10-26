@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Commande
+      {{ commande.numeroCommande }}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #28a745;
+        padding-bottom: 20px;
+      }
+
+      .logo-container {
+        flex: 0 0 auto;
+      }
+
+      .logo {
+        width: 138px;
+        height: auto;
+        max-height: 69px;
+        object-fit: contain;
+      }
+
+      .logo-placeholder {
+        width: 120px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #6c757d;
+      }
+
+      .header-info {
+        flex: 1;
+        text-align: center;
+        margin: 0 20px;
+      }
+
+      .header-title {
+        margin: 0;
+        font-size: 20px;
+        color: #28a745;
+      }
+
+      .header h1 {
+        color: #28a745;
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .header p {
+        margin: 5px 0;
+        color: #666;
+      }
+
+      .info-section {
+        margin-bottom: 30px;
+      }
+
+      .info-section h2 {
+        color: #28a745;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .info-item {
+        margin-bottom: 10px;
+      }
+
+      .info-item strong {
+        color: #555;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      .table td,
+      .table th {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #555;
+      }
+
+      .table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      .total-section {
+        margin-top: 20px;
+        text-align: right;
+      }
+
+      .total-section .total-line {
+        margin: 5px 0;
+        font-size: 16px;
+      }
+
+      .total-section .grand-total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #28a745;
+        border-top: 2px solid #28a745;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .status-en_attente {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .status-reserve {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .status-validee {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .status-annulee {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+      }
+
+      .footer-logo {
+        margin-bottom: 10px;
+      }
+
+      .footer-logo img {
+        width: 80px;
+        height: auto;
+        max-height: 40px;
+        object-fit: contain;
+      }
+
+      .info-box {
+        background-color: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+
+      .info-box h4 {
+        color: #0066cc;
+        margin: 0 0 10px;
+      }
+
+      .info-box p {
+        margin: 0;
+        color: #0066cc;
+      }
+
+      .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin: 0 0 10px;
+      }
+
+      .warning-box p {
+        margin: 0;
+        color: #856404;
+      }
+
+      .success-box {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin: 0 0 10px;
+      }
+
+      .success-box p {
+        margin: 0;
+        color: #155724;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo-container">
+        {% if logo_base64 %}
+          <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo 3Tek-Europe" class="logo">
+        {% else %}
+          <div class="logo-placeholder">3Tek-Europe</div>
+        {% endif %}
+      </div>
+      <div class="header-info">
+        <h1 class="header-title">MA COMMANDE N°
+          {{ commande.numeroCommande }}</h1>
+        <p>Date de commande :
+          {{ commande.createdAt|date('d/m/Y à H:i') }}</p>
+        <p>Statut :
+          <span class="status-badge status-{{ commande.statut }}">{{ commande.statut|replace({'_': ' '})|title }}</span></p>
+      </div>
+      <div class="logo-container">
+        <!-- Espace pour équilibrer le layout -->
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Mes Informations</h2>
+      <div class="info-grid">
+        <div>
+          <div class="info-item">
+            <strong>Nom complet :</strong>
+            {% if commande.user %}
+              {{ commande.user.name }}
+              {{ commande.user.lastname }}
+            {% else %}
+              Non défini
+            {% endif %}
+          </div>
+          <div class="info-item">
+            <strong>Email :</strong>
+            {% if commande.user %}
+              {{ commande.user.email }}
+            {% else %}
+              Non défini
+            {% endif %}
+          </div>
+          <div class="info-item">
+            <strong>Téléphone :</strong>
+            {% if commande.user and commande.user.phone %}
+              {{ commande.user.phone }}
+            {% else %}
+              Non défini
+            {% endif %}
+          </div>
+        </div>
+        <div>
+          <div class="info-item">
+            <strong>Entreprise :</strong>
+            {% if commande.user and commande.user.office %}
+              {{ commande.user.office }}
+            {% else %}
+              Non défini
+            {% endif %}
+          </div>
+          {% if commande.validatedAt %}
+            <div class="info-item">
+              <strong>Date de validation :</strong>
+              {{ commande.validatedAt|date('d/m/Y à H:i') }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Détail de Ma Commande</h2>
+
+      {% if commande.lignes | length > 0 %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Lot</th>
+              <th>Description</th>
+              <th>Quantité</th>
+              <th>Prix unitaire</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ligne in commande.lignes %}
+              <tr>
+                <td>{{ ligne.lot.name }}</td>
+                <td>{{ ligne.lot.description|safe_description|slice(0, 100) }}
+                  {% if ligne.lot.description | length > 100 %}...{% endif %}
+                </td>
+                <td>{{ ligne.quantite }}</td>
+                <td>{{ ligne.prixUnitaire|number_format(2, ',', ' ') }}
+                  €</td>
+                <td>{{ ligne.prixTotal|number_format(2, ',', ' ') }}
+                  €</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Aucun lot dans cette commande.</p>
+      {% endif %}
+
+      <div class="total-section">
+        <div class="total-line">
+          <strong>Total HT :</strong>
+          {{ commande.prixTotal|number_format(2, ',', ' ') }}
+          €
+        </div>
+        <div class="total-line">
+          <strong>TVA (20%) :</strong>
+          {{ (commande.prixTotal * 0.2)|number_format(2, ',', ' ') }}
+          €
+        </div>
+        <div class="grand-total">
+          <strong>TOTAL TTC :</strong>
+          {{ (commande.prixTotal * 1.2)|number_format(2, ',', ' ') }}
+          €
+        </div>
+      </div>
+    </div>
+
+    {% if commande.statut == 'en_attente' %}
+      <div class="warning-box">
+        <h4>⏳ Commande en Attente</h4>
+        <p>Votre commande est en attente de validation. Vous recevrez un email de confirmation une fois qu'elle sera traitée.</p>
+      </div>
+    {% elseif commande.statut == 'reserve' %}
+      <div class="info-box">
+        <h4>🔒 Commande Réservée</h4>
+        <p>Votre commande a été réservée. Veuillez procéder au paiement pour la confirmer.</p>
+      </div>
+    {% elseif commande.statut == 'validee' %}
+      <div class="success-box">
+        <h4>✅ Commande Validée</h4>
+        <p>Votre commande a été validée et sera préparée dans les plus brefs délais. Vous recevrez un email avec les détails de livraison.</p>
+      </div>
+    {% elseif commande.statut == 'annulee' %}
+      <div class="warning-box">
+        <h4>❌ Commande Annulée</h4>
+        <p>Cette commande a été annulée. Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+      </div>
+    {% endif %}
+
+    <div class="footer">
+      <div class="footer-logo">
+        {% if logo_base64 %}
+          <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo 3Tek-Europe">
+        {% else %}
+          <div class="logo-placeholder">3Tek-Europe</div>
+        {% endif %}
+      </div>
+      <p>Merci pour votre confiance !</p>
+      <p>Pour toute question, contactez-nous à : contact@3tek-europe.com</p>
+      <p>Document généré le
+        {{ "now"|date('d/m/Y à H:i') }}</p>
+    </div>
+  </body>
+</html>

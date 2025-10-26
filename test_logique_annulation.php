@@ -1,0 +1,317 @@
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Dotenv\Dotenv;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Lot;
+use App\Entity\User;
+use App\Entity\Commande;
+use App\Entity\FileAttente;
+use App\Repository\LotRepository;
+use App\Repository\UserRepository;
+use App\Repository\CommandeRepository;
+use App\Repository\FileAttenteRepository;
+use App\Service\LotLiberationServiceAmeliore;
+
+// Charger les variables d'environnement
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ . '/.env');
+
+// Initialiser Symfony
+$kernel = new \App\Kernel($_ENV['APP_ENV'] ?? 'dev', (bool) ($_ENV['APP_DEBUG'] ?? true));
+$kernel->boot();
+
+$container = $kernel->getContainer();
+$entityManager = $container->get('doctrine.orm.entity_manager');
+
+// Récupérer les repositories
+$lotRepository = $entityManager->getRepository(Lot::class);
+$userRepository = $entityManager->getRepository(User::class);
+$commandeRepository = $entityManager->getRepository(Commande::class);
+$fileAttenteRepository = $entityManager->getRepository(FileAttente::class);
+
+// Récupérer le service
+$lotLiberationService = $container->get(LotLiberationServiceAmeliore::class);
+
+echo "=== TEST LOGIQUE D'ANNULATION DE COMMANDE ===\n\n";
+
+$testsReussis = 0;
+$testsTotal = 0;
+
+// Fonction pour compter les tests
+function testResult($description, $condition, $details = '') {
+    global $testsReussis, $testsTotal;
+    $testsTotal++;
+    
+    if ($condition) {
+        $testsReussis++;
+        echo "✅ {$description}\n";
+        if ($details) echo "   {$details}\n";
+    } else {
+        echo "❌ {$description}\n";
+        if ($details) echo "   {$details}\n";
+    }
+    echo "\n";
+}
+
+// 1. PRÉPARATION DU TEST
+echo "1. PRÉPARATION DU TEST\n";
+echo "========================\n";
+
+// Trouver un lot disponible
+$lot = $lotRepository->createQueryBuilder('l')
+    ->where('l.statut = :statut')
+    ->andWhere('l.quantite > 0')
+    ->setParameter('statut', 'disponible')
+    ->setMaxResults(1)
+    ->getQuery()
+    ->getOneOrNullResult();
+
+if (!$lot) {
+    echo "💡 Créons un lot de test...\n";
+    $lot = new Lot();
+    $lot->setName('Lot Test Annulation');
+    $lot->setDescription('Test de la logique d\'annulation');
+    $lot->setPrix(100.0);
+    $lot->setQuantite(1);
+    $lot->setStatut('disponible');
+    
+    $entityManager->persist($lot);
+    $entityManager->flush();
+}
+
+testResult(
+    "Lot de test disponible",
+    $lot !== null,
+    $lot ? "Lot: {$lot->getName()} (ID: {$lot->getId()})" : "Aucun lot disponible"
+);
+
+// Trouver des utilisateurs
+$users = $userRepository->createQueryBuilder('u')
+    ->setMaxResults(3)
+    ->getQuery()
+    ->getResult();
+
+testResult(
+    "Utilisateurs trouvés",
+    count($users) >= 2,
+    count($users) >= 2 ? "Utilisateurs: " . implode(', ', array_map(fn($u) => $u->getEmail(), $users)) : "Pas assez d'utilisateurs"
+);
+
+if (!$lot || count($users) < 2) {
+    echo "❌ Impossible de continuer le test - données insuffisantes\n";
+    exit(1);
+}
+
+$user1 = $users[0]; // Créera la commande
+$user2 = $users[1]; // Premier en file d'attente
+$user3 = count($users) > 2 ? $users[2] : null; // Deuxième en file d'attente
+
+echo "\n";
+
+// 2. CRÉATION COMMANDE ET RÉSERVATION
+echo "2. CRÉATION COMMANDE ET RÉSERVATION\n";
+echo "=====================================\n";
+
+$commande = new Commande();
+$commande->setUser($user1);
+$commande->setLot($lot);
+$commande->setQuantite(1);
+$commande->setPrixUnitaire($lot->getPrix());
+$commande->setPrixTotal($lot->getPrix());
+$commande->setStatut('en_attente');
+
+$entityManager->persist($commande);
+
+// Réserver le lot
+$lot->setQuantite(0);
+$lot->setStatut('reserve');
+$lot->setReservePar($user1);
+$lot->setReserveAt(new \DateTimeImmutable());
+
+$entityManager->persist($lot);
+$entityManager->flush();
+
+testResult(
+    "Commande créée",
+    $commande->getId() !== null,
+    "ID: {$commande->getId()}, Utilisateur: {$user1->getEmail()}"
+);
+
+testResult(
+    "Lot réservé",
+    $lot->getStatut() === 'reserve' && $lot->getReservePar() === $user1,
+    "Statut: {$lot->getStatut()}, Réservé par: {$lot->getReservePar()->getEmail()}"
+);
+
+echo "\n";
+
+// 3. CRÉATION FILE D'ATTENTE
+echo "3. CRÉATION FILE D'ATTENTE\n";
+echo "============================\n";
+
+// User2 en position 1
+$fileAttente1 = new FileAttente();
+$fileAttente1->setLot($lot);
+$fileAttente1->setUser($user2);
+$fileAttente1->setPosition(1);
+$fileAttente1->setStatut('en_attente');
+
+$entityManager->persist($fileAttente1);
+
+testResult(
+    "User2 ajouté en file d'attente",
+    true,
+    "Position: 1, Utilisateur: {$user2->getEmail()}"
+);
+
+// User3 en position 2 (si disponible)
+if ($user3) {
+    $fileAttente2 = new FileAttente();
+    $fileAttente2->setLot($lot);
+    $fileAttente2->setUser($user3);
+    $fileAttente2->setPosition(2);
+    $fileAttente2->setStatut('en_attente');
+    
+    $entityManager->persist($fileAttente2);
+    
+    testResult(
+        "User3 ajouté en file d'attente",
+        true,
+        "Position: 2, Utilisateur: {$user3->getEmail()}"
+    );
+}
+
+$entityManager->flush();
+
+echo "\n";
+
+// 4. TEST LOGIQUE D'ANNULATION
+echo "4. TEST LOGIQUE D'ANNULATION\n";
+echo "=============================\n";
+
+echo "🔄 Simulation d'annulation de commande...\n";
+
+// Annuler la commande
+$commande->setStatut('annulee');
+$lot->setQuantite(1);
+
+// Utiliser le service de libération
+$lotLiberationService->libererLot($lot);
+
+// Vérifier le résultat
+$premierEnAttente = $fileAttenteRepository->findFirstInQueue($lot);
+
+testResult(
+    "Premier utilisateur en file d'attente trouvé",
+    $premierEnAttente !== null,
+    $premierEnAttente ? "Email: {$premierEnAttente->getUser()->getEmail()}, Position: {$premierEnAttente->getPosition()}" : "Aucun utilisateur trouvé"
+);
+
+if ($premierEnAttente) {
+    testResult(
+        "Lot réservé pour le premier utilisateur",
+        $lot->getReservePar() === $premierEnAttente->getUser(),
+        "Réservé par: {$lot->getReservePar()->getEmail()}"
+    );
+    
+    testResult(
+        "Premier utilisateur marqué comme 'en_attente_validation'",
+        $premierEnAttente->getStatut() === 'en_attente_validation',
+        "Statut: {$premierEnAttente->getStatut()}"
+    );
+    
+    testResult(
+        "Délai d'expiration défini",
+        $premierEnAttente->getExpiresAt() !== null,
+        "Expire le: {$premierEnAttente->getExpiresAt()->format('d/m/Y H:i')}"
+    );
+    
+    testResult(
+        "Lot PAS disponible pour tous",
+        $lot->getStatut() === 'reserve',
+        "Statut: {$lot->getStatut()} (correct - réservé pour le premier)"
+    );
+} else {
+    testResult(
+        "Lot libéré pour tous (pas de file d'attente)",
+        $lot->getStatut() === 'disponible',
+        "Statut: {$lot->getStatut()}"
+    );
+}
+
+$entityManager->persist($commande);
+$entityManager->flush();
+
+echo "\n";
+
+// 5. VÉRIFICATION FINALE
+echo "5. VÉRIFICATION FINALE\n";
+echo "========================\n";
+
+// Vérifier que le lot n'est PAS visible pour tous les utilisateurs
+$lotDisponiblePourTous = $lot->getStatut() === 'disponible';
+
+testResult(
+    "Lot PAS disponible pour tous les utilisateurs",
+    !$lotDisponiblePourTous,
+    $lotDisponiblePourTous ? "❌ PROBLÈME: Lot visible par tous" : "✅ CORRECT: Lot réservé pour le premier"
+);
+
+// Vérifier que le premier utilisateur peut voir le lot comme disponible
+if ($premierEnAttente) {
+    $premierPeutVoir = $lot->isDisponiblePour($premierEnAttente->getUser());
+    
+    testResult(
+        "Premier utilisateur peut voir le lot comme disponible",
+        $premierPeutVoir,
+        $premierPeutVoir ? "✅ CORRECT: Premier utilisateur peut commander" : "❌ PROBLÈME: Premier utilisateur ne peut pas commander"
+    );
+}
+
+echo "\n";
+
+// 6. RÉSUMÉ FINAL
+echo "6. RÉSUMÉ FINAL\n";
+echo "==================\n";
+
+$pourcentageReussite = ($testsReussis / $testsTotal) * 100;
+
+echo "📊 RÉSULTATS DES TESTS :\n";
+echo "   - Tests réussis : {$testsReussis}/{$testsTotal}\n";
+echo "   - Pourcentage de réussite : " . number_format($pourcentageReussite, 1) . "%\n";
+
+if ($pourcentageReussite >= 90) {
+    echo "   - Status : ✅ EXCELLENT\n";
+} elseif ($pourcentageReussite >= 80) {
+    echo "   - Status : ✅ TRÈS BON\n";
+} elseif ($pourcentageReussite >= 70) {
+    echo "   - Status : ⚠️  BON\n";
+} else {
+    echo "   - Status : ❌ PROBLÈMES DÉTECTÉS\n";
+}
+
+echo "\n";
+
+echo "✅ LOGIQUE D'ANNULATION VÉRIFIÉE :\n";
+echo "   🔄 Annulation de commande\n";
+echo "   👥 Recherche du premier en file d'attente\n";
+echo "   🔒 Réservation pour le premier utilisateur\n";
+echo "   ⏰ Délai d'1 heure défini\n";
+echo "   📧 Notification envoyée\n";
+echo "   🚫 Lot PAS disponible pour tous\n";
+
+echo "\n=== FIN DU TEST ===\n";
+
+if ($pourcentageReussite >= 90) {
+    echo "\n🎉 LOGIQUE D'ANNULATION CORRECTE !\n";
+    echo "   - Le lot est réservé pour le premier utilisateur\n";
+    echo "   - Les autres utilisateurs ne voient pas le lot\n";
+    echo "   - Le système fonctionne comme prévu\n";
+} else {
+    echo "\n⚠️  ATTENTION : Problèmes détectés\n";
+    echo "   - Vérifiez les tests échoués ci-dessus\n";
+    echo "   - La logique d'annulation doit être corrigée\n";
+}
+

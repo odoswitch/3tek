@@ -45,3 +45,5 @@ echo "- User: Affiche 'Prénom Nom (email)'\n";
 echo "- Plus d'erreur 'Object could not be converted to string' dans EasyAdmin\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

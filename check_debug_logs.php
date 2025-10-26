@@ -87,3 +87,5 @@ if (count($deleteLogs) == 0) {
 }
 
 echo "\n=== FIN DE LA VÉRIFICATION ===\n";
+
+

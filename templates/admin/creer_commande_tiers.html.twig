@@ -10,8 +10,9 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-body">
-          <form method="POST">
-            <div class="row">
+          <form method="POST" id="commande-form">
+            <!-- Informations générales -->
+            <div class="row mb-4">
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="user_id" class="form-label">Utilisateur</label>
@@ -26,33 +27,6 @@
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="lot_id" class="form-label">Lot</label>
-                  <select class="form-select" id="lot_id" name="lot_id" required="required">
-                    <option value="">Sélectionner un lot</option>
-                    {% for lot in lots %}
-                      <option value="{{ lot.id }}" data-prix="{{ lot.prix }}" data-quantite="{{ lot.quantite }}">
-                        {{ lot.name }}
-                        -
-                        {{ lot.prix|number_format(2, ',', ' ') }}€ (Stock:
-                        {{ lot.quantite }})
-                      </option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label for="quantite" class="form-label">Quantité</label>
-                  <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" required="required">
-                  <small class="text-muted" id="quantite-help">Maximum disponible:
-                    <span id="max-quantite">-</span></small>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="mb-3">
                   <label for="statut" class="form-label">Statut</label>
                   <select class="form-select" id="statut" name="statut">
                     <option value="en_attente">En attente</option>
@@ -61,10 +35,29 @@
                   </select>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label class="form-label">Prix total</label>
-                  <div class="form-control-plaintext" id="prix-total">0,00 €</div>
+            </div>
+
+            <!-- Section des lots -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Lots de la commande</h5>
+                <button type="button" class="btn btn-success btn-sm" id="ajouter-lot">
+                  <i class="fa fa-plus"></i>
+                  Ajouter un lot
+                </button>
+              </div>
+
+              <div id="lots-container">
+                <!-- Le premier lot sera ajouté ici -->
+              </div>
+            </div>
+
+            <!-- Total de la commande -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="alert alert-info">
+                  <strong>Total de la commande :</strong>
+                  <span id="total-commande">0,00 €</span>
                 </div>
               </div>
             </div>
@@ -90,42 +83,154 @@
         </div>
         <div class="card-body">
           <p>
-            <strong>En attente :</strong>
-            Commande créée, en attente de paiement</p>
+            <strong>Commande multiple :</strong>
+            Ajoutez plusieurs lots à la même commande</p>
           <p>
-            <strong>Réservé :</strong>
-            Commande réservée pour le client</p>
+            <strong>Calcul automatique :</strong>
+            Le total se calcule automatiquement</p>
           <p>
-            <strong>Validé :</strong>
-            Commande validée et lot vendu</p>
+            <strong>Gestion des stocks :</strong>
+            Vérification automatique des quantités</p>
+          <p>
+            <strong>Statuts disponibles :</strong>
+          </p>
+          <ul>
+            <li>
+              <strong>En attente :</strong>
+              Commande créée, en attente de paiement</li>
+            <li>
+              <strong>Réservé :</strong>
+              Commande réservée pour le client</li>
+            <li>
+              <strong>Validé :</strong>
+              Commande validée et lots vendus</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    document.getElementById('lot_id').addEventListener('change', function () {
-      const selectedOption = this.options[this.selectedIndex];
-      const prix = parseFloat(selectedOption.dataset.prix) || 0;
-      const quantite = parseInt(selectedOption.dataset.quantite) || 0;
+    let lotCounter = 0;
+    const lotsData = {{ lots|json_encode|raw }};
 
-      document.getElementById('max-quantite').textContent = quantite;
-      document.getElementById('quantite').max = quantite;
+    // Debug pour vérifier les données
+    console.log('Lots data:', lotsData);
 
-      updatePrixTotal();
-    });
+    function createLotRow() {
+      lotCounter++;
+      const lotRow = document.createElement('div');
+      lotRow.className = 'lot-row border rounded p-3 mb-3';
+      lotRow.id = `lot-row-${lotCounter}`;
 
-    document.getElementById('quantite').addEventListener('input', updatePrixTotal);
+      lotRow.innerHTML = `
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Lot</label>
+              <select class="form-select lot-select" name="lots[${lotCounter}][lot_id]" required>
+                <option value="">Sélectionner un lot</option>
+                ${lotsData.map(lot => `<option value="${lot.id}" data-prix="${lot.prix}" data-quantite="${lot.quantite}">
+                    ${lot.name} - ${parseFloat(lot.prix || 0).toFixed(2).replace('.', ',')}€ (Stock: ${lot.quantite || 0})
+                  </option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Quantité</label>
+              <input type="number" class="form-control lot-quantite" name="lots[${lotCounter}][quantite]" value="1" min="1" required>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Prix unitaire (€)</label>
+              <input type="number" class="form-control lot-prix" name="lots[${lotCounter}][prix_unitaire]" step="0.01" min="0" required>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">Total ligne</label>
+              <div class="form-control-plaintext lot-total">0,00 €</div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">&nbsp;</label>
+              <button type="button" class="btn btn-danger btn-sm d-block supprimer-lot">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
 
-    function updatePrixTotal() {
-      const lotSelect = document.getElementById('lot_id');
-      const quantite = parseInt(document.getElementById('quantite').value) || 0;
-      const prix = parseFloat(
-        lotSelect.options[lotSelect.selectedIndex]
-        ?.dataset.prix) || 0;
+      document.getElementById('lots-container').appendChild(lotRow);
 
-      const total = prix * quantite;
-      document.getElementById('prix-total').textContent = total.toFixed(2).replace('.', ',') + ' €';
+      // Ajouter les événements
+      const lotSelect = lotRow.querySelector('.lot-select');
+      const quantiteInput = lotRow.querySelector('.lot-quantite');
+      const prixInput = lotRow.querySelector('.lot-prix');
+      const supprimerBtn = lotRow.querySelector('.supprimer-lot');
+
+      lotSelect.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const prix = parseFloat(selectedOption.dataset.prix) || 0;
+        const quantite = parseInt(selectedOption.dataset.quantite) || 0;
+
+        quantiteInput.max = quantite;
+        prixInput.value = prix.toFixed(2);
+
+        updateLotTotal(lotRow);
+        updateCommandeTotal();
+      });
+
+      quantiteInput.addEventListener('input', () => {
+        updateLotTotal(lotRow);
+        updateCommandeTotal();
+      });
+
+      prixInput.addEventListener('input', () => {
+        updateLotTotal(lotRow);
+        updateCommandeTotal();
+      });
+
+      supprimerBtn.addEventListener('click', () => {
+        lotRow.remove();
+        updateCommandeTotal();
+      });
+
+      // Calcul initial
+      updateLotTotal(lotRow);
+      updateCommandeTotal();
     }
+
+    function updateLotTotal(lotRow) {
+      const quantite = parseInt(lotRow.querySelector('.lot-quantite').value) || 0;
+      const prix = parseFloat(lotRow.querySelector('.lot-prix').value) || 0;
+      const total = quantite * prix;
+
+      lotRow.querySelector('.lot-total').textContent = total.toFixed(2).replace('.', ',') + ' €';
+    }
+
+    function updateCommandeTotal() {
+      const lotRows = document.querySelectorAll('.lot-row');
+      let totalCommande = 0;
+
+      lotRows.forEach(row => {
+        const quantite = parseInt(row.querySelector('.lot-quantite').value) || 0;
+        const prix = parseFloat(row.querySelector('.lot-prix').value) || 0;
+        totalCommande += quantite * prix;
+      });
+
+      document.getElementById('total-commande').textContent = totalCommande.toFixed(2).replace('.', ',') + ' €';
+    }
+
+    // Ajouter le premier lot au chargement
+    document.addEventListener('DOMContentLoaded', function () {
+      createLotRow();
+
+      document.getElementById('ajouter-lot').addEventListener('click', createLotRow);
+    });
   </script>
 {% endblock %}

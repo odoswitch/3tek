@@ -176,3 +176,5 @@ echo "3. Puis supprimez la commande via l'admin et vérifiez qu'il passe à 'dis
 echo "4. Et que User2 (premier en file) est notifié\n\n";
 
 echo "=== FIN DE LA CRÉATION DU SCÉNARIO ===\n";
+
+

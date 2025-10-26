@@ -49,3 +49,5 @@ echo "Le système de file d'attente est complètement fonctionnel.\n";
 echo "L'application peut être utilisée sans erreur.\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

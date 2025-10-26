@@ -38,3 +38,4 @@ echo "- Réservé par: User ID $userId\n";
 echo "- Réservé le: " . date('Y-m-d H:i:s') . "\n";
 
 echo "\n=== FIN DU TEST ===\n";
+

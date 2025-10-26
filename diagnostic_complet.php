@@ -57,3 +57,5 @@ echo "- Fichiers en cache: " . count($cacheFiles) . "\n";
 
 echo "\n=== FIN DU DIAGNOSTIC ===\n";
 ?>
+
+

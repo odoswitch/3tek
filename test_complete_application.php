@@ -88,3 +88,5 @@ echo "L'interface utilisateur est sans erreur.\n";
 echo "Le client B peut réserver les lots déjà réservés.\n\n";
 
 echo "=== FIN DU TEST COMPLET ===\n";
+
+

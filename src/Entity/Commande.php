@@ -22,6 +22,9 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?Lot $lot = null;
 
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeLigne::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $lignes;
+
     #[ORM\Column]
     private ?int $quantite = 1;
 
@@ -50,6 +53,7 @@ class Commande
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->numeroCommande = 'CMD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+        $this->lignes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,7 +183,7 @@ class Commande
 
     public function getStatutLabel(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'en_attente' => 'En attente',
             'reserve' => 'Réservé',
             'validee' => 'Validée',
@@ -206,5 +210,72 @@ class Commande
     public function isAnnulee(): bool
     {
         return $this->statut === 'annulee';
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection<int, CommandeLigne>
+     */
+    public function getLignes(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->lignes;
+    }
+
+    public function addLigne(CommandeLigne $ligne): static
+    {
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigne(CommandeLigne $ligne): static
+    {
+        if ($this->lignes->removeElement($ligne)) {
+            // set the owning side to null (unless already changed)
+            if ($ligne->getCommande() === $this) {
+                $ligne->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Calcule le total de toutes les lignes
+     */
+    public function getTotalLignes(): float
+    {
+        $total = 0;
+        foreach ($this->lignes as $ligne) {
+            $total += (float) $ligne->getPrixTotal();
+        }
+        return $total;
+    }
+
+    /**
+     * Vérifie si la commande a plusieurs lots
+     */
+    public function hasMultipleLots(): bool
+    {
+        return $this->lignes->count() > 1;
+    }
+
+    /**
+     * Représentation string de la commande pour les formulaires
+     */
+    public function __toString(): string
+    {
+        $client = $this->user ? $this->user->getEmail() : 'Client inconnu';
+        $lot = $this->lot ? $this->lot->getName() : 'Lot inconnu';
+
+        return sprintf(
+            '%s - %s (%s) - %s€',
+            $this->numeroCommande ?? 'CMD-' . $this->id,
+            $lot,
+            $client,
+            $this->prixTotal ? number_format($this->prixTotal, 2) : '0.00'
+        );
     }
 }

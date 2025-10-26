@@ -40,3 +40,5 @@ echo "Ces requêtes doivent être exécutées dans la base de données MySQL.\n"
 echo "Utilisez phpMyAdmin ou un client MySQL pour les exécuter.\n\n";
 
 echo "=== FIN DU SCRIPT ===\n";
+
+

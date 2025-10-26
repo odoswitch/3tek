@@ -101,8 +101,15 @@ class PanierController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'app_panier_update', methods: ['POST'])]
-    public function update(Panier $panier, Request $request): Response
+    public function update(int $id, Request $request): Response
     {
+        $panierRepository = $this->entityManager->getRepository(Panier::class);
+        $panier = $panierRepository->find($id);
+
+        if (!$panier) {
+            throw $this->createNotFoundException('Article du panier non trouvé');
+        }
+
         if ($panier->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
@@ -122,8 +129,15 @@ class PanierController extends AbstractController
     }
 
     #[Route('/remove/{id}', name: 'app_panier_remove')]
-    public function remove(Panier $panier): Response
+    public function remove(int $id): Response
     {
+        $panierRepository = $this->entityManager->getRepository(Panier::class);
+        $panier = $panierRepository->find($id);
+
+        if (!$panier) {
+            throw $this->createNotFoundException('Article du panier non trouvé');
+        }
+
         if ($panier->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
@@ -180,7 +194,7 @@ class PanierController extends AbstractController
             $lot = $item->getLot();
             $nouvelleQuantite = $lot->getQuantite() - $item->getQuantite();
 
-            if ($_ENV['APP_ENV'] === 'dev') {
+            if ($this->getParameter('kernel.environment') === 'dev') {
                 error_log("DEBUG PANIER: Lot ID=" . $lot->getId() . ", Quantité actuelle=" . $lot->getQuantite() . ", Quantité commandée=" . $item->getQuantite() . ", Nouvelle quantité=" . $nouvelleQuantite);
             }
 
@@ -190,13 +204,13 @@ class PanierController extends AbstractController
                 $lot->setReservePar($user);
                 $lot->setReserveAt(new \DateTimeImmutable());
 
-                if ($_ENV['APP_ENV'] === 'dev') {
+                if ($this->getParameter('kernel.environment') === 'dev') {
                     error_log("DEBUG PANIER: Stock atteint 0, marquage comme réservé");
                 }
             } else {
                 $lot->setQuantite($nouvelleQuantite);
 
-                if ($_ENV['APP_ENV'] === 'dev') {
+                if ($this->getParameter('kernel.environment') === 'dev') {
                     error_log("DEBUG PANIER: Décrémentation de la quantité à " . $nouvelleQuantite);
                 }
             }

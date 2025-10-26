@@ -24,3 +24,5 @@ $verifyOutput = shell_exec($verifyCmd . ' 2>&1');
 echo "Résultat:\n$verifyOutput\n\n";
 
 echo "=== FIN DE LA CORRECTION ===\n";
+
+

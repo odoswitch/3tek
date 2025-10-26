@@ -147,3 +147,5 @@ echo "Vérifiez d'abord que le lot est bien en statut 'réservé' sur l'interfac
 echo "Puis supprimez la commande via l'admin et vérifiez qu'il passe à 'disponible'\n\n";
 
 echo "=== FIN DE LA CRÉATION DU TEST ===\n";
+
+

@@ -59,3 +59,5 @@ echo "L'application est prête et tous les composants sont compatibles.\n";
 echo "La modification du PanierController n'affecte pas les autres parties.\n\n";
 
 echo "=== FIN DE LA VÉRIFICATION ===\n";
+
+

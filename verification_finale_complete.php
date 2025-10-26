@@ -83,3 +83,5 @@ if (!$erreursTrouvees) {
 }
 
 echo "=== FIN DE LA VÉRIFICATION FINALE ===\n";
+
+

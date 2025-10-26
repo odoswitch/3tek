@@ -54,3 +54,5 @@ echo "4. Vérifier que la page se charge SANS ERREUR\n";
 echo "5. Tester la galerie d'images\n\n";
 
 echo "=== FIN DU VIDAGE ===\n";
+
+

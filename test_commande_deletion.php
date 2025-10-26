@@ -65,3 +65,5 @@ echo "6. Vérifiez que le lot passe à 'disponible'\n";
 echo "7. Vérifiez que la première personne de la file d'attente est notifiée\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

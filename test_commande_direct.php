@@ -45,3 +45,4 @@ echo "2. Tester une nouvelle commande\n";
 echo "3. Vérifier que le stock est mis à jour\n";
 
 echo "\n=== FIN DU TEST ===\n";
+

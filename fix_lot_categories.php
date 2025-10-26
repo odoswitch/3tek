@@ -86,3 +86,5 @@ echo "Les lots de test ont été mis à jour avec une catégorie par défaut.\n"
 echo "Ils devraient maintenant s'afficher sur l'interface utilisateur.\n\n";
 
 echo "=== FIN DU FIX ===\n";
+
+

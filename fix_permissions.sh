@@ -28,3 +28,4 @@ docker compose exec php php bin/console cache:clear --env=dev
 
 echo "=== CORRECTION TERMINÉE ==="
 echo "L'application devrait maintenant fonctionner."
+

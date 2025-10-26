@@ -19,3 +19,5 @@ echo "- Le prix de 0 € était la cause\n";
 echo "- La logique de mise à jour fonctionne\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

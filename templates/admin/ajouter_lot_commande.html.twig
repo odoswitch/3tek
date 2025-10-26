@@ -1,0 +1,200 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+  <i class="fa fa-plus"></i>
+  Ajouter un lot à la commande
+  {{ commande.numeroCommande }}
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fa fa-shopping-cart"></i>
+            Informations de la commande
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                <strong>Client :</strong>
+                {{ commande.user.email }}</p>
+              <p>
+                <strong>Statut :</strong>
+                <span class="badge badge-{{ commande.statut == 'en_attente' ? 'warning' : (commande.statut == 'reserve' ? 'info' : 'success') }}">
+                  {{ commande.statut|title }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                <strong>Total actuel :</strong>
+                {{ commande.prixTotal|number_format(2, ',', ' ') }}
+                €</p>
+              <p>
+                <strong>Date :</strong>
+                {{ commande.createdAt|date('d/m/Y H:i') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fa fa-plus"></i>
+            Ajouter un nouveau lot
+          </h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="lot_id" class="form-label">Sélectionner un lot</label>
+                  <select class="form-select" id="lot_id" name="lot_id" required="required">
+                    <option value="">Choisir un lot...</option>
+                    {% for lot in lots %}
+                      <option value="{{ lot.id }}" data-prix="{{ lot.prix }}" data-quantite="{{ lot.quantite }}" data-nom="{{ lot.name }}">
+                        {{ lot.name }}
+                        -
+                        {{ lot.prix|number_format(2, ',', ' ') }}€ (Stock:
+                        {{ lot.quantite }})
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="quantite" class="form-label">Quantité</label>
+                  <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" max="1" required="required">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="prix_unitaire" class="form-label">Prix unitaire (€)</label>
+                  <input type="number" class="form-control" id="prix_unitaire" name="prix_unitaire" step="0.01" min="0" required="required" readonly="readonly">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Total de cette ligne</label>
+                  <div class="form-control-plaintext" id="total-ligne">
+                    0,00 €
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Nouveau total commande</label>
+                  <div class="form-control-plaintext" id="nouveau-total">
+                    {{ commande.prixTotal|number_format(2, ',', ' ') }}
+                    €
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <a href="{{ ea_url().setController('App\\Controller\\Admin\\CommandeCrudController').setAction('edit').setEntityId(commande.id) }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Retour à la commande
+              </a>
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-plus"></i>
+                Ajouter le lot
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fa fa-list"></i>
+            Lots déjà dans la commande
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if commande.lignes | length > 0 %}
+            {% for ligne in commande.lignes %}
+              <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                <div>
+                  <strong>{{ ligne.lot.name }}</strong><br>
+                  <small class="text-muted">{{ ligne.quantite }}
+                    ×
+                    {{ ligne.prixUnitaire|number_format(2, ',', ' ') }}€</small>
+                </div>
+                <div class="text-end">
+                  <strong>{{ ligne.prixTotal|number_format(2, ',', ' ') }}€</strong>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">Aucun lot dans cette commande.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const lotSelect = document.getElementById('lot_id');
+      const quantiteInput = document.getElementById('quantite');
+      const prixUnitaireInput = document.getElementById('prix_unitaire');
+      const totalLigneDiv = document.getElementById('total-ligne');
+      const nouveauTotalDiv = document.getElementById('nouveau-total');
+      const commandeTotal = {{ commande.prixTotal }};
+
+      function updateCalculs() {
+        const selectedOption = lotSelect.options[lotSelect.selectedIndex];
+        const prix = parseFloat(selectedOption.dataset.prix || 0);
+        const quantite = parseInt(quantiteInput.value || 0);
+        const stockMax = parseInt(selectedOption.dataset.quantite || 0);
+
+        // Mettre à jour le prix unitaire
+        prixUnitaireInput.value = prix.toFixed(2);
+
+        // Calculer le total de la ligne
+        const totalLigne = prix * quantite;
+        totalLigneDiv.textContent = totalLigne.toFixed(2).replace('.', ',') + ' €';
+
+        // Calculer le nouveau total de la commande
+        const nouveauTotal = commandeTotal + totalLigne;
+        nouveauTotalDiv.textContent = nouveauTotal.toFixed(2).replace('.', ',') + ' €';
+      }
+
+      lotSelect.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const stockMax = parseInt(selectedOption.dataset.quantite || 0);
+
+        if (stockMax > 0) {
+          quantiteInput.max = stockMax;
+          quantiteInput.value = Math.min(quantiteInput.value || 1, stockMax);
+        } else {
+          quantiteInput.max = 0;
+          quantiteInput.value = 0;
+        }
+
+        updateCalculs();
+      });
+
+      quantiteInput.addEventListener('input', updateCalculs);
+
+      // Calcul initial
+      updateCalculs();
+    });
+  </script>
+{% endblock %}
+

@@ -43,9 +43,17 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center mb-4">
                     <h4 class="card-title mb-0">Détails de la commande</h4>
-                    <span class="badge {% if commande.statut == 'validee' %}bg-success{% elseif commande.statut == 'annulee' %}bg-danger{% else %}bg-warning{% endif %} ms-auto font-size-14">
-                      {{ commande.statutLabel }}
-                    </span>
+                    <div class="ms-auto d-flex align-items-center gap-2">
+                      <span class="badge {% if commande.statut == 'validee' %}bg-success{% elseif commande.statut == 'annulee' %}bg-danger{% else %}bg-warning{% endif %} font-size-14">
+                        {{ commande.statutLabel }}
+                      </span>
+                      {% if commande.statut != 'annulee' %}
+                        <a href="{{ path('commande_pdf_client', {id: commande.id}) }}" class="btn btn-sm btn-danger" target="_blank">
+                          <i class="bx bx-file-pdf"></i>
+                          PDF
+                        </a>
+                      {% endif %}
+                    </div>
                   </div>
 
                   <div class="table-responsive">
@@ -157,7 +165,8 @@
                       <div class="modal-body">
                         <p>Êtes-vous sûr de vouloir annuler cette commande ?</p>
                         <div class="alert alert-warning">
-                          <strong>Attention :</strong> Cette action libérera le lot pour les autres utilisateurs en file d'attente.
+                          <strong>Attention :</strong>
+                          Cette action libérera le lot pour les autres utilisateurs en file d'attente.
                         </div>
                       </div>
                       <div class="modal-footer">

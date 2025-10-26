@@ -23,3 +23,5 @@ echo "5. Vérifier que le stock passe à 0\n";
 echo "6. Vérifier que le statut passe à 'reserve'\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

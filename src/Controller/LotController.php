@@ -29,7 +29,7 @@ class LotController extends AbstractController
     public function list(LotRepository $lotRepository): Response
     {
         $user = $this->getUser();
-        
+
         // Admin voit tous les lots
         if ($this->isGranted('ROLE_ADMIN')) {
             $lots = $lotRepository->findAll();
@@ -40,6 +40,7 @@ class LotController extends AbstractController
                 $lots = [];
             } else {
                 // Filtrer les lots selon les catégories et le type de l'utilisateur
+                // Montrer tous les lots, même ceux avec quantité = 0 (réservés)
                 $lots = $lotRepository->createQueryBuilder('l')
                     ->leftJoin('l.images', 'images')
                     ->addSelect('images')
@@ -47,7 +48,6 @@ class LotController extends AbstractController
                     ->addSelect('lt')
                     ->where('l.cat IN (:categories)')
                     ->andWhere(':userType MEMBER OF l.types')
-                    ->andWhere('l.quantite > 0')
                     ->setParameter('categories', $user->getCategorie())
                     ->setParameter('userType', $user->getType())
                     ->orderBy('l.quantite', 'DESC')
@@ -56,7 +56,7 @@ class LotController extends AbstractController
                     ->getResult();
             }
         }
-        
+
         return $this->render('lot/list.html.twig', [
             'lots' => $lots,
         ]);

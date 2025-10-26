@@ -54,3 +54,5 @@ echo "Le template lot/view.html.twig fonctionne correctement.\n";
 echo "Les images des lots s'affichent sans problème.\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

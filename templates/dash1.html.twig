@@ -172,6 +172,11 @@
                             <i class="bx bx-check-circle"></i>
                             Vendu
                           </span>
+                        {% elseif item.commandesEnAttente is defined and item.commandesEnAttente > 0 %}
+                          <span class="badge bg-warning">
+                            <i class="bx bx-time"></i>
+                            Réservé (Commande en attente)
+                          </span>
                         {% else %}
                           <span class="badge {% if item.quantite > 10 %}bg-success{% elseif item.quantite > 0 %}bg-warning{% else %}bg-danger{% endif %}">
                             {% if item.quantite > 0 %}
@@ -185,13 +190,13 @@
                           </span>
                         {% endif %}
                       </div>
-                      {% if item.statut == 'disponible' and item.quantite > 0 %}
+                      {% if item.statut == 'disponible' and item.quantite > 0 and(item.commandesEnAttente is not defined or item.commandesEnAttente == 0) %}
                         <a href="{{ path('app_lot_view', {id: item.id}) }}" class="btn btn-primary btn-sm w-100">
                           <i class="bx bx-cart me-1"></i>
                           Voir et commander
                           <i class="mdi mdi-chevron-right"></i>
                         </a>
-                      {% elseif item.statut == 'reserve' %}
+                      {% elseif item.statut == 'reserve' or (item.commandesEnAttente is defined and item.commandesEnAttente > 0) %}
                         <a href="{{ path('app_lot_view', {id: item.id}) }}" class="btn btn-warning btn-sm w-100">
                           <i class="bx bx-time me-1"></i>
                           Rejoindre la file d'attente

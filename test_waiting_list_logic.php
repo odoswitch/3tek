@@ -61,3 +61,5 @@ echo "4. Le premier utilisateur de la file d'attente sera notifié\n";
 echo "5. Il recevra un email de notification\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

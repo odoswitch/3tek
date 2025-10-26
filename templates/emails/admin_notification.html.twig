@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Admin - Nouvelle Commande</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background-color: #0066cc;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 5px 5px 0 0;
+      }
+      .content {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 0 0 5px 5px;
+      }
+      .info-box {
+        background-color: #e7f3ff;
+        border-left: 4px solid #0066cc;
+        padding: 15px;
+        margin: 15px 0;
+      }
+      .highlight {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🔔 Nouvelle Commande Reçue</h1>
+      <p>3Tek-Europe - Système de Notification</p>
+    </div>
+
+    <div class="content">
+      <h2>Bonjour Administrateur,</h2>
+
+      <p>Une nouvelle commande a été passée sur la plateforme 3Tek-Europe.</p>
+
+      <div class="info-box">
+        <h3>📋 Détails de la Commande</h3>
+        <p>
+          <strong>Numéro de commande :</strong>
+          {{ commande.numeroCommande }}</p>
+        <p>
+          <strong>Client :</strong>
+          {{ user.name }}
+          {{ user.lastname }}</p>
+        <p>
+          <strong>Email :</strong>
+          {{ user.email }}</p>
+        <p>
+          <strong>Téléphone :</strong>
+          {{ user.phone }}</p>
+        <p>
+          <strong>Date de commande :</strong>
+          {{ commande.createdAt|date('d/m/Y H:i') }}</p>
+      </div>
+
+      <div class="info-box">
+        <h3>📦 Produit Commandé</h3>
+        <p>
+          <strong>Lot :</strong>
+          {{ commande.lot.name }}</p>
+        <p>
+          <strong>Description :</strong>
+          {{ commande.lot.description|slice(0, 100) }}...</p>
+        <p>
+          <strong>Quantité :</strong>
+          {{ commande.quantite }}</p>
+        <p>
+          <strong>Prix unitaire :</strong>
+          {{ commande.prixUnitaire|number_format(2, ',', ' ') }}
+          €</p>
+        <p>
+          <strong>Total :</strong>
+          {{ commande.prixTotal|number_format(2, ',', ' ') }}
+          €</p>
+      </div>
+
+      <div class="highlight">
+        <h3>⚠️ Action Requise</h3>
+        <p>Cette commande est en attente de validation. Veuillez vous connecter à l'interface d'administration pour traiter cette commande.</p>
+      </div>
+
+      <p>
+        <strong>Prochaines étapes :</strong>
+      </p>
+      <ul>
+        <li>Vérifier la disponibilité du stock</li>
+        <li>Confirmer les détails de la commande</li>
+        <li>Valider ou annuler la commande</li>
+        <li>Notifier le client du statut</li>
+      </ul>
+
+      <p>Connectez-vous à l'interface d'administration pour traiter cette commande.</p>
+    </div>
+
+    <div class="footer">
+      <p>3Tek-Europe - Système de Gestion des Commandes</p>
+      <p>Email automatique - Ne pas répondre</p>
+    </div>
+  </body>
+</html>
+

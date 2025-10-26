@@ -91,3 +91,5 @@ echo "Tous les caches ont été supprimés.\n";
 echo "L'application est maintenant 100% fonctionnelle.\n\n";
 
 echo "=== FIN DU TEST DÉFINITIF ===\n";
+
+

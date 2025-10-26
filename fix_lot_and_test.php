@@ -18,3 +18,4 @@ $checkOutput = shell_exec('docker compose exec php bin/console doctrine:query:sq
 echo $checkOutput . "\n";
 
 echo "=== FIN DE LA CORRECTION ===\n";
+

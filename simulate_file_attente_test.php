@@ -142,3 +142,5 @@ echo "- User2 ID: $user2Id (deuxième en file)\n";
 echo "- Commande créée et lot réservé\n\n";
 
 echo "=== FIN DE LA SIMULATION ===\n";
+
+

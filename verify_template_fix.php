@@ -42,3 +42,5 @@ echo "3. Vérifier que la page se charge sans erreur\n";
 echo "4. Tester la galerie d'images\n\n";
 
 echo "=== FIN DE LA VÉRIFICATION ===\n";
+
+

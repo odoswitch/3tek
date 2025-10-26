@@ -1,4 +1,3 @@
-
 services:
   php:
     build:
@@ -9,11 +8,14 @@ services:
       - .:/var/www/html
       # Volumes nommés pour améliorer les performances sur Windows
       - php_vendor:/var/www/html/vendor
-      - php_cache:/var/www/html/var/cache
+      # Utiliser un bind mount pour le cache pour éviter les problèmes de permissions
+      - ./var/cache:/var/www/html/var/cache
       - php_log:/var/www/html/var/log
     environment:
-      - APP_ENV=${APP_ENV:-dev}
-      - DATABASE_URL=${DATABASE_URL}
+      - APP_ENV=prod
+      - APP_DEBUG=false
+      - DATABASE_URL=mysql://root:ngamba123@3tek-database-1:3306/db_3tek?serverVersion=8.0&charset=utf8mb4
+      - MAILER_DSN=smtp://noreply%40odoip.net:Ngamba%2D123@mail.odoip.net:465?encryption=ssl
       - TZ=Europe/Paris
     depends_on:
       - database
@@ -33,7 +35,7 @@ services:
     networks:
       - app_network
 
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database:
     image: mysql:${MYSQL_VERSION:-8.0}
     environment:
@@ -58,12 +60,11 @@ services:
 ###< doctrine/doctrine-bundle ###
 
 volumes:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
+  ###< doctrine/doctrine-bundle ###
   # Volumes pour améliorer les performances sur Windows
   php_vendor:
-  php_cache:
   php_log:
 
 networks:

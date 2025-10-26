@@ -76,3 +76,5 @@ try {
 }
 
 echo "\n=== FIN DE LA VÉRIFICATION ===\n";
+
+

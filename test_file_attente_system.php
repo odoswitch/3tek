@@ -46,3 +46,5 @@ echo "- Le système gère automatiquement les positions\n";
 echo "- L'interface est intuitive et sécurisée\n\n";
 
 echo "=== FIN DU TEST ===\n";
+
+

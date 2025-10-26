@@ -58,3 +58,4 @@ class AppExtension extends AbstractExtension
         return $cleaned;
     }
 }
+

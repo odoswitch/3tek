@@ -46,3 +46,4 @@ if ($lot) {
 }
 
 echo "\n=== FIN DE LA CORRECTION ===\n";
+

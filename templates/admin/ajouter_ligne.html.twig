@@ -1,0 +1,135 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content_title %}
+  <i class="fa fa-plus-circle"></i>
+  Ajouter une ligne de commande
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="commande_id" class="form-label">Commande</label>
+                  <select class="form-select" id="commande_id" name="commande_id" required="required">
+                    <option value="">Sélectionner une commande</option>
+                    {% for commande in commandes %}
+                      <option value="{{ commande.id }}">
+                        {{ commande.numeroCommande }}
+                        -
+                        {{ commande.user.email }}
+                        {% if commande.lot %}
+                          ({{ commande.lot.name }})
+                        {% endif %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <small class="text-muted">Seules les commandes "en attente" sont affichées</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="lot_id" class="form-label">Lot</label>
+                  <select class="form-select" id="lot_id" name="lot_id" required="required">
+                    <option value="">Sélectionner un lot</option>
+                    {% for lot in lots %}
+                      <option value="{{ lot.id }}" data-prix="{{ lot.prix }}" data-quantite="{{ lot.quantite }}">
+                        {{ lot.name }}
+                        -
+                        {{ lot.prix|number_format(2, ',', ' ') }}€ (Stock:
+                        {{ lot.quantite }})
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="quantite" class="form-label">Quantité</label>
+                  <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" required="required">
+                  <small class="text-muted" id="quantite-help">Maximum disponible:
+                    <span id="max-quantite">-</span></small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="prix_unitaire" class="form-label">Prix unitaire (€)</label>
+                  <input type="number" class="form-control" id="prix_unitaire" name="prix_unitaire" step="0.01" min="0" required="required">
+                  <small class="text-muted">Prix par unité</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="form-label">Prix total ligne</label>
+                  <div class="form-control-plaintext" id="prix-total-ligne">0,00 €</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-plus"></i>
+                Ajouter la ligne
+              </button>
+              <a href="{{ path('admin') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Retour
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Informations</h5>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong>Ligne de commande :</strong>
+            Ajoute un lot supplémentaire à une commande existante</p>
+          <p>
+            <strong>Calcul automatique :</strong>
+            Le total de la commande sera recalculé automatiquement</p>
+          <p>
+            <strong>Stock vérifié :</strong>
+            La quantité ne peut pas dépasser le stock disponible</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('lot_id').addEventListener('change', function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const prix = parseFloat(selectedOption.dataset.prix) || 0;
+      const quantite = parseInt(selectedOption.dataset.quantite) || 0;
+
+      document.getElementById('max-quantite').textContent = quantite;
+      document.getElementById('quantite').max = quantite;
+      document.getElementById('prix_unitaire').value = prix.toFixed(2);
+
+      updatePrixTotalLigne();
+    });
+
+    document.getElementById('quantite').addEventListener('input', updatePrixTotalLigne);
+    document.getElementById('prix_unitaire').addEventListener('input', updatePrixTotalLigne);
+
+    function updatePrixTotalLigne() {
+      const quantite = parseInt(document.getElementById('quantite').value) || 0;
+      const prix = parseFloat(document.getElementById('prix_unitaire').value) || 0;
+
+      const total = prix * quantite;
+      document.getElementById('prix-total-ligne').textContent = total.toFixed(2).replace('.', ',') + ' €';
+    }
+  </script>
+{% endblock %}
+

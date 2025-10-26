@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File d'Attente Expirée</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background-color: #dc3545;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 5px 5px 0 0;
+      }
+      .content {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 0 0 5px 5px;
+      }
+      .info-box {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+        padding: 15px;
+        margin: 15px 0;
+      }
+      .highlight {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>⏰ Délai Expiré</h1>
+      <p>3Tek-Europe - Notification</p>
+    </div>
+
+    <div class="content">
+      <h2>Bonjour
+        {{ user.name }},</h2>
+
+      <p>Votre délai d'attente pour le lot suivant a expiré :</p>
+
+      <div class="info-box">
+        <h3>📦 Lot Concerné</h3>
+        <p>
+          <strong>Nom :</strong>
+          {{ lot.name }}</p>
+        <p>
+          <strong>Description :</strong>
+          {{ lot.description|slice(0, 100) }}...</p>
+        <p>
+          <strong>Prix :</strong>
+          {{ lot.prix|number_format(2, ',', ' ') }}
+          €</p>
+        <p>
+          <strong>Délai expiré le :</strong>
+          {{ fileAttente.expiresAt|date('d/m/Y H:i') }}</p>
+      </div>
+
+      <div class="highlight">
+        <h3>⚠️ Statut</h3>
+        <p>Le lot a été libéré et est maintenant disponible pour le prochain client dans la file d'attente.</p>
+      </div>
+
+      <p>
+        <strong>Que pouvez-vous faire maintenant ?</strong>
+      </p>
+      <ul>
+        <li>Consulter d'autres lots disponibles</li>
+        <li>Vous inscrire à une nouvelle file d'attente</li>
+        <li>Recevoir des notifications pour de nouveaux lots</li>
+      </ul>
+
+      <p>Nous vous encourageons à continuer à explorer nos autres produits disponibles.</p>
+
+      <p>Connectez-vous à votre espace client pour découvrir de nouveaux lots.</p>
+    </div>
+
+    <div class="footer">
+      <p>3Tek-Europe - Système de File d'Attente</p>
+      <p>Email automatique - Ne pas répondre</p>
+    </div>
+  </body>
+</html>
+

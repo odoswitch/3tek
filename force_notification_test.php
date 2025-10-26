@@ -122,3 +122,5 @@ echo "- Commande créée et lot réservé\n";
 echo "- File d'attente créée\n\n";
 
 echo "=== FIN DE LA SIMULATION ===\n";
+
+

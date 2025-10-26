@@ -20,3 +20,5 @@ echo "3. Vérifier les logs d'erreur\n";
 echo "4. Tester la logique de mise à jour du stock\n\n";
 
 echo "=== FIN DU DIAGNOSTIC ===\n";
+
+
