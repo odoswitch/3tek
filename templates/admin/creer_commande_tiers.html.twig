@@ -1,0 +1,131 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content_title %}
+  <i class="fa fa-plus"></i>
+  Créer une commande pour un tiers
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="user_id" class="form-label">Utilisateur</label>
+                  <select class="form-select" id="user_id" name="user_id" required="required">
+                    <option value="">Sélectionner un utilisateur</option>
+                    {% for user in users %}
+                      <option value="{{ user.id }}">{{ user.email }}
+                        ({{ user.name }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="lot_id" class="form-label">Lot</label>
+                  <select class="form-select" id="lot_id" name="lot_id" required="required">
+                    <option value="">Sélectionner un lot</option>
+                    {% for lot in lots %}
+                      <option value="{{ lot.id }}" data-prix="{{ lot.prix }}" data-quantite="{{ lot.quantite }}">
+                        {{ lot.name }}
+                        -
+                        {{ lot.prix|number_format(2, ',', ' ') }}€ (Stock:
+                        {{ lot.quantite }})
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="quantite" class="form-label">Quantité</label>
+                  <input type="number" class="form-control" id="quantite" name="quantite" value="1" min="1" required="required">
+                  <small class="text-muted" id="quantite-help">Maximum disponible:
+                    <span id="max-quantite">-</span></small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="statut" class="form-label">Statut</label>
+                  <select class="form-select" id="statut" name="statut">
+                    <option value="en_attente">En attente</option>
+                    <option value="reserve">Réservé</option>
+                    <option value="validee">Validé</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="form-label">Prix total</label>
+                  <div class="form-control-plaintext" id="prix-total">0,00 €</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                Créer la commande
+              </button>
+              <a href="{{ path('admin') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Retour
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Informations</h5>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong>En attente :</strong>
+            Commande créée, en attente de paiement</p>
+          <p>
+            <strong>Réservé :</strong>
+            Commande réservée pour le client</p>
+          <p>
+            <strong>Validé :</strong>
+            Commande validée et lot vendu</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('lot_id').addEventListener('change', function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const prix = parseFloat(selectedOption.dataset.prix) || 0;
+      const quantite = parseInt(selectedOption.dataset.quantite) || 0;
+
+      document.getElementById('max-quantite').textContent = quantite;
+      document.getElementById('quantite').max = quantite;
+
+      updatePrixTotal();
+    });
+
+    document.getElementById('quantite').addEventListener('input', updatePrixTotal);
+
+    function updatePrixTotal() {
+      const lotSelect = document.getElementById('lot_id');
+      const quantite = parseInt(document.getElementById('quantite').value) || 0;
+      const prix = parseFloat(
+        lotSelect.options[lotSelect.selectedIndex]
+        ?.dataset.prix) || 0;
+
+      const total = prix * quantite;
+      document.getElementById('prix-total').textContent = total.toFixed(2).replace('.', ',') + ' €';
+    }
+  </script>
+{% endblock %}

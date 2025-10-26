@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 3px solid #28a745;
+      }
+      .content {
+        padding: 30px 0;
+      }
+      .lot-box {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 4px solid #28a745;
+      }
+      .lot-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 20px;
+      }
+      .info-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+      }
+      .info-label {
+        font-weight: bold;
+      }
+      .price {
+        font-size: 28px;
+        font-weight: bold;
+        color: #28a745;
+        text-align: right;
+        margin: 20px 0;
+      }
+      .alert-success {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .cta-button {
+        display: inline-block;
+        background: #28a745;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+      .footer {
+        text-align: center;
+        padding: 20px 0;
+        border-top: 1px solid #ddd;
+        color: #666;
+        font-size: 14px;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="{{ logoUrl }}" alt="3Tek-Europe" style="max-width: 180px; height: auto;">
+    </div>
+
+    <div class="content">
+      <h2>🎉 Lot disponible !</h2>
+
+      <p>Bonjour
+        {{ user.name }},</p>
+
+      <p>Excellente nouvelle ! Le lot pour lequel vous étiez en file d'attente est maintenant
+        <strong>disponible</strong>
+        pour vous.</p>
+
+      <div class="lot-box">
+        <div class="lot-title">{{ lot.name }}</div>
+
+        <div class="info-line">
+          <span class="info-label">Votre position :</span>
+          <span>
+            <strong>{{ position }}</strong>
+          </span>
+        </div>
+
+        <div class="info-line">
+          <span class="info-label">Catégorie :</span>
+          <span>{{ lot.cat.name }}</span>
+        </div>
+
+        <div class="info-line">
+          <span class="info-label">Quantité disponible :</span>
+          <span>{{ lot.quantite }}</span>
+        </div>
+
+        <div class="price">
+          {{ lot.prix|number_format(2, ',', ' ') }}
+          €
+        </div>
+      </div>
+
+      <div class="alert-success">
+        <strong>✅ Vous pouvez maintenant commander ce lot !</strong><br>
+        Le lot vous a été automatiquement réservé suite à votre position dans la file d'attente.
+      </div>
+
+      <div style="text-align: center;">
+        <a href="{{ lotUrl }}" class="cta-button">
+          🛒 Commander maintenant
+        </a>
+      </div>
+
+      <p>
+        <strong>⏰ Important :</strong>
+        Vous avez une priorité sur ce lot, mais nous vous recommandons de passer commande rapidement pour confirmer votre réservation.</p>
+
+      <p>Si vous ne souhaitez plus commander ce lot, vous pouvez simplement ignorer cet email. Le lot sera alors proposé au prochain utilisateur en file d'attente.</p>
+
+      <p>Pour toute question, n'hésitez pas à nous contacter.</p>
+    </div>
+
+    <div class="footer">
+      <p>
+        <strong>3Tek-Europe</strong><br>
+        Email : contact@3tek-europe.com<br>
+        Téléphone : +33 1 83 61 18 36
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+      </p>
+    </div>
+  </body>
+</html>

@@ -332,12 +332,13 @@ class Lot
             return true;
         }
 
-        // Si le lot est réservé, vérifier si l'utilisateur est le premier en file d'attente
+        // Si le lot est réservé, vérifier si l'utilisateur peut le commander
         if ($this->statut === 'reserve' && $this->quantite > 0) {
-            // Vérifier si l'utilisateur est le premier en file d'attente
+            // Trouver l'utilisateur en file d'attente
             foreach ($this->filesAttente as $fileAttente) {
-                if ($fileAttente->getUser() === $user && $fileAttente->getPosition() === 1) {
-                    return true; // L'utilisateur est le premier en file, il peut voir le lot comme disponible
+                if ($fileAttente->getUser() === $user) {
+                    // L'utilisateur peut commander seulement s'il est en attente de validation
+                    return $fileAttente->getStatut() === 'en_attente_validation';
                 }
             }
         }

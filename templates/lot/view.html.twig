@@ -238,7 +238,7 @@
 
                 <div class="mb-4">
                   <h5 class="font-size-16 mb-2">Description</h5>
-                  <div class="text-muted">{{ lot.description|raw }}</div>
+                  <div class="text-muted">{{ lot.description|safe_description }}</div>
                 </div>
 
                 <div class="d-grid gap-2">
@@ -260,7 +260,12 @@
                       <i class="bx bx-info-circle me-2"></i>
                       <strong>Ce lot est réservé par un autre client</strong><br>
                       <small>Réservé par :
-                        {{ lot.reservePar.email }}</small><br>
+                        {% if lot.reservePar.id == app.user.id %}
+                          <span class="text-success">Vous</span>
+                        {% else %}
+                          <span class="text-muted">Un autre utilisateur</span>
+                        {% endif %}
+                      </small><br>
                       <small class="text-muted">En attente de son paiement sous 1 jour. Si le paiement n'est pas effectué, le lot sera libéré selon la position dans la file d'attente.</small>
                     </div>
                     {% if app.user and lot.reservePar != app.user %}

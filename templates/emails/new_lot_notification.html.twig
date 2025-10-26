@@ -105,8 +105,7 @@
           €</div>
 
         <div class="lot-description">
-          {{ lot.description|raw|slice(0, 200) }}
-          {% if lot.description | length > 200 %}...{% endif %}
+          {{ lot.description|safe_description(200) }}
         </div>
       </div>
 

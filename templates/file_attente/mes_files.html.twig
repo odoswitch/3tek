@@ -92,7 +92,12 @@
   <div class="d-flex align-items-center mb-2">
     <i class="bx bx-user me-2 text-info"></i>
     <small class="text-muted">Réservé par:
-      {{ file.lot.reservePar.email }}</small>
+      {% if file.lot.reservePar.id == app.user.id %}
+        <span class="text-success">Vous</span>
+      {% else %}
+        <span class="text-muted">Un autre utilisateur</span>
+      {% endif %}
+    </small>
   </div>
 {% endif %}
 
@@ -120,4 +125,4 @@
 {% endfor %}
 </div>
 {% endif %}
-</div></div> </div></div>{{ include('partials/vendor-scripts.html.twig') }}</body></html>
+</div></div>{{ include('partials/footer.html.twig') }} </div></div>{{ include('partials/right-sidebar.html.twig') }}{{ include('partials/vendor-scripts.html.twig') }}</body></html>

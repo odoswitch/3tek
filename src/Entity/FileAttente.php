@@ -33,6 +33,12 @@ class FileAttente
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $notifiedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $expiresAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $expiredAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -109,11 +115,35 @@ class FileAttente
         return $this;
     }
 
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt(?\DateTimeImmutable $expiresAt): static
+    {
+        $this->expiresAt = $expiresAt;
+        return $this;
+    }
+
+    public function getExpiredAt(): ?\DateTimeImmutable
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiredAt(?\DateTimeImmutable $expiredAt): static
+    {
+        $this->expiredAt = $expiredAt;
+        return $this;
+    }
+
     public function getStatutLabel(): string
     {
-        return match($this->statut) {
+        return match ($this->statut) {
             'en_attente' => 'En attente',
+            'en_attente_validation' => 'En attente de validation',
             'notifie' => 'Notifié',
+            'delai_depasse' => 'Délai dépassé',
             'expire' => 'Expiré',
             default => 'Inconnu',
         };

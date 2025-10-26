@@ -156,6 +156,99 @@ class DashboardController extends AbstractDashboardController
                 .badge-primary {
                     background-color: #0066cc !important;
                 }
+                
+                /* Correction du problème de dropdown EasyAdmin coupé */
+                .dropdown-menu {
+                    z-index: 9999 !important;
+                    position: fixed !important;
+                }
+
+                /* Correction spécifique pour EasyAdmin */
+                .ea-content .dropdown-menu {
+                    z-index: 9999 !important;
+                    position: absolute !important;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+
+                /* Ensure dropdown displays above everything */
+                .ea-content .dropdown.show .dropdown-menu {
+                    z-index: 9999 !important;
+                    display: block !important;
+                }
+
+                /* Fix for EasyAdmin actions */
+                .ea-content .dropdown-toggle::after {
+                    display: none;
+                }
+
+                /* Improve action buttons display */
+                .ea-content .btn-group .dropdown-menu {
+                    z-index: 9999 !important;
+                    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+                    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+                }
+
+                /* Fix for context menus */
+                .ea-content .dropdown-menu.show {
+                    z-index: 9999 !important;
+                    position: absolute !important;
+                    transform: none !important;
+                }
+
+                /* Ensure parent container allows overflow */
+                .ea-content {
+                    overflow: visible !important;
+                }
+
+                .ea-content .table-responsive {
+                    overflow: visible !important;
+                }
+
+                /* Fix for EasyAdmin tables */
+                .ea-content table {
+                    overflow: visible !important;
+                }
+
+                .ea-content .table {
+                    overflow: visible !important;
+                }
+                
+                /* Fix for actions in table rows */
+                .ea-content .table td .dropdown-menu {
+                    z-index: 9999 !important;
+                    position: absolute !important;
+                    top: 100% !important;
+                    left: 0 !important;
+                    right: auto !important;
+                    transform: none !important;
+                }
+                
+                /* Ensure action buttons are visible */
+                .ea-content .table td .btn-group {
+                    position: relative !important;
+                    z-index: 1 !important;
+                }
+                
+                /* Specific fix for bottom page dropdowns */
+                .ea-content .table tbody tr:last-child .dropdown-menu {
+                    top: auto !important;
+                    bottom: 100% !important;
+                    margin-bottom: 5px !important;
+                }
+                
+                /* Auto-detection for bottom dropdowns */
+                .ea-content .dropdown-menu[style*="top"] {
+                    position: fixed !important;
+                    z-index: 9999 !important;
+                }
+                
+                /* Fix for last table rows */
+                .ea-content .table tbody tr:nth-last-child(-n+3) .dropdown-menu {
+                    top: auto !important;
+                    bottom: 100% !important;
+                    transform: translateY(-5px) !important;
+                }
             </style>');
     }
 

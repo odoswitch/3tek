@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use App\Entity\FileAttente;
 use App\Repository\LotRepository;
 use App\Repository\FileAttenteRepository;
+use App\Service\LotLiberationServiceAmeliore;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,8 @@ class CommandeController extends AbstractController
         private EntityManagerInterface $entityManager,
         private MailerInterface $mailer,
         private Environment $twig,
-        private string $projectDir
+        private string $projectDir,
+        private LotLiberationServiceAmeliore $lotLiberationService
     ) {}
 
     #[Route('/commande/create/{lotId}', name: 'app_commande_create', methods: ['POST'])]
@@ -33,7 +35,7 @@ class CommandeController extends AbstractController
         $lot = $lotRepository->find($lotId);
 
         if (!$lot) {
-            $this->addFlash('error', 'Lot introuvable');
+            $this->addFlash('danger', 'Lot introuvable');
             return $this->redirectToRoute('app_dash');
         }
 
@@ -62,14 +64,14 @@ class CommandeController extends AbstractController
 
         // Vérifier si le lot est disponible
         if (!$lot->isDisponible()) {
-            $this->addFlash('error', 'Ce lot n\'est plus disponible');
+            $this->addFlash('danger', 'Ce lot n\'est plus disponible');
             return $this->redirectToRoute('app_lot_view', ['id' => $lotId]);
         }
 
         $quantite = (int) $request->request->get('quantite', 1);
 
         if ($quantite > $lot->getQuantite()) {
-            $this->addFlash('error', 'Quantité demandée non disponible');
+            $this->addFlash('danger', 'Quantité demandée non disponible');
             return $this->redirectToRoute('app_lot_view', ['id' => $lotId]);
         }
 
@@ -154,6 +156,68 @@ class CommandeController extends AbstractController
         return $this->render('commande/view.html.twig', [
             'commande' => $commande,
         ]);
+    }
+
+    #[Route('/commande/{id}/annuler', name: 'app_commande_cancel', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function cancel(Commande $commande): Response
+    {
+        $user = $this->getUser();
+
+        // Vérifier que l'utilisateur peut annuler cette commande
+        if ($commande->getUser() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Vérifier que la commande peut être annulée
+        if ($commande->getStatut() === 'validee') {
+            $this->addFlash('danger', 'Impossible d\'annuler une commande déjà validée');
+            return $this->redirectToRoute('app_commande_view', ['id' => $commande->getId()]);
+        }
+
+        if ($commande->getStatut() === 'annulee') {
+            $this->addFlash('warning', 'Cette commande est déjà annulée');
+            return $this->redirectToRoute('app_commande_view', ['id' => $commande->getId()]);
+        }
+
+        // Empêcher l'annulation des commandes trop anciennes (plus de 24h)
+        $delaiAnnulation = new \DateTimeImmutable('-24 hours');
+        if ($commande->getCreatedAt() < $delaiAnnulation) {
+            $this->addFlash('danger', 'Impossible d\'annuler une commande de plus de 24 heures. Contactez le support.');
+            return $this->redirectToRoute('app_commande_view', ['id' => $commande->getId()]);
+        }
+
+        $lot = $commande->getLot();
+
+        // Vérifier si la commande a un lot associé
+        if (!$lot) {
+            error_log("DEBUG ANNULATION: Commande ID=" . $commande->getId() . " n'a pas de lot associé - annulation simple");
+
+            // Annuler la commande sans libérer de lot
+            $commande->setStatut('annulee');
+            $this->entityManager->persist($commande);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Votre commande a été annulée.');
+            return $this->redirectToRoute('app_mes_commandes');
+        }
+
+        // Log de débogage
+        error_log("DEBUG ANNULATION: Annulation commande ID=" . $commande->getId() . ", Statut=" . $commande->getStatut() . ", Lot ID=" . $lot->getId());
+
+        // Annuler la commande
+        $commande->setStatut('annulee');
+        $this->entityManager->persist($commande);
+
+        // Libérer le lot avec notre service unifié
+        $this->lotLiberationService->libererLot($lot);
+
+        $this->entityManager->flush();
+
+        error_log("DEBUG ANNULATION: Commande annulée et lot libéré avec succès");
+
+        $this->addFlash('success', 'Votre commande a été annulée. Le lot a été libéré pour les autres utilisateurs.');
+
+        return $this->redirectToRoute('app_mes_commandes');
     }
 
     private function sendCommandeConfirmation(Commande $commande): void

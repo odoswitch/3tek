@@ -1,0 +1,56 @@
+/* Correction du problème de dropdown EasyAdmin coupé */
+.dropdown-menu {
+    z-index: 9999 !important;
+    position: fixed !important;
+}
+
+/* Correction spécifique pour EasyAdmin */
+.ea-content .dropdown-menu {
+    z-index: 9999 !important;
+    position: absolute !important;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Assurer que le dropdown s'affiche au-dessus de tout */
+.ea-content .dropdown.show .dropdown-menu {
+    z-index: 9999 !important;
+    display: block !important;
+}
+
+/* Correction pour les actions EasyAdmin */
+.ea-content .dropdown-toggle::after {
+    display: none;
+}
+
+/* Améliorer l'affichage des boutons d'action */
+.ea-content .btn-group .dropdown-menu {
+    z-index: 9999 !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Correction pour les menus contextuels */
+.ea-content .dropdown-menu.show {
+    z-index: 9999 !important;
+    position: absolute !important;
+    transform: none !important;
+}
+
+/* Assurer que le conteneur parent permet l'overflow */
+.ea-content {
+    overflow: visible !important;
+}
+
+.ea-content .table-responsive {
+    overflow: visible !important;
+}
+
+/* Correction spécifique pour les tables EasyAdmin */
+.ea-content table {
+    overflow: visible !important;
+}
+
+.ea-content .table {
+    overflow: visible !important;
+}

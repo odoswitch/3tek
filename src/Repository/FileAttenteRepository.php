@@ -76,9 +76,9 @@ class FileAttenteRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('f')
             ->where('f.lot = :lot')
-            ->andWhere('f.statut = :statut')
+            ->andWhere('f.statut IN (:statuts)')
             ->setParameter('lot', $lot)
-            ->setParameter('statut', 'en_attente')
+            ->setParameter('statuts', ['en_attente', 'en_attente_validation', 'notifie'])
             ->orderBy('f.position', 'ASC')
             ->setMaxResults(1)
             ->getQuery()

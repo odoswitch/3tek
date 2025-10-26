@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 3px solid #dc3545;
+      }
+      .content {
+        padding: 30px 0;
+      }
+      .lot-box {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 4px solid #dc3545;
+      }
+      .lot-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #dc3545;
+        margin-bottom: 20px;
+      }
+      .info-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+      }
+      .info-label {
+        font-weight: bold;
+      }
+      .price {
+        font-size: 28px;
+        font-weight: bold;
+        color: #dc3545;
+        text-align: right;
+        margin: 20px 0;
+      }
+      .alert-info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .alert-warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .footer {
+        text-align: center;
+        padding: 20px 0;
+        border-top: 1px solid #ddd;
+        color: #666;
+        font-size: 14px;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="{{ logoUrl }}" alt="3Tek-Europe" style="max-width: 180px; height: auto;">
+    </div>
+
+    <div class="content">
+      <h2>⏰ Délai dépassé - Lot passé au suivant</h2>
+
+      <p>Bonjour
+        {{ user.name }},</p>
+
+      <p>Nous vous informons que le délai d'1 heure pour commander le lot
+        <strong>{{ lot.name }}</strong>
+        a été dépassé.</p>
+
+      <div class="lot-box">
+        <div class="lot-title">{{ lot.name }}</div>
+
+        <div class="info-line">
+          <span class="info-label">Votre position :</span>
+          <span>
+            <strong>{{ position }}</strong>
+          </span>
+        </div>
+
+        <div class="info-line">
+          <span class="info-label">Catégorie :</span>
+          <span>{{ lot.cat.name }}</span>
+        </div>
+
+        <div class="info-line">
+          <span class="info-label">Prix :</span>
+          <span>{{ lot.prix|number_format(2, ',', ' ') }}
+            €</span>
+        </div>
+
+        <div class="info-line">
+          <span class="info-label">Délai expiré le :</span>
+          <span>{{ expiredAt|date('d/m/Y à H:i') }}</span>
+        </div>
+      </div>
+
+      <div class="alert-warning">
+        <strong>⏰ Délai dépassé :</strong>
+        Vous n'avez pas commandé dans les temps.<br>
+        Le lot a été automatiquement proposé au prochain utilisateur en file d'attente.
+      </div>
+
+      <div class="alert-info">
+        <strong>ℹ️ Information :</strong>
+        Vous restez dans la file d'attente pour ce lot.<br>
+        Si le prochain utilisateur ne commande pas non plus dans le délai, le lot vous sera reproposé.
+      </div>
+
+      <p>
+        <strong>📋 Que se passe-t-il maintenant ?</strong>
+      </p>
+      <ol>
+        <li>Le lot est maintenant proposé au prochain utilisateur en file d'attente</li>
+        <li>Ce prochain utilisateur a également 1 heure pour commander</li>
+        <li>Si lui aussi ne commande pas, le lot sera proposé au suivant</li>
+        <li>Vous restez dans la file d'attente et pourrez être notifié à nouveau</li>
+      </ol>
+
+      <p>
+        <strong>🔄 Prochaines étapes :</strong>
+      </p>
+      <ul>
+        <li>Surveillez vos emails pour une nouvelle notification</li>
+        <li>Préparez-vous à réagir rapidement lors de la prochaine notification</li>
+        <li>Assurez-vous que vos informations de contact sont à jour</li>
+      </ul>
+
+      <p>Pour toute question concernant ce processus, n'hésitez pas à nous contacter.</p>
+    </div>
+
+    <div class="footer">
+      <p>
+        <strong>3Tek-Europe</strong><br>
+        Email : contact@3tek-europe.com<br>
+        Téléphone : +33 1 83 61 18 36
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+      </p>
+    </div>
+  </body>
+</html>
