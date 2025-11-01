@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Environment;
 
 /**
@@ -21,7 +23,9 @@ class LotLiberationService
         private FileAttenteRepository $fileAttenteRepository,
         private MailerInterface $mailer,
         private LoggerInterface $logger,
-        private Environment $twig
+        private Environment $twig,
+        private UrlGeneratorInterface $urlGenerator,
+        private ParameterBagInterface $params
     ) {}
 
     /**
@@ -89,11 +93,11 @@ class LotLiberationService
         $lot = $fileAttente->getLot();
 
         try {
-            // Générer l'URL du lot
-            $lotUrl = 'http://localhost:8080/lot/' . $lot->getId();
+            // Générer l'URL du lot dynamiquement
+            $lotUrl = $this->urlGenerator->generate('app_lot_view', ['id' => $lot->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            // Générer l'URL du logo
-            $logoUrl = 'http://localhost:8080/images/logo.png';
+            // Générer l'URL du logo dynamiquement
+            $logoUrl = rtrim($this->params->get('app.base_url'), '/') . '/images/logo.png';
 
             // Rendre le template Twig
             $htmlContent = $this->twig->render('emails/lot_disponible_notification.html.twig', [

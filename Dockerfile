@@ -1,75 +1,50 @@
-# Stage 1: Build dependencies
-# Note: Les avertissements de vulnérabilité proviennent de l'image PHP officielle
-# Mettez régulièrement à jour avec: docker pull php:8.2-fpm
-FROM php:8.2-fpm AS builder
+FROM php:8.2-fpm
 
-# Install system dependencies
+# Installation des dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev libicu-dev \
     zip \
     unzip \
-    libzip-dev \
-    libicu-dev \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
-# Install Composer
+# Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Définition du répertoire de travail
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
-COPY composer.json composer.lock symfony.lock ./
-
-# Install PHP dependencies
-RUN composer install --no-dev --no-interaction --no-scripts --optimize-autoloader --prefer-dist
-
-# Stage 2: Production image
-FROM php:8.2-fpm
-
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libicu-dev \
-    default-mysql-client \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
-WORKDIR /var/www/html
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy vendor from builder
-COPY --from=builder /var/www/html/vendor ./vendor
-
-# Copy application files
+# Copie des fichiers de l'application
 COPY . .
 
-# Copy custom PHP configuration
-COPY php-custom.ini /usr/local/etc/php/conf.d/php-custom.ini
+# Installation des dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
 
-# Create necessary directories
-RUN mkdir -p var/cache var/log var/sessions public/uploads \
-    && chown -R www-data:www-data var public/uploads \
-    && chmod -R 775 var public/uploads
+# Configuration des permissions - APPROCHE DÉFINITIVE
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+RUN chmod -R 777 /var/www/html/var
 
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Création des répertoires de cache nécessaires avec permissions correctes
+RUN mkdir -p /var/www/html/var/cache/prod/{asset_mapper,easyadmin,pools/system,twig}
+RUN chown -R www-data:www-data /var/www/html/var/cache
+RUN chmod -R 777 /var/www/html/var/cache
 
-EXPOSE 9000
+# Création des répertoires de logs avec permissions correctes
+RUN mkdir -p /var/www/html/var/log
+RUN chown -R www-data:www-data /var/www/html/var/log
+RUN chmod -R 777 /var/www/html/var/log
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["php-fpm"]
+# Script de démarrage pour corriger les permissions au démarrage
+RUN echo '#!/bin/bash\nchown -R www-data:www-data /var/www/html/var\nchmod -R 777 /var/www/html/var\nmkdir -p /var/www/html/var/cache/prod/{asset_mapper,easyadmin,pools/system,twig}\nchown -R www-data:www-data /var/www/html/var/cache\nchmod -R 777 /var/www/html/var/cache\nphp-fpm' > /start.sh
+RUN chmod +x /start.sh
+
+# Exposition du port
+EXPOSE 80
+
+# Commande de démarrage
+CMD ["/start.sh"]

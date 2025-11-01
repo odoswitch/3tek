@@ -1,0 +1,46 @@
+FROM php:8.2-fpm
+
+# Installation des dépendances système
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    nodejs \
+    npm \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Installation de Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Définition du répertoire de travail
+WORKDIR /var/www/html
+
+# Copie des fichiers de l'application
+COPY . .
+
+# Installation des dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
+
+# Installation des dépendances Node.js et build des assets (si package.json existe)
+RUN if [ -f package.json ]; then npm install && npm run build; else echo "No package.json found, skipping npm build"; fi
+
+# Configuration des permissions - APPROCHE CORRIGÉE
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+RUN chmod -R 777 /var/www/html/var
+
+# Création des répertoires de cache nécessaires
+RUN mkdir -p /var/www/html/var/cache/prod/{asset_mapper,easyadmin,pools/system,twig}
+RUN chown -R www-data:www-data /var/www/html/var/cache
+RUN chmod -R 777 /var/www/html/var/cache
+
+# Exposition du port
+EXPOSE 80
+
+# Commande de démarrage
+CMD ["php-fpm"]

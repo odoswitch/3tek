@@ -3,7 +3,7 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "3306:3306"
+      - "3309:3306"
 ###< doctrine/doctrine-bundle ###
 
 ###> symfony/mailer ###
@@ -23,7 +23,7 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: 3tek_phpmyadmin
     ports:
-      - "8081:80"
+      - "8087:80"
     environment:
       PMA_HOST: database
       PMA_PORT: 3306

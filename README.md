@@ -1,118 +1,111 @@
-# 🚀 3TEK - Application Symfony 7.3
+# Application 3tek - Symfony 7.3
 
+## 📋 Description
 Application web développée avec Symfony 7.3, déployable avec Docker.
 
-## 📋 Prérequis
+## 🚀 Installation et Démarrage
 
-- Docker Desktop (Windows/Mac) ou Docker Engine (Linux)
-- Docker Compose 2.0+
-- Git
-
-## 🐳 Démarrage avec Docker (Recommandé)
-
-### Windows
-
-1. **Vérifier l'environnement** :
-   ```bash
-   # Double-cliquez sur check-docker.bat
-   ```
-
-2. **Démarrer l'application** :
-   ```bash
-   # Double-cliquez sur start-dev.bat
-   ```
-
-3. **Accéder à l'application** :
-   - Application : http://localhost:8080
-   - PhpMyAdmin : http://localhost:8081
-   - Mailpit : http://localhost:8025
-
-### Linux/Mac
-
+### 1. Installation complète
 ```bash
-# Démarrer
-make dev
-
-# Ou sans Make
-docker compose -f compose.yaml -f compose.override.yaml up -d
+cd /opt/docker/3tek
+chmod +x scripts/3tek-manage.sh
+./scripts/3tek-manage.sh install
 ```
 
-## 📚 Documentation
-
-- **[QUICK_START.md](QUICK_START.md)** - Démarrage rapide (5 minutes)
-- **[DOCKER_README.md](DOCKER_README.md)** - Documentation Docker complète
-- **[DEPLOIEMENT_DOCKER.md](DEPLOIEMENT_DOCKER.md)** - Guide de déploiement
-- **[LISEZMOI_DOCKER.txt](LISEZMOI_DOCKER.txt)** - Aide rapide en français
-
-## 🛠️ Technologies
-
-- **Framework** : Symfony 7.3
-- **PHP** : 8.2
-- **Base de données** : MySQL 8.0
-- **Serveur web** : Nginx
-- **Containerisation** : Docker & Docker Compose
-
-## 📦 Installation Complète
-
+### 2. Commandes de gestion
 ```bash
-# 1. Démarrer les conteneurs
-make dev
+# Démarrer l'application
+./scripts/3tek-manage.sh start
 
-# 2. Installer les dépendances et initialiser la base
-make install
+# Arrêter l'application
+./scripts/3tek-manage.sh stop
 
-# 3. (Optionnel) Charger des données de test
-docker compose exec php php bin/console doctrine:fixtures:load
+# Redémarrer l'application
+./scripts/3tek-manage.sh restart
+
+# Voir le statut
+./scripts/3tek-manage.sh status
+
+# Voir les logs
+./scripts/3tek-manage.sh logs
 ```
 
-## 🔧 Commandes Utiles
+## 🌐 Accès
 
+### Interface Web
+- **URL**: http://45.11.51.2:8085
+- **Utilisateur**: admin
+- **Mot de passe**: admin123
+
+### PhpMyAdmin
+- **URL**: http://45.11.51.2:8086
+- **Utilisateur**: root
+- **Mot de passe**: ngamba123
+
+## 🗄️ Base de Données
+- **Type**: MySQL 8.0
+- **Nom**: 3tek
+- **Utilisateur**: 3tek
+- **Mot de passe**: ngamba123
+- **Port**: 3309
+
+## 🐳 Services Docker
+
+### Conteneurs
+- `3tek-mysql`: Base de données MySQL
+- `3tek-app`: Application Symfony (PHP-FPM)
+- `3tek-nginx`: Serveur web Nginx
+- `3tek-phpmyadmin`: Interface d'administration MySQL
+
+### Ports
+- **8085**: Interface web principale
+- **8086**: PhpMyAdmin
+- **3309**: MySQL (accès direct)
+
+## 📁 Structure
+```
+/opt/docker/3tek/
+├── docker-compose.yml
+├── Dockerfile
+├── mysql/
+│   └── my.cnf
+├── nginx/
+│   └── nginx.conf
+├── scripts/
+│   └── 3tek-manage.sh
+└── src/ (après installation)
+```
+
+## 🔧 Configuration
+
+### Variables d'environnement
+- `APP_ENV`: prod
+- `APP_SECRET`: your-secret-key-here-change-in-production
+- `DATABASE_URL`: mysql://3tek:ngamba123@mysql:3306/3tek
+
+### Volumes persistants
+- `mysql-data`: Données MySQL
+- `app-data`: Cache et logs Symfony
+
+## 🆘 Dépannage
+
+### Vérifier les logs
 ```bash
-make help              # Liste toutes les commandes
-make dev               # Démarrer en développement
-make logs              # Voir les logs
-make shell             # Accéder au shell PHP
-make migrate           # Exécuter les migrations
-make cache-clear       # Vider le cache
+./scripts/3tek-manage.sh logs
 ```
 
-## 🚀 Déploiement en Production
-
-Consultez [DEPLOIEMENT_DOCKER.md](DEPLOIEMENT_DOCKER.md) pour les instructions détaillées.
-
+### Redémarrer les services
 ```bash
-# 1. Configurer l'environnement
-cp .env.prod.example .env.prod
-# Éditer .env.prod avec vos valeurs
-
-# 2. Déployer
-docker compose -f docker-compose.prod.yaml --env-file .env.prod up -d
+./scripts/3tek-manage.sh restart
 ```
 
-## 📝 Structure du Projet
-
-```
-3tek/
-├── config/              # Configuration Symfony
-├── public/              # Point d'entrée web
-├── src/                 # Code source
-├── templates/           # Templates Twig
-├── var/                 # Cache et logs
-├── Dockerfile           # Image Docker
-├── compose.yaml         # Docker Compose
-├── Makefile            # Commandes simplifiées
-└── README.md           # Ce fichier
+### Vérifier le statut
+```bash
+./scripts/3tek-manage.sh status
 ```
 
-## 🆘 Support
-
-En cas de problème :
-
-1. Vérifiez les logs : `make logs`
-2. Consultez la documentation dans les fichiers MD
-3. Vérifiez que Docker Desktop est lancé
-4. Exécutez `check-docker.bat` pour diagnostiquer
-
-## 📄 Licence
-
-Propriétaire
+## 📝 Notes
+- L'application utilise Symfony 7.3 avec PHP 8.2
+- Base de données MySQL 8.0 avec authentification native
+- Serveur web Nginx pour la performance
+- PhpMyAdmin pour l'administration de la base de données

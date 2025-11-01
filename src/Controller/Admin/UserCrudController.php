@@ -176,6 +176,23 @@ class UserCrudController extends AbstractCrudController
             }
         }
 
+        // Libérer tous les lots réservés par cet utilisateur
+        $lotRepository = $entityManager->getRepository(\App\Entity\Lot::class);
+        $lotsReserves = $lotRepository->findBy(['reservePar' => $user]);
+        foreach ($lotsReserves as $lot) {
+            $lot->setStatut('disponible');
+            $lot->setReservePar(null);
+            $lot->setReserveAt(null);
+            $entityManager->persist($lot);
+        }
+
+        // Supprimer les demandes de réinitialisation de mot de passe
+        $resetPasswordRepository = $entityManager->getRepository(\App\Entity\ResetPasswordRequest::class);
+        $resetPasswordRequests = $resetPasswordRepository->findBy(['user' => $user]);
+        foreach ($resetPasswordRequests as $request) {
+            $entityManager->remove($request);
+        }
+
         // Supprimer les entrées de file d'attente
         $fileAttenteRepository = $entityManager->getRepository(\App\Entity\FileAttente::class);
         $fileAttenteEntries = $fileAttenteRepository->findBy(['user' => $user]);

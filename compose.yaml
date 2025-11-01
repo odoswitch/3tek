@@ -14,7 +14,8 @@ services:
     environment:
       - APP_ENV=prod
       - APP_DEBUG=false
-      - DATABASE_URL=mysql://root:ngamba123@3tek-database-1:3306/db_3tek?serverVersion=8.0&charset=utf8mb4
+      - APP_URL=${APP_URL:-http://45.11.51.2:8084}
+      - DATABASE_URL=mysql://3tek:ngamba123@database:3306/3tek?serverVersion=8.0&charset=utf8mb4
       - MAILER_DSN=smtp://noreply%40odoip.net:Ngamba%2D123@mail.odoip.net:465?encryption=ssl
       - TZ=Europe/Paris
     depends_on:
@@ -26,7 +27,7 @@ services:
     image: nginx:alpine
     container_name: 3tek_nginx
     ports:
-      - "8080:80"
+      - "8084:80"
     volumes:
       - .:/var/www/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
@@ -39,11 +40,11 @@ services:
   database:
     image: mysql:${MYSQL_VERSION:-8.0}
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-3tek}
       # You should definitely change the password in production
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!}
-      MYSQL_USER: ${MYSQL_USER:-app}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ngamba123}
+      MYSQL_USER: ${MYSQL_USER:-3tek}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ngamba123}
       TZ: Europe/Paris
     command: --default-time-zone='+01:00'
     healthcheck:
@@ -51,6 +52,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 60s
+    ports:
+      - "3309:3306"
     volumes:
       - database_data:/var/lib/mysql:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!

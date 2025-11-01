@@ -13,11 +13,11 @@ class FileAttente
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: "filesAttente")]
     #[ORM\JoinColumn(nullable: false)]
     private ?Lot $lot = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: "filesAttente")]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
